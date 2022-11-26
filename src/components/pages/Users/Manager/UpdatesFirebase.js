@@ -8,13 +8,16 @@ import {CSVLink} from "react-csv";
 
 var options = []
 var guidesOptions = []
+var BusinessMentorOptions = []
 var studentsOptions = []
 var emptyGuidesOptions = []
+var emptyBusinessMentorOptions = []
 var emptyStudentsOptions = []
 var emptyTeamOptions = []
 var TeamOptions = []
 var csvGuidesData = []
 var csvStudentsData = []
+var csvBusinessMentorData = []
 class UpdatesFirebase extends Component {
 
     constructor(props) {
@@ -32,6 +35,7 @@ class UpdatesFirebase extends Component {
                 replaceTeamName:false,
                 delete:false,
                 showGuides:false,
+                showBusinessMentor:false,
                 showStudents:false,
                 showTeamWithoutGuide:false,
                 showGuideWithoutTeam:false,
@@ -91,7 +95,8 @@ class UpdatesFirebase extends Component {
                     user.data().type==='testers'?'בודק':
                         user.data().type==='managers'?"מנהל":
                             user.data().type==='guides'?"מדריך":
-                                user.data().type==='students'?"חניך":"",
+                                user.data().type==='BusinessMentor'?"מנחה עסקי":
+                                       user.data().type==='students'?"חניך":"",
                     user.data().teamName,
 
                 ],)
@@ -99,6 +104,44 @@ class UpdatesFirebase extends Component {
                 return user
             })
         }
+        ////////////
+        else{
+            if(type ==='BusinessMentor')
+            {
+                csvBusinessMentorData = [
+                    [
+                        "שם פרטי",
+                        "שם משפחה",
+                        "ת.ז",
+                        "טלפון",
+                        "מייל",
+                        "תפקיד",
+                        "קבוצה",
+                    ],
+                ];
+                users.map(user=>{
+                    if(user)
+                    {
+                    csvBusinessMentorData.push([
+                        user.data().fname,
+                        user.data().lname,
+                        user.data().ID,
+                        user.data().phone.substr(0,3)+"-"+user.data().phone.substr(3,user.data().phone.length),
+                        user.data().email,
+                        user.data().type==='testers'?'בודק':
+                            user.data().type==='managers'?"מנהל":
+                                user.data().type==='guides'?"מדריך":
+                                    user.data().type==='BusinessMentor'?"מנחה עסקי":
+                                           user.data().type==='students'?"חניך":"",
+                        user.data().teamName,
+
+                    ],)
+                        }
+                    return user
+                })
+            }
+        }
+        //////////
         else
         {
             csvStudentsData = [
@@ -117,13 +160,14 @@ class UpdatesFirebase extends Component {
                     csvStudentsData.push([
                         user.data().fname,
                         user.data().lname,
-                        user.data().ID,
+                        user.data().ID,  
                         user.data().phone.substr(0, 2) + "-" + user.data().phone.substr(3, user.data().phone.length),
                         user.data().email,
                         user.data().type === 'testers' ? 'בודק' :
                             user.data().type === 'managers' ? "מנהל" :
                                 user.data().type === 'guides' ? "מדריך" :
-                                    user.data().type === 'students' ? "חניך" : "",
+                                      user.data().type==='BusinessMentor'?"מנחה עסקי":
+                                            user.data().type === 'students' ? "חניך" : "",
                         user.data().teamName,
 
                     ],)
@@ -239,6 +283,13 @@ class UpdatesFirebase extends Component {
                                         team:null
                                     })
                                 })
+                                var BusinessMentor = await  db.collection("BusinessMentor").where('teamName','==',this.state.teamName).get()
+                                BusinessMentor.docs.forEach(async BusinessMentor=>{
+                                    BusinessMentor.ref.update({
+                                        teamName: null,
+                                        team:null
+                                    })
+                                })
 
                                 await db.doc(this.state.teamPath).delete().then(function() {
                                    alert("הקבוצה נמחקה בהצלחה!");
@@ -302,6 +353,55 @@ class UpdatesFirebase extends Component {
                         </div>
 
                     </Grid>
+                    ///////////////
+                     <Grid item xs={12}>
+                        <div className="text-below-image">
+                            <button onClick={()=>{
+                                this.getAllUsers('BusinessMentor')
+                                this.setState({showBusinessMentor:!this.state.showBusinessMentor,BusinessMentorTeamName:null,BusinessMentorName:null})
+
+                            }} >{this.state.showBusinessMentor?'הסתר רשימת מנחים עסקיים':'הצג רשימת מנחים עסקיים'}</button>
+                            {
+                                (this.state.showBusinessMentor && this.state.BusinessMentor) ? (
+                                    <div>
+                                        <Grid item xs={12}>
+                                            נמצאו:{this.state.BusinessMentor.length} מנחים עסקיים
+                                            <Select placeholder={"מצא מנחה עסקי "} options={BusinessMentorOptions}
+                                                    onChange={(e) => {
+                                                        // console.log(e.label, e.value);
+                                                        this.setState({BusinessMentor: [e.value]})
+                                                    }}/>
+
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <CSVLink
+                                                data={csvBusinessMentorData}
+                                                filename={"מנחים עסקיים.csv"}
+                                                className="btn btn-primary"
+                                                target="_blank"
+                                            >
+                                                <button>
+                                                    הורדת פרטי קשר מנחים עסקיים
+                                                </button>
+                                            </CSVLink>
+                                        </Grid>
+                                    </div> ) : ('')
+                            }
+                            {
+                                (!this.state.BusinessMentor || !this.state.showBusinessMentor)?'':
+                                    this.stateBusinessMentor.map((BusinessMentor,index) => (
+                                        <Grid  item xs={12}  key={index}>
+                                            <hr/>
+                                            {this.card(BusinessMentor.data(),index)}
+                                        </Grid >
+                                    ))
+
+
+                            }
+                        </div>
+
+                    </Grid>
+                    //////////
                     <Grid item xs={12}>
                         <div className="text-below-image">
                             <button onClick={()=>{
@@ -492,8 +592,10 @@ class UpdatesFirebase extends Component {
 
             if (!reload && (
                 (user === 'guides' && this.state.Guides && this.state.Guides > 1) ||
+                (user === 'BusinessMentor' && this.state.BusinessMentor && this.state.BusinessMentor > 1) ||
                 (user === 'students' && this.state.Students && this.state.Students > 1) ||
                 (user === 'guidesEmpty' && this.state.GuidesEmpty && this.state.GuidesEmpty > 1) ||
+                (user === 'BusinessMentorEmpty' && this.state.BusinessMentorEmpty && this.state.BusinessMentorEmpty > 1) ||
                 (user === 'studentEmpty' && this.state.StudentEmpty && this.state.StudentEmpty > 1) ||
                 (user === 'teamEmpty' && this.state.TeamEmpty && this.state.TeamEmpty > 1) ||
                 (user === 'Teams' && this.state.Teams && this.state.Teams > 1))
@@ -512,7 +614,13 @@ class UpdatesFirebase extends Component {
             // console.log("in1")
             tempTeam = await db.collection("Teams").get();
             tempTeam = tempTeam.docs
-
+            //////////
+        }else if (user === 'BusinessMentor')
+            BusinessMentorOptions = []
+        else if (user === 'BusinessMentorEmpty') {
+            emptyBusinessMentorOptions = []
+            temp = 'BusinessMentor'
+            /////
         } else if (user === 'studentEmpty') {
             emptyStudentsOptions = []
             temp = 'students'
@@ -531,8 +639,13 @@ class UpdatesFirebase extends Component {
                     if (user === 'students') {
                         allUsers.push(res)
                         studentsOptions.push({value: res, label: res.data().fname + ' ' + res.data().lname})
-
-                    } else if (user === 'guides') {
+                    }
+                      ////////////
+                      else if (user === 'BusinessMentor') {
+                        allUsers.push(res)
+                        BusinessMentorOptions.push({value: res, label: res.data().fname + ' ' + res.data().lname})
+                    }////////////
+                      else if (user === 'guides') {
                         allUsers.push(res)
                         guidesOptions.push({value: res, label: res.data().fname + ' ' + res.data().lname})
 
@@ -558,6 +671,12 @@ class UpdatesFirebase extends Component {
                         allUsers.push(res)
                         emptyStudentsOptions.push({value: res, label: res.data().fname + ' ' + res.data().lname})
                     }
+                    /////
+                     else if (user === 'BusinessMentorEmpty' && !res.data().teamName) {
+                        allUsers.push(res)
+                        emptyBusinessMentorOptions.push({value: res, label: res.data().fname + ' ' + res.data().lname})
+                     }
+                     /////////
                 } else if (user === 'teamEmpty' && !res.data().guide) {
                     allUsers.push(res)
                     emptyTeamOptions.push({value: res, label: res.name})
@@ -572,12 +691,22 @@ class UpdatesFirebase extends Component {
             this.setState({Guides: allUsers})
             this.createCsvFile(allUsers,'guides')
         }
+        ////
+        else if (user === 'BusinessMentor') {
+            this.setState({BusinessMentor: allUsers})
+            this.createCsvFile(allUsers,'BusinessMentor')
+        }
+        ///
         else if (user === 'students') {
             this.setState({Students: allUsers})
             this.createCsvFile(allUsers,'students')
         }
         else if (user === 'guidesEmpty')
             this.setState({GuidesEmpty: allUsers})
+            ////
+        else if (user === 'BusinessMentorEmpty')
+            this.setState({BusinessMentorEmpty: allUsers})
+            /////
         else if (user === 'studentEmpty')
             this.setState({StudentEmpty: allUsers})
         else if (user === 'teamEmpty')
@@ -803,6 +932,10 @@ class UpdatesFirebase extends Component {
 
                                     if(this.state.showGuides)
                                         this.getAllUsers("guides")
+                                        /////
+                                    if(this.state.showBusinessMentor)
+                                        this.getAllUsers("BusinessMentor")
+                                        /////
                                     if(this.state.showStudents)
                                         this.getAllUsers("students")
                                     if(this.state.showGuideWithoutTeam)

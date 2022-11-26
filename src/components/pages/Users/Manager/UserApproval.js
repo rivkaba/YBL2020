@@ -93,6 +93,7 @@ class UserApproval extends React.Component {
     var student = document.getElementById("students"+index)
     var guide = document.getElementById("guides"+index)
     var manager = document.getElementById("managers"+index)
+    var BusinessMentor = document.getElementById("BusinessMentor"+index)
     var tester = document.getElementById("testers"+index)
 
 
@@ -103,6 +104,7 @@ class UserApproval extends React.Component {
         guide.checked=false;
         manager.checked=false;
         tester.checked=false;
+        BusinessMentor=false;
 
     }
     else if(e.target === guide) {
@@ -110,20 +112,32 @@ class UserApproval extends React.Component {
         guide.checked=true;
         manager.checked=false;
         tester.checked=false;
+        BusinessMentor=false;
 
     }
+    /////
+    else if(e.target === BusinessMentor) {
+        student.checked=false;
+        guide.checked=false;
+        manager.checked=false;
+        tester.checked=false;
+        BusinessMentor=true;
+
+    }
+    /////
     else if(e.target === manager) {
         student.checked=false;
         guide.checked=false;
         manager.checked=true;
         tester.checked=false;
-
+        BusinessMentor=false;
     }
     else {
         student.checked=false;
         guide.checked=false;
         manager.checked=false;
         tester.checked=true;
+        BusinessMentor=false;
     }
 }
 render() {
@@ -313,7 +327,8 @@ render() {
                             {
                                 (user.type === "students") ?
                                     (<b> תפקיד: חניך </b>):(user.type === "guides")?
-                                    (<b> תפקיד: מדריך </b>):(user.type === "managers")?
+                                    (<b> תפקיד: מדריך </b>):(user.type === "BusinessMentor")?
+                                    (<b> תפקיד: מנחה עסקי </b>):(user.type === "managers")?
                                         (<b> תפקיד: מנהל </b>):(<b> תפקיד: בודק </b>)
 
                             }
@@ -349,6 +364,19 @@ render() {
                                 </label>
                             </div>
                         </Grid>
+                        ////////
+                        <Grid item xs={3}>
+                            <div>
+
+                                <label>
+                                    <input id ={"BusinessMentor"+index} type="radio" value="BusinessMentor"  onClick={e => {
+                                        this.radio(e,index,user)
+                                    }}/>
+                                    מנחה עסקי
+                                </label>
+                            </div>
+                        </Grid>
+                        /////
                         <Grid item xs={3}>
                             <div>
 
