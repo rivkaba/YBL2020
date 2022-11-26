@@ -181,13 +181,24 @@ class SignUp extends React.Component {
                                 </label>
                             </div>
                         </Grid>
-                        <Grid item xs={6}>
+                      
+                         <Grid item xs={6}>
                             <div>
 
                                 <label>
                                     <input type="radio" value="guides" checked={this.state.type==='guides'} onChange={e =>
                                         this.setState({type:e.target.value})}/>
                                     מדריך
+                                </label>
+                            </div>
+                        </Grid>
+                          <Grid item xs={6}>
+                            <div>
+
+                                <label>
+                                    <input type="radio" value="BusinessMentor" checked={this.state.type==='BusinessMentor'} onChange={e =>
+                                        this.setState({type:e.target.value})}/>
+                                   מנחה עסקי
                                 </label>
                             </div>
                         </Grid>
