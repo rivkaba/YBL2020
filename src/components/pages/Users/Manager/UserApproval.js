@@ -393,7 +393,7 @@ render() {
 
                                 <label>
                                     <input id ={"testers"+index} type="radio" value="testers"  onClick={e => {
-                                        this.radio(e,index,user)
+                                        this.radio(e,index,user) 
                                     }}/>
                                     בודק
                                 </label>

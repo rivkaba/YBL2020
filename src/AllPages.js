@@ -7,6 +7,7 @@ import resetPassword from './components/pages/Login/resetPassword';
 
 import UserPage from "./components/pages/Users/UserPage";
 import Students from './components/pages/Users/Student/Students';
+import BusinessMentor from './components/pages/Users/BusinessMentor/BusinessMentor';
 import Guides from "./components/pages/Users/Guide/Guide";
 import Managers from './components/pages/Users/Manager/Manager';
 import test_g_a_r from "./components/pages/Users/Guide/test_g_a_r";
@@ -65,6 +66,12 @@ function LoadPage() {
                     <Route exact path="/Guide/:id/:404" component={notFound} />
                     <Route exact path="/Guide/:id/:page/:404" component={notFound} />
 
+                    
+                    <Route exact path="/BusinessMentor/:id" component={BusinessMentor} />
+                    <Route exact path="/BusinessMentor/:id/profile" component={Profile} />
+                    <Route exact path="/BusinessMentor/:id/:404" component={notFound} />
+                    <Route exact path="/BusinessMentor/:id/:page/:404" component={notFound} />
+
 
                     <Route exact path="/Manager/:id" component={Managers} />
                     <Route exact path="/Manager/:id/UserApproval" component={UserApproval} />
@@ -92,6 +99,9 @@ function LoadPage() {
                     <Route exact path="/TempGuide/Feedback" component={GuideFeedback} />
                     <Route exact path="/TempGuide/profile" component={Profile} />
 
+
+                    
+               
 
                     {/*managers pages*/}
                     <Route exact path="/TempManager" component={TempManager} />
