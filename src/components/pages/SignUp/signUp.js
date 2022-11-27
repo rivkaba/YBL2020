@@ -173,7 +173,6 @@ class SignUp extends React.Component {
 
                         <Grid item xs={6}>
                             <div>
-
                                 <label>
                                     <input type="radio" value="students" checked={this.state.type==='students'}  onChange={e =>
                                         this.setState({type:e.target.value})}/>
@@ -194,7 +193,6 @@ class SignUp extends React.Component {
                         </Grid>
                           <Grid item xs={6}>
                             <div>
-
                                 <label>
                                     <input type="radio" value="BusinessMentor" checked={this.state.type==='BusinessMentor'} onChange={e =>
                                         this.setState({type:e.target.value})}/>

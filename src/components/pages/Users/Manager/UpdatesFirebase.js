@@ -100,7 +100,7 @@ class UpdatesFirebase extends Component {
                     user.data().teamName,
 
                 ],)
-                    }
+                }
                 return user
             })
         }
@@ -136,47 +136,47 @@ class UpdatesFirebase extends Component {
                         user.data().teamName,
 
                     ],)
-                        }
+                    }
                     return user
                 })
             }
-        }
+        
         //////////
-        else
-        {
-            csvStudentsData = [
-                [
-                    "שם פרטי",
-                    "שם משפחה",
-                    "ת.ז",
-                    "טלפון",
-                    "מייל",
-                    "תפקיד",
-                    "קבוצה",
-                ],
-            ];
-            users.map(user=>{
-                if(user) {
-                    csvStudentsData.push([
-                        user.data().fname,
-                        user.data().lname,
-                        user.data().ID,  
-                        user.data().phone.substr(0, 2) + "-" + user.data().phone.substr(3, user.data().phone.length),
-                        user.data().email,
-                        user.data().type === 'testers' ? 'בודק' :
-                            user.data().type === 'managers' ? "מנהל" :
-                                user.data().type === 'guides' ? "מדריך" :
-                                      user.data().type==='BusinessMentor'?"מנחה עסקי":
-                                            user.data().type === 'students' ? "חניך" : "",
-                        user.data().teamName,
+            else
+            {
+                csvStudentsData = [
+                    [
+                        "שם פרטי",
+                        "שם משפחה",
+                        "ת.ז",
+                        "טלפון",
+                        "מייל",
+                        "תפקיד",
+                        "קבוצה",
+                    ],
+                ];
+                users.map(user=>{
+                    if(user) {
+                        csvStudentsData.push([
+                            user.data().fname,
+                            user.data().lname,
+                            user.data().ID,  
+                            user.data().phone.substr(0, 2) + "-" + user.data().phone.substr(3, user.data().phone.length),
+                            user.data().email,
+                            user.data().type === 'testers' ? 'בודק' :
+                                user.data().type === 'managers' ? "מנהל" :
+                                    user.data().type === 'guides' ? "מדריך" :
+                                          user.data().type==='BusinessMentor'?"מנחה עסקי":
+                                                user.data().type === 'students' ? "חניך" : "",
+                            user.data().teamName,
 
-                    ],)
-                }
-                return user
-            })
+                        ],)
+                    }
+                    return user
+                })
 
+            }
         }
-
     }
 
 

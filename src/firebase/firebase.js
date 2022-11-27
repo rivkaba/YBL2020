@@ -87,12 +87,14 @@ export async function CreateUser(user) {
         await db.collection("students").doc(user.uid).set(user)
         await db.collection("guides").doc(user.uid).set(user)
         await db.collection("managers").doc(user.uid).set(user)
+        await db.collection("BusinessMentor").doc(user.uid).set(user)
     }
     await  db.collection(user.type).doc(user.uid).set(user)
     var team=await db.collection('Teams').doc(user.team.id);
     team.set({
         name: user.teamName,
         guide: db.doc('guides/'+user.uid)
+        /////BusinessMentor: db.doc('BusinessMentor/'+user.uid)
     })
 
     await db.collection("waitforapproval").doc(user.email).delete();
@@ -122,7 +124,7 @@ export async function signOut() {
    await auth.signOut();
     return
 }
-
+//Guide
 export async function getGuide(uid) {
     var guide = await db.collection("guides").doc(uid);
     // console.log(guide);
@@ -157,7 +159,34 @@ export async function getGuideForms(uid) {
     // console.log(forms);
     return forms;
 }
+///end guides
+//BusinessMentor
+export async function getBusinessMentor(uid) {
+    var BusinessMentor = await db.collection("BusinessMentor").doc(uid);
+    return BusinessMentor;
+}
 
+export async function getBusinessMentoreData(uid) {
+    var BusinessMentorData = await (await db.collection("BusinessMentor").doc(uid).get()).data();
+    return BusinessMentorData;
+}
+
+/*export async function getBusinessMentorFormByDate(uid, date) {
+    var BusinessMentorData = await (await db.collection("BusinessMentor").doc(uid).collection("comes").doc(date).get()).data();
+    return BusinessMentorData;
+}
+
+
+export async function getBusinessMentorForms(uid) {
+    var forms = [];
+    var BusinessMentorData = await db.collection("BusinessMentor").doc(uid).collection("comes").get();
+    BusinessMentorData.docs.forEach(doc=>{
+        forms.push(doc.data());
+    })
+    return forms;
+}*/
+///end BusinessMentor
+//Student
 export async function getStudent(uid) {
     var student = await db.collection("students").doc(uid);
     // console.log(student);
@@ -189,11 +218,12 @@ export async function getStudentForms(uid) {
     return forms;
 }
 
-
+//////end Student
 export async function getUser(user)
 {
     var testers = await db.collection('testers').doc(user.uid).get()
     var guides = await db.collection('guides').doc(user.uid).get()
+    var BusinessMentor = await db.collection('BusinessMentor').doc(user.uid).get()
     var students = await db.collection('students').doc(user.uid).get()
     var managers = await db.collection('managers').doc(user.uid).get()
     var wait = await db.collection('waitforapproval').doc(user.uid).get()
@@ -208,6 +238,8 @@ export async function getUser(user)
         return 'Manager'
     else if(guides.exists)
         return 'Guide'
+    else if(BusinessMentor.exists)
+        return 'BusinessMentor'
     else if(students.exists)
         return 'Student'
     else
@@ -231,6 +263,7 @@ export async function getTeamFeedbackByDate(teamPath,date) {
     console.log(teamPath);
     if(team === undefined)
     {
+        ////// BusinessMentor  alert("לא נמצא מדריך עסקי לקבוצה")
 
         alert("לא נמצא מדריך לקבוצה")
     }
