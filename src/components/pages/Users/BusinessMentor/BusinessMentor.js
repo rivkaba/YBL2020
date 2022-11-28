@@ -13,7 +13,7 @@ class BusinessMentor extends React.Component {
 
 
         this.state = {
-            spinner: [true,'נא להמתין הדף נטען'],
+            spinner: [true,'Please wait, the page is loading'],
             page:'menu',
             user: props.location,
             error:false,
@@ -29,7 +29,7 @@ class BusinessMentor extends React.Component {
                 q2:"",
                 q3:"",
                 q4:"",
-                q5:"",
+                q5:"", 
                 q6:"",
                 q7:"",
                 q8:"",
@@ -120,6 +120,11 @@ if(this.state.loadPage) {
             <h2>Hello {this.state.user.displayName} </h2>
             {/*<h2>Hello Guide {this.state.user.email} </h2>*/}
             <div id="instructor_menu" className="form-design" name="student_form" method="POST">
+                <button id="feedback-button" className="btn btn-info" onClick={() => {
+                   this.ChangePage("Feedbacks/Guides")
+                      return
+                }}>צפייה במשובי מדריכים<span
+                    className="fa fa-arrow-right"></span></button>
                 <button id="report-button" className="btn btn-info" onClick={() => {
                     NextPage(this.props, "Profile", this.state.user)
                 }}>update profile or password<span
@@ -171,6 +176,15 @@ if(this.state.loadPage) {
             pathname: `/${page}/${this.state.user.uid}`,
             data: this.state.user // your data array of objects
         })
+    }
+    
+    ChangePage(path) {
+
+        this.props.history.push({
+            pathname: `${this.props.location.pathname}/${path}`,
+            data: this.state.user
+        })
+
     }
 
 }

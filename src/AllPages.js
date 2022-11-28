@@ -26,6 +26,7 @@ import FeedbackStudents from "./components/pages/Users/Manager/mngStudFeedback";
 import FeedbackGuides from "./components/pages/Users/Manager/mngGuideFeedback";
 import UpdatesFirebase from "./components/pages/Users/Manager/UpdatesFirebase";
 import StudentFeedback from "./components/pages/Users/Student/stud_feedback";
+import bmGuideFeedback from "./components/pages/Users/BusinessMentor/bmGuideFeedback";
 import Profile from "./components/pages/Users/profile";
 import GuideReports from "./components/pages/Users/Guide/guide_attend_report";
 import GuideFeedback from "./components/pages/Users/Guide/guide_feedback";
@@ -68,6 +69,7 @@ function LoadPage() {
 
                     
                     <Route exact path="/BusinessMentor/:id" component={BusinessMentor} />
+                    <Route exact path="/BusinessMentor/:id/Feedbacks/Guides" component={bmGuideFeedback} />
                     <Route exact path="/BusinessMentor/:id/profile" component={Profile} />
                     <Route exact path="/BusinessMentor/:id/:404" component={notFound} />
                     <Route exact path="/BusinessMentor/:id/:page/:404" component={notFound} />

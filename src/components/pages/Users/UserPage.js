@@ -120,6 +120,7 @@ class UserPage extends React.Component {
 
                             <button onClick={() => this.loadUser("Student")}>Enter Student</button>
                             <button onClick={() => this.loadUser("Guide")}>Enter Guide</button>
+                            <button onClick={() => this.loadUser("BusinessMentor")}>Enter BusinessMentor</button>
                             <button onClick={() => this.loadUser("Manager")}>Enter Manager</button>
                             <button onClick={() => this.loadTempPage("TempStudent")}>Enter TempStudent</button>
                             <button onClick={() => this.loadTempPage("TempGuide")}>Enter TempGuide</button>
