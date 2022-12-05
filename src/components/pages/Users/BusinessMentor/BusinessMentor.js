@@ -123,7 +123,7 @@ if(this.state.loadPage) {
                 <button id="feedback-button" className="btn btn-info" onClick={() => {
                    this.ChangePage("Feedbacks/Guides")
                       return
-                }}>צפייה במשובי מדריכים<span
+                }}>Viewing instructor feedback<span
                     className="fa fa-arrow-right"></span></button>
                 <button id="report-button" className="btn btn-info" onClick={() => {
                     NextPage(this.props, "Profile", this.state.user)

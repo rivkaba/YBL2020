@@ -16,10 +16,13 @@ class bmGuideFeedback extends Component {
         super(props);
         this.state =
             {
+                user: props.location,
                 isLoaded:false,
                 show:false,
                 loadPage:false,
                 spinner: [true,'נא להמתין הדף נטען'],
+                team: {},
+                show: false
             }
     }
 
@@ -30,7 +33,37 @@ class bmGuideFeedback extends Component {
         this.loadSpinner(true,"מיבא נתוני קבוצה")
         var from = this.GetDates(this.state.dateFrom)
         var to = this.GetDates(this.state.dateTo)
+       // var team = (await db.collection("BusinessMentor").doc(auth.currentUser.uid).get()).data().team
+       
+       var teamName = (await db.collection("BusinessMentor").doc(auth.currentUser.uid).get()).data().teamName;
+ 
+       /*   var team = await db.collection("Teams").where("name",'==',teamName).get()
+       console. log(team. id, " => ", team. data())
+       alert(teamName)*/
+       ////
+       var options = [];
+       this.setState({options: options})
+       var team = {};
+       await db.collection("Teams").where("name", "==", teamName)
+         .get()
+         .then(function(querySnapshot) {
+             console.log('querySnapshot', querySnapshot)
+            querySnapshot.forEach(function(doc) {
+            team['teamID'] = doc.id;
+            team['teamName'] = teamName
+           
+          });
+         })
+         this.setState({team: team})
 
+         var name = await db.collection("Teams").where("name", "==", teamName).get();
+   
+       ////
+      // var doc1= await db.collection("Teams").doc(team.id).get()
+     
+     
+       // this.setState({team:team,teamName:teamName})
+         
         if(!this.state.dateFrom || !this.state.dateTo )
         {
             alert("נא למלא תאריך התחלה וסיום")
@@ -38,47 +71,62 @@ class bmGuideFeedback extends Component {
             return
         }
 
-        var options=[]
-        this.setState({options:options,show:false})
-        var nameTeams = await db.collection("Teams")
+       
+      /*  var nameTeams = await db.collection("Teams")
             .orderBy('name','asc')
-            .get()
+            .get()*/
 
-
+            console.log('name',name)
+            console.log('this.state.team.teamID',this.state.team.teamID)
 
         // console.log("in 1")
-        var Teamcollection = nameTeams.docs.map( async function(doc) {
-            // console.log("in 2")
-            var dates = await db.collection("Teams").doc(doc.id).collection("Dates")
+       var Teamcollection = async () => {
+           // var dates = await db.collection("Teams").doc(team.id).collection("Dates")
+           var dates = await db.collection("Teams").docs(this.state.team.teamID).collection("Dates")
                 .where('date','>=',from)
                 .where('date','<=',to)
                 .get()
 
+                console.log('dates',dates)
+
             if(!dates.empty)
-            {
+            { 
+                alert("bbbbb");
                 var forms=[]
+                console.log('DATES',dates)
                 dates.forEach(async function(doc){
-                    if(doc.data().reportGuide)
+                    if(doc.data().reportGuide0)
                     {
                         var FormsGuide = await getPathData(doc.data().reportGuide.path)
                         forms.push(FormsGuide)
                     }
                 })
-                return [doc,dates,forms]
+              
+                
+                return [team,dates,forms]
             }
 
-        })
+        }
 
-        Promise.all(Teamcollection).then(res => {
+        var teamCollectionResult = await Teamcollection();
+       ///
+       console.log('teamcollection', teamCollectionResult)
+
+       
+ /*       Promise(Teamcollection).then(res => {
             res.forEach(item=>{
                 // console.log("in 3")
                 if(item)
                     options.push({ value: item, label:  item[0].data().name})
+                
             })
             this.setState({options:options})
             // console.log("in 4")
             this.loadSpinner(false,"")
-        })
+        })*/
+       ////
+
+        
 
     }
 
@@ -173,6 +221,9 @@ class bmGuideFeedback extends Component {
     }
 
     render() {
+
+        console.log('this.state',this.state)
+
         if(this.state.loadPage){
         return(
             <div>
@@ -213,33 +264,17 @@ class bmGuideFeedback extends Component {
                                            }}
                                            required/>
                                 </Grid>
-
-
-                                <Grid item xs={2} hidden={!this.state.dateTo || !this.state.dateFrom}>
+                                 <Grid item xs={2} hidden={!this.state.dateTo || !this.state.dateFrom}>
                                     <label id="insert-student" className="title-input" htmlFor="name"> &nbsp;</label>
                                     <button id="viewReport" className="btn btn-info" onClick={()=>{
                                         this.GetTeams()
                                     }}>מצא קבוצות<span
                                         className="fa fa-arrow-right"></span></button>
-                                </Grid>
-
-                                <Grid item xs={6} hidden={!this.state.options}>
-                                    <Select id = 'select'  placeholder={" בחר קבוצה "} options={this.state.options} onChange={(e)=>{
-                                        // console.log(e.label,e.value);
-                                        this.setState({team:e.value,teamName:e.label})
-                                    }} required/>
-                                </Grid>
-                                <Grid item xs={3} hidden={!this.state.options}>
-                                    <label id="insert-student" className="title-input" htmlFor="name"> &nbsp;</label>
-                                    {
-                                        !this.state.teamName?"לא נבחרה קבוצה": this.state.teamName
-                                    }
-
-                                </Grid>
-                                <Grid item xs={3}  hidden={!this.state.teamName}>
+                                 </Grid>
+                                    <Grid item xs={3}  hidden={!this.state.team.teamName}>
                                     <button id="viewReport" className="btn btn-info" onClick={()=>{
-                                        this.setState({show:!this.state.show, forms:this.state.team[1].docs, reportGuide:this.state.team[2]})
-                                        this.createCsvFile(this.state.team[1].docs, this.state.team[2])
+                                        this.setState({show:!this.state.show, forms:this.state.team.team[1].docs, reportGuide:this.state.team[2]})
+                                        this.createCsvFile(this.state.team.team[1].docs, this.state.team.team[2])
                                     }}>{!this.state.show?("הצג דו\"ח מפגשים"):("הסתר דו\"ח מפגשים")}<span
                                         className="fa fa-arrow-right"></span></button>
                                 </Grid>
@@ -432,23 +467,6 @@ class bmGuideFeedback extends Component {
         parsDate.setFullYear(date["year"],date["month"]-1,date["day"])
 
         return parsDate;
-
-        // var toDate = this.parser(to)
-        // to = new Date()
-        // to.setFullYear(toDate["year"],toDate["month"]-1,toDate["day"]+1)
-        // if(fromDate["year"]>toDate["year"]){
-        //     alert("התאריך מ גדול מהתאירך עד")
-        //     return
-        // }
-        // if(fromDate["year"]===toDate["year"] && fromDate["month"]>toDate["month"]){
-        //     alert("התאריך מ גדול מהתאירך עד")
-        //     return
-        // }
-        // if(fromDate["year"]===toDate["year"] && fromDate["month"]===toDate["month"] && fromDate["day"]>toDate["day"]){
-        //     alert("התאריך מ גדול מהתאירך עד")
-        //     return
-        // }
-
     }
 
     loadUser(page)
@@ -480,3 +498,11 @@ class bmGuideFeedback extends Component {
 
 
 export default bmGuideFeedback;
+
+
+
+
+
+
+
+  

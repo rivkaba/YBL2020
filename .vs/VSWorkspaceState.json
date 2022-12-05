@@ -1,6 +1,16 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\src",
+    "\\src\\components",
+    "\\src\\components\\pages",
+    "\\src\\components\\pages\\LoadingPages",
+    "\\src\\components\\pages\\Users",
+    "\\src\\components\\pages\\Users\\BusinessMentor",
+    "\\src\\components\\pages\\Users\\Guide",
+    "\\src\\components\\pages\\Users\\Manager",
+    "\\src\\components\\pages\\Users\\Student"
   ],
+  "SelectedNode": "\\src\\components\\pages\\Users\\Manager\\UpdatesFirebase.js",
   "PreviewInSolutionExplorer": false
 }

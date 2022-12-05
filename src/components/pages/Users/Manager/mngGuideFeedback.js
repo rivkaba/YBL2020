@@ -44,8 +44,6 @@ class FeedbackGuide extends Component {
             .orderBy('name','asc')
             .get()
 
-
-
         // console.log("in 1")
         var Teamcollection = nameTeams.docs.map( async function(doc) {
             // console.log("in 2")
@@ -74,6 +72,7 @@ class FeedbackGuide extends Component {
                 // console.log("in 3")
                 if(item)
                     options.push({ value: item, label:  item[0].data().name})
+                
             })
             this.setState({options:options})
             // console.log("in 4")

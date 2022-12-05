@@ -353,7 +353,7 @@ class UpdatesFirebase extends Component {
                         </div>
 
                     </Grid>
-                    ///////////////
+                    
                      <Grid item xs={12}>
                         <div className="text-below-image">
                             <button onClick={()=>{
@@ -401,7 +401,7 @@ class UpdatesFirebase extends Component {
                         </div>
 
                     </Grid>
-                    //////////
+                  
                     <Grid item xs={12}>
                         <div className="text-below-image">
                             <button onClick={()=>{
