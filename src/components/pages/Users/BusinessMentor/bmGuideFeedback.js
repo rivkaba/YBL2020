@@ -26,9 +26,6 @@ class bmGuideFeedback extends Component {
             }
     }
 
-
-
-
     async  GetTeams() {
         this.loadSpinner(true,"מיבא נתוני קבוצה")
         var from = this.GetDates(this.state.dateFrom)
@@ -47,7 +44,6 @@ class bmGuideFeedback extends Component {
        await db.collection("Teams").where("name", "==", teamName)
          .get()
          .then(function(querySnapshot) {
-             console.log('querySnapshot', querySnapshot)
             querySnapshot.forEach(function(doc) {
             team['teamID'] = doc.id;
             team['teamName'] = teamName
@@ -57,12 +53,9 @@ class bmGuideFeedback extends Component {
          this.setState({team: team})
 
          var name = await db.collection("Teams").where("name", "==", teamName).get();
-   
-       ////
-      // var doc1= await db.collection("Teams").doc(team.id).get()
+         console.log('name123',name)
      
-     
-       // this.setState({team:team,teamName:teamName})
+        // this.setState({team:team,teamName:teamName})
          
         if(!this.state.dateFrom || !this.state.dateTo )
         {
@@ -76,58 +69,78 @@ class bmGuideFeedback extends Component {
             .orderBy('name','asc')
             .get()*/
 
-            console.log('name',name)
-            console.log('this.state.team.teamID',this.state.team.teamID)
-
+    
         // console.log("in 1")
-       var Teamcollection = async () => {
            // var dates = await db.collection("Teams").doc(team.id).collection("Dates")
-           var dates = await db.collection("Teams").docs(this.state.team.teamID).collection("Dates")
+        //    var forms=[]
+        //    var dates = await db.collection("Teams").doc('6BUhM6JuYzjRVHhJr6Vu').collection("Dates")
+        //         .where('date','>=',from)
+        //         .where('date','<=',to)
+        //         .get()
+
+        //     console.log('dates',dates)
+
+        //     if(!dates.empty)
+        //     { 
+        //         // alert("bbbbb");
+        //         // var forms=[]
+        //         console.log('DATES',dates)
+        //         dates.forEach(async function(doc){
+        //             if(doc.data().reportGuide0)
+        //             {
+        //                 var FormsGuide = await getPathData(doc.data().reportGuide.path)
+        //                 forms.push(FormsGuide)
+        //             }
+        //         })
+                
+        //         // return [team,dates,forms]
+        //     }
+        //     console.log('team',team)
+        //     console.log('dates',dates)
+        //     console.log('forms',forms)
+          
+
+        console.log('name',name)
+        var Teamcollection = name.docs.map( async function(doc) {
+            // console.log("in 2")
+            var dates = await db.collection("Teams").doc(doc.id).collection("Dates")
                 .where('date','>=',from)
                 .where('date','<=',to)
                 .get()
 
-                console.log('dates',dates)
-
             if(!dates.empty)
-            { 
-                alert("bbbbb");
+            {
                 var forms=[]
-                console.log('DATES',dates)
                 dates.forEach(async function(doc){
-                    if(doc.data().reportGuide0)
+                    if(doc.data().reportGuide)
                     {
                         var FormsGuide = await getPathData(doc.data().reportGuide.path)
                         forms.push(FormsGuide)
                     }
                 })
-              
-                
-                return [team,dates,forms]
+                return [doc,dates,forms]
             }
 
-        }
+        })
 
-        var teamCollectionResult = await Teamcollection();
-       ///
-       console.log('teamcollection', teamCollectionResult)
 
-       
- /*       Promise(Teamcollection).then(res => {
+
+        Promise.all(Teamcollection).then(res => {
             res.forEach(item=>{
                 // console.log("in 3")
                 if(item)
                     options.push({ value: item, label:  item[0].data().name})
                 
             })
+            console.log('options123',options)
             this.setState({options:options})
+            this.setState({team:options[0].value,teamName:options[0].label})
+
             // console.log("in 4")
             this.loadSpinner(false,"")
-        })*/
-       ////
+        })
 
-        
-
+   
     }
 
 
@@ -271,10 +284,10 @@ class bmGuideFeedback extends Component {
                                     }}>מצא קבוצות<span
                                         className="fa fa-arrow-right"></span></button>
                                  </Grid>
-                                    <Grid item xs={3}  hidden={!this.state.team.teamName}>
+                                    <Grid item xs={3}  hidden={!this.state.teamName}>
                                     <button id="viewReport" className="btn btn-info" onClick={()=>{
-                                        this.setState({show:!this.state.show, forms:this.state.team.team[1].docs, reportGuide:this.state.team[2]})
-                                        this.createCsvFile(this.state.team.team[1].docs, this.state.team.team[2])
+                                        this.setState({show:!this.state.show, forms:this.state.team[1].docs, reportGuide:this.state.team[2]})
+                                        this.createCsvFile(this.state.team[1].docs, this.state.team[2])
                                     }}>{!this.state.show?("הצג דו\"ח מפגשים"):("הסתר דו\"ח מפגשים")}<span
                                         className="fa fa-arrow-right"></span></button>
                                 </Grid>
@@ -502,7 +515,3 @@ export default bmGuideFeedback;
 
 
 
-
-
-
-  

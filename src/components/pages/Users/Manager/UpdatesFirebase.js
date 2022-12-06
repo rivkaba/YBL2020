@@ -650,7 +650,7 @@ class UpdatesFirebase extends Component {
                         guidesOptions.push({value: res, label: res.data().fname + ' ' + res.data().lname})
 
                     } else if (user === 'guidesEmpty' /*&& !res.data().team*/) {
-                        if(!res.data().team)
+                        if(!res.data().team )//////////////////////////////////////////////////////////
                         {
                             allUsers.push(res)
                             emptyGuidesOptions.push({value: res, label: res.data().fname + ' ' + res.data().lname})

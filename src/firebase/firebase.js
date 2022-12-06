@@ -89,15 +89,26 @@ export async function CreateUser(user) {
         await db.collection("managers").doc(user.uid).set(user)
         await db.collection("BusinessMentor").doc(user.uid).set(user)
     }
-    await  db.collection(user.type).doc(user.uid).set(user)
-    var team=await db.collection('Teams').doc(user.team.id);
-    team.set({
-        name: user.teamName,
-        guide: db.doc('guides/'+user.uid)
-        /////BusinessMentor: db.doc('BusinessMentor/'+user.uid)
-    })
-
-    await db.collection("waitforapproval").doc(user.email).delete();
+    else{    
+        if(user.type==="guides") {
+            var team=await db.collection('Teams').doc(user.team.id);
+                team.set({
+                    name: user.teamName,
+                    guide: db.doc('guides/'+user.uid)
+                })
+        }
+    
+   /* else{    
+        if(user.type==="BusinessMentor") {
+            var team=await db.collection('Teams').doc(user.team.id);
+                team.set({
+                    name: user.teamName,
+                    BusinessMentor: db.doc('BusinessMentor/'+user.uid)
+        })
+        }    
+    }*/
+   }
+   await  db.collection(user.type).doc(user.uid).set(user)
     await DeleteUser(user.uid)
     console.log("done the user is ready")
     return true;
@@ -217,6 +228,7 @@ export async function getStudentForms(uid) {
     // console.log(forms);
     return forms;
 }
+
 
 //////end Student
 export async function getUser(user)
