@@ -680,10 +680,13 @@ class UpdatesFirebase extends Component {
                 } else if (user === 'teamEmpty' && !res.data().guide) {
                     allUsers.push(res)
                     emptyTeamOptions.push({value: res, label: res.name})
+                    emptyTeamOptions.sort((a, b) =>(a.label > b.label) ? 1 : -1)
+
 
                 } else if (user === 'Teams' && res.data().guide) {
                     allUsers.push(res)
                     TeamOptions.push({value: res, label: res.name})
+                    TeamOptions.sort((a, b) =>(a.label > b.label) ? 1 : -1)
                 }
             })
         })
@@ -751,9 +754,10 @@ class UpdatesFirebase extends Component {
                     this.render()
                     this.setState({loadPage:true})
                     this.loadSpinner(true,"מיבא קבוצות")
-                    var nameTeams =  await db.collection("Teams").get();
+                    var nameTeams =  await db.collection("Teams").where("old", "==",false).get();
                     nameTeams.forEach(doc=>{
                         options.push({ value: doc.ref, label: doc.data().name })
+                        options.sort((a, b) =>(a.label > b.label) ? 1 : -1)
                     })
                     this.loadSpinner(false,"")
                     return

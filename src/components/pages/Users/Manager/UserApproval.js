@@ -58,11 +58,11 @@ class UserApproval extends React.Component {
                     });
                     this.setState({users: usersList});
 
-                    var nameTeams =  await db.collection("Teams").get();
+                    var nameTeams =  await db.collection("Teams").where("old", "==",false).get();
                     nameTeams.forEach(doc=>{
                         options.push({ value: doc.ref, label: doc.data().name })
                     })
-
+                    options.sort((a, b) =>(a.label > b.label) ? 1 : -1)
                     this.loadSpinner(false,"")
 
                     return

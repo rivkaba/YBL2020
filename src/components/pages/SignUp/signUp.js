@@ -31,16 +31,17 @@ class SignUp extends React.Component {
 
 
     async  GetTeams() {
-        // console.log("בדיקה")
+         console.log("בדיקה")
 
         if (!op) {
             op=true
-            var nameTeams = await db.collection("Teams")
-                .orderBy('name','asc')
+            var nameTeams = await db.collection("Teams").where("old", "==",false)
+            //.orderBy('name','asc')
                 .get()
-            // console.log(nameTeams)
+           // console.log(nameTeams)
             nameTeams.forEach(doc => {
                 options.push({value: doc.ref, label: doc.data().name})
+                options.sort((a, b) =>(a.label > b.label) ? 1 : -1)
             })
             // console.log(options)
 

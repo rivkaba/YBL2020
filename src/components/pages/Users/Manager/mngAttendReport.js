@@ -151,9 +151,10 @@ if(this.state.loadPage){
                     this.render()
                     this.setState({loadPage:true})
                     this.loadSpinner(true,"מיבא נתוני משתמש")
-                    var nameTeams =  await db.collection("Teams").get();
+                    var nameTeams =  await db.collection("Teams").where("old", "==",false).get();
                     nameTeams.forEach(doc=>{
                         options.push({ value: doc.ref, label: doc.data().name })
+                        options.sort((a, b) =>(a.label > b.label) ? 1 : -1)
                     })
                     this.loadSpinner(false,"")
                     return

@@ -167,8 +167,8 @@ class FeedbackStudents extends Component {
 
         var options=[]
         this.setState({options:options,show:false})
-        var nameTeams = await db.collection("Teams")
-            .orderBy('name','asc')
+        var nameTeams = await db.collection("Teams").where("old", "==",false)
+           // .orderBy('name','asc')
             .get()
 
 
@@ -189,8 +189,10 @@ class FeedbackStudents extends Component {
         Promise.all(Teamcollection).then(res => {
             res.forEach(item=>{
                 // console.log("in 3")
-                if(item)
+                if(item){
                     options.push({ value: item, label:  item[0].data().name})
+                    options.sort((a, b) =>(a.label > b.label) ? 1 : -1)
+                }
             })
             this.setState({options:options})
             // console.log("in 4")
