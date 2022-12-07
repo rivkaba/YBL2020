@@ -19,14 +19,14 @@ class StudentFeedback extends React.Component {
             page:'menu',
             rule:"Student",
             date:'',
+            isFeedbackError: false,
             form:{
                 canUpdate : true,
+                feedback: '',
             },
             searchTerm:"",
             searchResults:[],
-
-
-
+            
             search: true,
             searchQuery: null,
             value1: [],
@@ -39,8 +39,6 @@ class StudentFeedback extends React.Component {
 
         this.handleChange1 = (e, { value }) => this.setState({ value })
         this.handleSearchChange1 = (e, { searchQuery }) => this.setState({ searchQuery })
-
-
 
         this.handleSubmit = this.handleSubmit.bind(this)
         this.handleChange = this.handleChange.bind(this)
@@ -126,18 +124,19 @@ class StudentFeedback extends React.Component {
         {
             form = this.state.form
             form[name] = value;
-            // this.setState({form:form})
-            // this.state.form = form
             this.setState({form:form})
         }
-
-
-
     }
 
     handleSubmit(event)
     {
-        this.sendDataToFirebase(this.state.form)
+
+        if (this.state.form.feedback == '') {
+            this.setState({isFeedbackError: true})
+            return;
+        } else {
+            this.sendDataToFirebase(this.state.form)
+        }
 
 
     }
@@ -224,7 +223,11 @@ class StudentFeedback extends React.Component {
         })
     }
 
+
     render() {
+
+        console.log('this.state RENDER',this.state)
+
         if(this.state.loadPage)
         {
         return (<div>
@@ -360,7 +363,11 @@ class StudentFeedback extends React.Component {
                         {/*        </div>*/}
                         {/*    }*/}
                         {/*</Grid>*/}
-                        <input type="text" className="form-control" name="feedback" id="Q4" placeholder="התשובה שלך"
+                        <input type="text" className="form-control" 
+                        style={this.state.isFeedbackError == true ? { border: '2px solid red' } : { border: '' } }
+
+                        
+                        name="feedback" id="Q4" placeholder="התשובה שלך"
                                minLength="10" onChange={this.handleChange} required/>
                     </div>
                 </div>
