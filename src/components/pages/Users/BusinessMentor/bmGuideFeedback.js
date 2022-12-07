@@ -1,4 +1,4 @@
-import  React, {Component} from "react";
+ import  React, {Component} from "react";
 import Grid from "@material-ui/core/Grid";
 import Select from "react-select";
 import {auth, db, getPathData, getUser} from "../../../../firebase/firebase";

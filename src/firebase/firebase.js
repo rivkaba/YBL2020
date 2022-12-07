@@ -231,7 +231,6 @@ export async function getTeamFeedbackByDate(teamPath,date) {
     console.log(teamPath);
     if(team === undefined)
     {
-        ////// BusinessMentor  alert("לא נמצא מדריך עסקי לקבוצה")
 
         alert("לא נמצא מדריך לקבוצה")
     }
@@ -241,15 +240,12 @@ export async function getTeamFeedbackByDate(teamPath,date) {
     return teamFeedback;
 }
 export async function getTeamFeedback(teamPath) {
-    var team = await db.collection("Teams").doc(teamPath).collection("Dates").get();
-    if(team === undefined)
+    var teamFeedback = await db.collection("Teams").doc(teamPath).collection("Dates").get();
+    if(teamFeedback === undefined)
     {
         ////// BusinessMentor  alert("לא נמצא מדריך עסקי לקבוצה")
-
         alert("לא נמצא מדריך לקבוצה")
     } 
-    console.log("team",team[0]);
-    var teamFeedback=team;
-    console.log(teamFeedback);
     return teamFeedback;
 }
+

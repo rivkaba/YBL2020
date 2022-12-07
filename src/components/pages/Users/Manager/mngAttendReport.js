@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import {getTeamFeedback, db, auth, getUser} from "../../../../firebase/firebase";
+import {getTeamFeedback, getTeamFeedbackByDate,db, auth, getUser} from "../../../../firebase/firebase";
 import Select from 'react-select'
 import Grid from "@material-ui/core/Grid";
 import $ from 'jquery'
@@ -7,6 +7,7 @@ import $ from 'jquery'
 import ClipLoader from "react-spinners/ClipLoader";
 
 var options = []
+var optionsDate = []
 class AttendReport extends Component {
 
     constructor(props) {
@@ -20,10 +21,13 @@ class AttendReport extends Component {
                 teamPath:"",
                 loadPage:false,
                 spinner: [true,'נא להמתין הדף נטען'],
-                report:false
+                report:false,
+                report1:false,
+                optionDate:false
             }
             this.handleSubmit = this.handleSubmit.bind(this)
-            this.handleChangeDate = this.handleChangeDate.bind(this)
+            this.handleSubmitFeedbackByDate = this.handleSubmitFeedbackByDate.bind(this)
+           // this.handleChangeDate = this.handleChangeDate.bind(this)
     }
 
     loadSpinner(event,massage){
@@ -59,6 +63,7 @@ if(this.state.loadPage){
                             <Select  placeholder={" בחר קבוצה "} options={options} onChange={(e)=>{
                                 // console.log(e.label,e.value);
                                 this.setState({teamPath:e.value})
+                                optionsDate=[];
                             }} required/>
                             
                               {/*<Route exact path="/"><label id="date" className="title-input">:הכנס את תאריך המפגש</label>
@@ -66,14 +71,31 @@ if(this.state.loadPage){
                         </Grid>
                         <Grid item xs={12}>
                             <div className="text-below-image">
-
+                                <button  onClick={()=>{
+                                    this.GetDates()
+                                    this.setState({optionDate:!this.state.optionDate})
+                                     this.setState({report1:!this.state.report1})
+                                }} >{this.state.report1?"הסתר דוח":"הצג דוח נוחכות לקבוצה זו לפי תאריך "}</button>
+                            </div>
+                        </Grid>
+                        <Grid item xs={12} hidden={!this.state.optionDate}>
+                                    <Select id = 'select'  placeholder={" בחר תאריך "} options={optionsDate} onChange={(e)=>{  
+                                    this.setState({date:e.label,viewStudent:false});
+                                    this.state.date=e.label;
+                                    this.handleSubmitFeedbackByDate(e);
+                                    }} required/>
+                                </Grid>
+                                <Grid item xs={12}  hidden={!this.state.report1}>
+                            <div id="studentList1" ></div>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <div className="text-below-image">
                                 <button onClick={(e)=>{
                                     this.handleSubmit(e)
                                     this.setState({report:!this.state.report})
                                 }} >{this.state.report?"הסתר את כל הדוחות":"הצג את כל הדוחות נוכחות לקבוצה זו "}</button>
-
                             </div>
-                        </Grid>
+                        </Grid> 
                         <Grid item xs={12}  hidden={!this.state.report}>
                             <div id="studentList" ></div>
                         </Grid>
@@ -108,31 +130,27 @@ if(this.state.loadPage){
         </div>)
 }
     }
+    async  GetDates()
+    {
+          var dates =await db.collection("Teams").doc(this.state.teamPath.id).collection("Dates").get()
+          dates.forEach(doc=>{
+                   optionsDate.push({ value: doc.data(), label: doc.id })
+                    
+                        })
+                        console.log( optionsDate)
+    }
     async handleSubmit(event)
     {
         $("#studentList").replaceWith('<div id="studentList">')
         if( !this.state.teamPath) {
-            //!this.state.date ||
             alert("נא לבחור קבוצה להצגה")
             return
         }
-      //  var res= (await getTeamFeedbackByDate(this.state.teamPath.id,this.state.date)).studentsComes
-        var res= await getTeamFeedback(this.state.teamPath.id)//.studentsComes 
+        var res= await getTeamFeedback(this.state.teamPath.id)
         if(!res.empty)
         {
             res.forEach(async function(doc){
                 var date=doc.id;
-                <div className="sweet-loading">
-                        <ClipLoader style={{
-                            backgroundColor: "rgba(255,255,255,0.85)",
-                            borderRadius: "25px"
-                        }}
-                            //   css={override}
-                                    size={120}
-                                    color={"#123abc"}
-
-                        />
-                    </div>
                  var lable=document.createElement("lable");
                     lable.innerHTML = date;
                     var br=document.createElement("br");
@@ -156,6 +174,22 @@ if(this.state.loadPage){
         //     $('#studentList').append(br);
         // }
     }
+
+     async handleSubmitFeedbackByDate(event){
+        $("#studentList1").replaceWith('<div id="studentList1">')
+       var res= (await getTeamFeedbackByDate(this.state.teamPath.id,this.state.date)).studentsComes
+       // var res= await getTeamFeedback(this.state.teamPath.id)
+       if(!res.empty)
+       { 
+             res.forEach(name=>{
+                    var lable=document.createElement("lable");
+                    lable.innerHTML = name;
+                    var br=document.createElement("br");
+                    $('#studentList1').append(lable);
+                    $('#studentList1').append(br);
+                })
+        }
+     }
 
     async componentDidMount() {
         var href =  window.location.href.split("/",5)
@@ -203,7 +237,7 @@ if(this.state.loadPage){
 
     }
 
-    async handleChangeDate(event)
+   /* async handleChangeDate(event)
     {
         var name = event.target.name;
         var value = event.target.value;
@@ -212,7 +246,7 @@ if(this.state.loadPage){
             this.setState({date:value,viewStudent:false});
             this.state.date=value
         }
-    }
+    }*/
 
     loadUser(page)
     {
