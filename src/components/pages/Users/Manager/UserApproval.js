@@ -32,13 +32,17 @@ class UserApproval extends React.Component {
 
     async componentDidMount() {
         var href =  window.location.href.split("/",5)
-        // console.log(href)
+        console.log('href[4],',href[4])
+        console.log('href[3]',href[3])
+    
         auth.onAuthStateChanged(async user=>{
+            console.log('user',user)
             if(user)
             {
 
-                var type = await getUser(user)
-                if(href[4] === user.uid && (href[3] === type||type==='Tester'))
+                   var type = await getUser(user)
+                console.log('type',type)
+                if(href[4] === user.uid && (href[3] === type || type==='Tester'))
                 {
                     this.setState({
                         isLoad: true,
@@ -66,7 +70,7 @@ class UserApproval extends React.Component {
                     this.loadSpinner(false,"")
 
                     return
-                }
+                } 
                 else
                 {
                     this.notfound()
@@ -259,6 +263,7 @@ render() {
 
                     </div>
                 );
+           
             } else {
                 return (
                     <div id="guideAttendReport" className="sec-design" dir="rtl">
@@ -314,8 +319,6 @@ render() {
 }
 
 
-
-
     Card(user,index) {
             return (
                 <div className="Card"  dir="rtl">
@@ -353,6 +356,7 @@ render() {
                                 </label>
                             </div>
                         </Grid>
+                               
                         <Grid item xs={3}>
                             <div>
 
@@ -376,7 +380,7 @@ render() {
                                 </label>
                             </div>
                         </Grid>
-                        
+                      
                         <Grid item xs={3}>
                             <div>
 
@@ -393,20 +397,20 @@ render() {
 
                                 <label>
                                     <input id ={"testers"+index} type="radio" value="testers"  onClick={e => {
-                                        this.radio(e,index,user) 
+                                        this.radio(e,index,user)
                                     }}/>
                                     בודק
                                 </label>
                             </div>
                         </Grid>
-                        <Grid item xs={12}>
+                        {/* <Grid item xs={12}>
                             <div className="text-below-image">
                                 <label className="container">אישור בקשה<input type='checkbox'  onChange={e=>{
                                     user.approve = e.target.checked
                                 } }/></label>
                             </div>
 
-                        </Grid>
+                        </Grid> */}
 
                         <Grid item xs={6}>
                             <button
@@ -415,6 +419,7 @@ render() {
                                 CreateUser(user).then(()=>{
                                 var newUsers = []
                                 this.state.users.forEach((user,i)=>{
+                                
                                  if(index!==i)
                                      newUsers.push(user)
                                 })
@@ -437,9 +442,6 @@ render() {
                             }}>דחיית בקשה</button>
                         </Grid>
                     </Grid>
-
-
-
 
                 </div>
             );

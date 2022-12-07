@@ -1,17 +1,9 @@
 import firebase from 'firebase/app'
 import 'firebase/auth'
 import 'firebase/firebase-firestore'
-// import * as admin from 'firebase-admin';
 
 const firebaseConfig = {
-    // apiKey: "AIzaSyD91v4LsW6wytMO6tJoUE7xyVz6BLTm5jk",
-    // authDomain: "ybl-project-b5e04.firebaseapp.com",
-    // databaseURL: "https://ybl-project-b5e04.firebaseio.com",
-    // projectId: "ybl-project-b5e04",
-    // storageBucket: "ybl-project-b5e04.appspot.com",
-    // messagingSenderId: "288673703911",
-    // appId: "1:288673703911:web:e0cc3b8ea3fc61019c3f42",
-    // measurementId: "G-1RWZH22PZ6"
+    
     apiKey: "AIzaSyC5lZ0pGbNOQ7m7BsIssvOXQoog8N_SM1c",
     authDomain: "finalybl.firebaseapp.com",
     databaseURL: "https://finalybl.firebaseio.com",
@@ -24,42 +16,10 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 
-// var serviceAccount = require("./adminYbl");
-//
-// admin.initializeApp({
-//     credential: admin.credential.cert(serviceAccount),
-//     databaseURL: "https://ybl-project-b5e04.firebaseio.com"
-// });
+
 export const auth = firebase.auth();
 export const db = firebase.firestore();
-// export  const admin = admin.auth();
 export default firebase;
-//
-// console.log(admin);
-//
-//
-// admin.auth().createUser({
-//     email: 'user@example.com',
-//     emailVerified: false,
-//     phoneNumber: '+11234567890',
-//     password: 'secretPassword',
-//     displayName: 'John Doe',
-//     photoURL: 'http://www.example.com/12345678/photo.png',
-//     disabled: false
-// })
-//     .then(function(userRecord) {
-//         // See the UserRecord reference doc for the contents of userRecord.
-//         console.log('Successfully created new user:', userRecord.uid);
-//     })
-//     .catch(function(error) {
-//         console.log('Error creating new user:', error);
-//     });
-
-// db.collection("Teams").doc().get().then(res=>{
-//     // console.log(res)
-// }).catch(e=>{
-//     console.log(e)
-// })
 
 export async function CreateNewUser(email,phone) {
     var res = await auth.createUserWithEmailAndPassword(email,phone)
@@ -76,13 +36,9 @@ export async function DeleteUser(uid) {
     return;
 }
 
+
 export async function CreateUser(user) {
-
-
-    // console.log(user)
-    // var res = await auth.createUserWithEmailAndPassword(user.email,user.phone)
-    // res.user.updateProfile({displayName:user.fname+" "+ user.lname})
-
+    user.approve = true;
     if(user.type==="testers") {
         await db.collection("students").doc(user.uid).set(user)
         await db.collection("guides").doc(user.uid).set(user)
@@ -94,7 +50,8 @@ export async function CreateUser(user) {
             var team=await db.collection('Teams').doc(user.team.id);
                 team.set({
                     name: user.teamName,
-                    guide: db.doc('guides/'+user.uid)
+                    guide: db.doc('guides/'+user.uid),
+                    old:false
                 })
         }
     
@@ -115,7 +72,7 @@ export async function CreateUser(user) {
 }
 
 export async function CreateNewTeam(team) {
-    await  db.collection("Teams").doc().set({name:team}).then(()=>{
+    await  db.collection("Teams").doc().set({name:team,old:false}).then(()=>{
         alert("הקבוצה נוספה בהצלחה")
     return true;
     }
@@ -125,7 +82,6 @@ export async function CreateNewTeam(team) {
     })
 
 }
-
 export async function checkUser() {
    const user =await auth.onAuthStateChanged();
    return user
@@ -284,41 +240,3 @@ export async function getTeamFeedbackByDate(teamPath,date) {
     console.log(teamFeedback);
     return teamFeedback;
 }
-//
-// class Firebase {
-//     constructor() {
-//         firebase.initializeApp(firebaseConfig)
-//         this.auth = firebase.auth()
-//         this.db = firebase.firestore()
-//     }
-//
-//     login(email, password) {
-//         return this.auth.signInWithEmailAndPassword(email, password)
-//     }
-//
-//     logout() {
-//         return this.auth.signOut()
-//     }
-//
-//     async register(name, email, password) {
-//         await this.auth.createUserWithEmailAndPassword(email, password)
-//         return this.auth.currentUser.updateProfile({
-//             displayName: name
-//         })
-//     }
-//
-//
-//
-//     isInitialized() {
-//         return new Promise(resolve => {
-//             this.auth.onAuthStateChanged(resolve)
-//         })
-//     }
-//
-//     getCurrentUsername() {
-//         return firebase.auth().currentUser //&& this.auth.currentUser.displayName
-//     }
-//
-// }
-
-// export default Firebase;

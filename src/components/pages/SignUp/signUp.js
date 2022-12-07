@@ -24,6 +24,7 @@ class SignUp extends React.Component {
             team:'',
             teamName:'',
             type:'',
+            approve: false
         };
 
 
@@ -31,14 +32,12 @@ class SignUp extends React.Component {
 
 
     async  GetTeams() {
-         console.log("בדיקה")
-
         if (!op) {
             op=true
             var nameTeams = await db.collection("Teams").where("old", "==",false)
-            //.orderBy('name','asc')
+                //.orderBy('name','asc')
                 .get()
-           // console.log(nameTeams)
+            // console.log(nameTeams)
             nameTeams.forEach(doc => {
                 options.push({value: doc.ref, label: doc.data().name})
                 options.sort((a, b) =>(a.label > b.label) ? 1 : -1)
@@ -57,7 +56,7 @@ class SignUp extends React.Component {
                 alert("נא למלא את כל השדות החובה")
                 return
             }
-            await this.setState({approve:false})
+            // await this.setState({approve:false})
             var newUser = await CreateNewUser(this.state.email,this.state.phone)
             this.setState({uid:newUser.user.uid})
             await RegisterUser(newUser.user,this.state)
@@ -174,6 +173,7 @@ class SignUp extends React.Component {
 
                         <Grid item xs={6}>
                             <div>
+
                                 <label>
                                     <input type="radio" value="students" checked={this.state.type==='students'}  onChange={e =>
                                         this.setState({type:e.target.value})}/>
@@ -181,8 +181,7 @@ class SignUp extends React.Component {
                                 </label>
                             </div>
                         </Grid>
-                      
-                         <Grid item xs={6}>
+                        <Grid item xs={6}>
                             <div>
 
                                 <label>
@@ -192,7 +191,7 @@ class SignUp extends React.Component {
                                 </label>
                             </div>
                         </Grid>
-                          <Grid item xs={6}>
+                         <Grid item xs={6}>
                             <div>
                                 <label>
                                     <input type="radio" value="BusinessMentor" checked={this.state.type==='BusinessMentor'} onChange={e =>
