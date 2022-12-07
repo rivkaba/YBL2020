@@ -131,7 +131,7 @@ class StudentFeedback extends React.Component {
     handleSubmit(event)
     {
 
-        if (this.state.form.feedback == '') {
+        if (this.state.form.feedback === '') {
             this.setState({isFeedbackError: true})
             return;
         } else {
@@ -364,7 +364,7 @@ class StudentFeedback extends React.Component {
                         {/*    }*/}
                         {/*</Grid>*/}
                         <input type="text" className="form-control" 
-                        style={this.state.isFeedbackError == true ? { border: '2px solid red' } : { border: '' } }
+                        style={this.state.isFeedbackError === true ? { border: '2px solid red' } : { border: '' } }
 
                         
                         name="feedback" id="Q4" placeholder="התשובה שלך"

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import {getTeamFeedbackByDate, db, auth, getUser} from "../../../../firebase/firebase";
+import {getTeamFeedback, db, auth, getUser} from "../../../../firebase/firebase";
 import Select from 'react-select'
 import Grid from "@material-ui/core/Grid";
 import $ from 'jquery'
@@ -56,13 +56,13 @@ if(this.state.loadPage){
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
                         <Grid item xs={12}>
-                            <label id="date" className="title-input">הכנס את תאריך המפגש:</label>
-                            <input type="date" className="form-control" id="insert-date" name="date" onChange={this.handleChangeDate} required/>
                             <Select  placeholder={" בחר קבוצה "} options={options} onChange={(e)=>{
                                 // console.log(e.label,e.value);
                                 this.setState({teamPath:e.value})
                             }} required/>
-
+                            
+                              {/*<Route exact path="/"><label id="date" className="title-input">:הכנס את תאריך המפגש</label>
+                            <input type="date" className="form-control" id="insert-date" name="date" onChange={this.handleChangeDate} required/>*/}
                         </Grid>
                         <Grid item xs={12}>
                             <div className="text-below-image">
@@ -70,7 +70,7 @@ if(this.state.loadPage){
                                 <button onClick={(e)=>{
                                     this.handleSubmit(e)
                                     this.setState({report:!this.state.report})
-                                }} >{this.state.report?"הסתר דוח נוכחות":"הצג דוח נוכחות"}</button>
+                                }} >{this.state.report?"הסתר את כל הדוחות":"הצג את כל הדוחות נוכחות לקבוצה זו "}</button>
 
                             </div>
                         </Grid>
@@ -111,19 +111,43 @@ if(this.state.loadPage){
     async handleSubmit(event)
     {
         $("#studentList").replaceWith('<div id="studentList">')
-        if(!this.state.date ||  !this.state.teamPath) {
-            alert("נא למלא את כל השדות החובה")
+        if( !this.state.teamPath) {
+            //!this.state.date ||
+            alert("נא לבחור קבוצה להצגה")
             return
         }
-        var res= (await getTeamFeedbackByDate(this.state.teamPath.id,this.state.date)).studentsComes
+      //  var res= (await getTeamFeedbackByDate(this.state.teamPath.id,this.state.date)).studentsComes
+        var res= await getTeamFeedback(this.state.teamPath.id)//.studentsComes 
+        if(!res.empty)
+        {
+            res.forEach(async function(doc){
+                var date=doc.id;
+                <div className="sweet-loading">
+                        <ClipLoader style={{
+                            backgroundColor: "rgba(255,255,255,0.85)",
+                            borderRadius: "25px"
+                        }}
+                            //   css={override}
+                                    size={120}
+                                    color={"#123abc"}
 
-        res.forEach(name=>{
-            var lable=document.createElement("lable");
-            lable.innerHTML = name;
-            var br=document.createElement("br");
-            $('#studentList').append(lable);
-            $('#studentList').append(br);
-        })
+                        />
+                    </div>
+                 var lable=document.createElement("lable");
+                    lable.innerHTML = date;
+                    var br=document.createElement("br");
+                    $('#studentList').append(lable);
+                    $('#studentList').append(br);
+               var studentsComes1 =doc.data().studentsComes;
+                studentsComes1.forEach(name=>{
+                    var lable=document.createElement("lable");
+                    lable.innerHTML = name;
+                    var br=document.createElement("br");
+                    $('#studentList').append(lable);
+                    $('#studentList').append(br);
+                })
+            })
+        }
         // for (var name in res){
         //     var lable=document.createElement("lable");
         //     lable.innerHTML = name;

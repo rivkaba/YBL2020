@@ -240,3 +240,16 @@ export async function getTeamFeedbackByDate(teamPath,date) {
     console.log(teamFeedback);
     return teamFeedback;
 }
+export async function getTeamFeedback(teamPath) {
+    var team = await db.collection("Teams").doc(teamPath).collection("Dates").get();
+    if(team === undefined)
+    {
+        ////// BusinessMentor  alert("לא נמצא מדריך עסקי לקבוצה")
+
+        alert("לא נמצא מדריך לקבוצה")
+    } 
+    console.log("team",team[0]);
+    var teamFeedback=team;
+    console.log(teamFeedback);
+    return teamFeedback;
+}
