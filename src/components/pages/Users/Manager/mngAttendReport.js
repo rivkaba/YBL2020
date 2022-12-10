@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import {getTeamFeedback, getTeamFeedbackByDate,db, auth, getUser} from "../../../../firebase/firebase";
+import {getTeamFeedback, getTeamFeedbackByDate,getstudentSdidntCome,db, auth, getUser} from "../../../../firebase/firebase";
 import Select from 'react-select'
 import Grid from "@material-ui/core/Grid";
 import $ from 'jquery'
@@ -62,8 +62,11 @@ if(this.state.loadPage){
                         <Grid item xs={12}>
                             <Select  placeholder={" בחר קבוצה "} options={options} onChange={(e)=>{
                                 // console.log(e.label,e.value);
-                                this.setState({teamPath:e.value})
-                                optionsDate=[];
+                                this.setState({teamPath:e.value,teamName:e.label})
+                                optionsDate=[""];
+                                this.setState({optionDate:false})
+                                this.setState({report1:false})
+                                this.setState({report:false})
                             }} required/>
                             
                               {/*<Route exact path="/"><label id="date" className="title-input">:הכנס את תאריך המפגש</label>
@@ -73,15 +76,14 @@ if(this.state.loadPage){
                             <div className="text-below-image">
                                 <button  onClick={()=>{
                                     this.GetDates()
+                                    optionsDate=[];
                                     this.setState({optionDate:!this.state.optionDate})
-                                     this.setState({report1:!this.state.report1})
+                                    this.setState({report1:!this.state.report1})
                                 }} >{this.state.report1?"הסתר דוח":"הצג דוח נוחכות לקבוצה זו לפי תאריך "}</button>
                             </div>
                         </Grid>
                         <Grid item xs={12} hidden={!this.state.optionDate}>
                                     <Select id = 'select'  placeholder={" בחר תאריך "} options={optionsDate} onChange={(e)=>{  
-                                    this.setState({date:e.label,viewStudent:false});
-                                    this.state.date=e.label;
                                     this.handleSubmitFeedbackByDate(e);
                                     }} required/>
                                 </Grid>
@@ -131,7 +133,12 @@ if(this.state.loadPage){
 }
     }
     async  GetDates()
+
     {
+         if( !this.state.teamPath) {
+            alert("נא לבחור קבוצה להצגה")
+            return
+        }
           var dates =await db.collection("Teams").doc(this.state.teamPath.id).collection("Dates").get()
           dates.forEach(doc=>{
                    optionsDate.push({ value: doc.data(), label: doc.id })
@@ -177,11 +184,35 @@ if(this.state.loadPage){
 
      async handleSubmitFeedbackByDate(event){
         $("#studentList1").replaceWith('<div id="studentList1">')
+         if( !this.state.teamPath) {
+            alert("נא לבחור קבוצה להצגה")
+            return
+        }
+        this.setState({date:event.label,viewStudent:false});
+        this.state.date=event.label;
        var res= (await getTeamFeedbackByDate(this.state.teamPath.id,this.state.date)).studentsComes
+       var res2=(await getstudentSdidntCome(this.state.teamName,res))
        // var res= await getTeamFeedback(this.state.teamPath.id)
        if(!res.empty)
        { 
+            var lable=document.createElement("lable");
+                    lable.innerHTML = "החניכים שהיו במפגש";
+                    var br=document.createElement("br");
+                    $('#studentList1').append(lable);
+                    $('#studentList1').append(br);
              res.forEach(name=>{
+                    var lable=document.createElement("lable");
+                    lable.innerHTML = name;
+                    var br=document.createElement("br");
+                    $('#studentList1').append(lable);
+                    $('#studentList1').append(br);
+                })
+                var lable=document.createElement("lable");
+                    lable.innerHTML = "החניכים שלא היו במפגש";
+                    var br=document.createElement("br");
+                    $('#studentList1').append(lable);
+                    $('#studentList1').append(br);
+                res2.forEach(name=>{
                     var lable=document.createElement("lable");
                     lable.innerHTML = name;
                     var br=document.createElement("br");

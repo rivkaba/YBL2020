@@ -248,4 +248,24 @@ export async function getTeamFeedback(teamPath) {
     } 
     return teamFeedback;
 }
+export async function getstudentSdidntCome(teamName,studentsComes){
+    var studentSdidntCome=[]
+    var students= await db.collection("students")
+       .where('teamName','==',teamName)
+       //.where('fname'+'lname', 'not-in', studentsComes)
+       .get();
+       students.forEach(result=> {
+             var name =result.data().fname+" "+result.data().lname;
+           if (studentsComes.indexOf(name) > -1) {
+    //In the array!
+            return;
+           } else {
+    //Not in the array
+         studentSdidntCome.push(name)
+           }
+         })
+           console.log("studentSdidntCome",studentSdidntCome);
+       return studentSdidntCome;
+
+}
 
