@@ -1,3 +1,4 @@
+
 import React from 'react'
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 import HomePage from './components/pages/HomePage/HomePage';
@@ -26,6 +27,7 @@ import FeedbackStudents from "./components/pages/Users/Manager/mngStudFeedback";
 import FeedbackGuides from "./components/pages/Users/Manager/mngGuideFeedback";
 import UpdatesFirebase from "./components/pages/Users/Manager/UpdatesFirebase";
 import StudentFeedback from "./components/pages/Users/Student/stud_feedback";
+import StudentOpened from "./components/pages/Users/Student/stud_opened";
 import bmGuideFeedback from "./components/pages/Users/BusinessMentor/bmGuideFeedback";
 import Profile from "./components/pages/Users/profile";
 import GuideReports from "./components/pages/Users/Guide/guide_attend_report";
@@ -55,6 +57,7 @@ function LoadPage() {
 
                     <Route exact path="/Student/:id" component={Students} />
                     <Route exact path="/Student/:id/Feedback" component={StudentFeedback} />
+                    <Route exact path="/Student/:id/Opened" component={StudentOpened} />
                     <Route exact path="/Student/:id/Profile" component={Profile} />
                     <Route exact path="/Student/:id/:404" component={notFound} />
                     <Route exact path="/Student/:id/:page/:404" component={notFound} />

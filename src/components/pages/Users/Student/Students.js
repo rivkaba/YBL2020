@@ -128,6 +128,10 @@ class Student extends React.Component {
                             NextPage(this.props, "Feedback", this.state.user)
                         }}>מילוי משוב<span
                             className="fa fa-arrow-right"></span></button>
+                          <button id="feedback-button" className="btn btn-info" onClick={() => {
+                            NextPage(this.props, "Opened", this.state.user)
+                        }}>שאלון הפתיחה<span
+                            className="fa fa-arrow-right"></span></button>
                         <button id="report-button" className="btn btn-info" onClick={() => {
                             NextPage(this.props, "Profile", this.state.user)
                         }}>עדכון פרטים או סיסמא<span

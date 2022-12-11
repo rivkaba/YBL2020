@@ -1,3 +1,4 @@
+
 import React, { Component } from "react";
 import {getTeamFeedback, getTeamFeedbackByDate,getstudentSdidntCome,db, auth, getUser} from "../../../../firebase/firebase";
 import Select from 'react-select'
@@ -6,8 +7,8 @@ import $ from 'jquery'
 
 import ClipLoader from "react-spinners/ClipLoader";
 
-var options = []
-var optionsDate = []
+ //var options = []
+// var optionsDate = []
 class AttendReport extends Component {
 
     constructor(props) {
@@ -23,7 +24,11 @@ class AttendReport extends Component {
                 spinner: [true,'נא להמתין הדף נטען'],
                 report:false,
                 report1:false,
-                optionDate:false
+                optionDate:false,
+                option: [],
+                optionsDate: [],
+                results: [],
+                results2: []
             }
             this.handleSubmit = this.handleSubmit.bind(this)
             this.handleSubmitFeedbackByDate = this.handleSubmitFeedbackByDate.bind(this)
@@ -36,7 +41,8 @@ class AttendReport extends Component {
         spinner.push(massage)
         this.setState({spinner:spinner})
     }
-
+    
+    
     render() {
 if(this.state.loadPage){
         return(
@@ -60,13 +66,11 @@ if(this.state.loadPage){
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
                         <Grid item xs={12}>
-                            <Select  placeholder={" בחר קבוצה "} options={options} onChange={(e)=>{
-                                // console.log(e.label,e.value);
+                            <Select  placeholder={" בחר קבוצה "} options={this.state.options} onChange={(e)=>{
                                 this.setState({teamPath:e.value,teamName:e.label})
-                                optionsDate=[""];
-                                this.setState({optionDate:false})
-                                this.setState({report1:false})
-                                this.setState({report:false})
+                            this.resetConfig()
+                                this.setState({optionDate: false})
+                                this.setState({optionsDate: []});
                             }} required/>
                             
                               {/*<Route exact path="/"><label id="date" className="title-input">:הכנס את תאריך המפגש</label>
@@ -76,20 +80,72 @@ if(this.state.loadPage){
                             <div className="text-below-image">
                                 <button  onClick={()=>{
                                     this.GetDates()
-                                    optionsDate=[];
-                                    this.setState({optionDate:!this.state.optionDate})
-                                    this.setState({report1:!this.state.report1})
-                                }} >{this.state.report1?"הסתר דוח":"הצג דוח נוחכות לקבוצה זו לפי תאריך "}</button>
+                                    // this.setState({optionDate:!this.state.optionDate})
+                                     this.setState({report1:!this.state.report1})
+                                }} >{this.state.optionDate?"הסתר דוח":"הצג דוח נוחכות לקבוצה זו לפי תאריך "}</button>
                             </div>
                         </Grid>
-                        <Grid item xs={12} hidden={!this.state.optionDate}>
-                                    <Select id = 'select'  placeholder={" בחר תאריך "} options={optionsDate} onChange={(e)=>{  
-                                    this.handleSubmitFeedbackByDate(e);
-                                    }} required/>
-                                </Grid>
-                                <Grid item xs={12}  hidden={!this.state.report1}>
-                            <div id="studentList1" ></div>
-                        </Grid>
+                            {this.state.optionsDate.length == 0 ? 
+                            <>
+                                <Grid item xs={12} hidden={!this.state.optionDate}>
+                                        <Select id = 'select'  
+                                        placeholder={'בחר תאריך'} 
+                                        value={'test'}  
+                                        onChange={(e)=>{  
+                                            // this.setState({viewStudent:false});
+                                            // this.handleSubmitFeedbackByDate(e);
+                                        }} required/>
+                                        </Grid>     
+                                </>
+                                :
+                                <>
+                                <Grid item xs={12} hidden={!this.state.optionDate}>
+                                        <Select id ='select'  
+                                        placeholder={'בחר תאריך'} 
+                                        options={this.state.optionsDate} 
+                                        onChange={(e)=>{  
+                                            this.setState({viewStudent:false});
+                                            this.handleSubmitFeedbackByDate(e);
+                                               }} required/>
+                                        </Grid>
+                                        {this.state.results.length !== 0 ? <>
+                                      <b>  :החניכים שהיו במפגש</b>
+                                        <Grid item xs={12}  hidden={!this.state.report1}>
+                                            {
+                                                this.state.results.map(function(result, i){
+                                                    return <ul style={{ padding: "0" }}>
+                                                        {<li style={{ listStyleType: "none" }}>{result}</li>}
+                                                    </ul>
+                                                })      
+                                                                                    
+                                            }
+
+                                    {/* <div id="studentList1" ></div> */}
+                                </Grid>    
+                                </> : ""}
+                                </>       
+                        
+                                    }
+                                           {this.state.results2.length !== 0 ? <>
+                                        <b>  : החניכים שלא היו במפגש</b>
+                                        <Grid item xs={12}  hidden={!this.state.report1}>
+                                            {
+                                                this.state.results2.map(function(result, i){
+                                                    return <ul style={{ padding: "0" }}>
+                                                        {<li style={{ listStyleType: "none" }}>{result}</li>}
+                                                    </ul>
+                                                })      
+                                                                                    
+                                            }
+
+                                    {/* <div id="studentList1" ></div> */}
+                                </Grid>    
+                                </> : ""}
+                                      
+                        
+                                    
+
+                        
                         <Grid item xs={12}>
                             <div className="text-below-image">
                                 <button onClick={(e)=>{
@@ -110,7 +166,6 @@ if(this.state.loadPage){
 
         )
 } else {
-    // console.log(this.state.spinner)
     return (
         <div>
             {!this.state.spinner[0] ? "" :
@@ -132,20 +187,46 @@ if(this.state.loadPage){
         </div>)
 }
     }
-    async  GetDates()
 
+    resetConfig = async() => {
+        this.setState({optionsDate : []});
+        // $("#studentList1").empty();
+        this.setState({optionDate:false})
+        // window.location.reload();
+
+        // this.setState({date:'TEST!' })
+    }
+
+
+    async  GetDates()
     {
-         if( !this.state.teamPath) {
+        if( !this.state.teamPath) {
+            this.setState({optionDate:false})
+            this.setState({optionsDate : []});
             alert("נא לבחור קבוצה להצגה")
             return
-        }
-          var dates =await db.collection("Teams").doc(this.state.teamPath.id).collection("Dates").get()
+        } else {
+            this.setState({optionDate:!this.state.optionDate})
+
+          var dates = await db.collection("Teams").doc(this.state.teamPath.id).collection("Dates").get()
           dates.forEach(doc=>{
-                   optionsDate.push({ value: doc.data(), label: doc.id })
-                    
-                        })
-                        console.log( optionsDate)
+                // optionsDate.push({ value: doc.data(), label: doc.id })
+                this.setState((prevState) => ({
+                    optionsDate: [
+                        ...prevState.optionsDate,
+                        { value: doc.data(), label: doc.id }                    ]
+                }));
+          })
+        }
     }
+
+
+
+
+
+
+
+
     async handleSubmit(event)
     {
         $("#studentList").replaceWith('<div id="studentList">')
@@ -173,58 +254,12 @@ if(this.state.loadPage){
                 })
             })
         }
-        // for (var name in res){
-        //     var lable=document.createElement("lable");
-        //     lable.innerHTML = name;
-        //     var br=document.createElement("br");
-        //     $('#studentList').append(lable);
-        //     $('#studentList').append(br);
-        // }
     }
 
-     async handleSubmitFeedbackByDate(event){
-        $("#studentList1").replaceWith('<div id="studentList1">')
-         if( !this.state.teamPath) {
-            alert("נא לבחור קבוצה להצגה")
-            return
-        }
-        this.setState({date:event.label,viewStudent:false});
-        this.state.date=event.label;
-       var res= (await getTeamFeedbackByDate(this.state.teamPath.id,this.state.date)).studentsComes
-       var res2=(await getstudentSdidntCome(this.state.teamName,res))
-       // var res= await getTeamFeedback(this.state.teamPath.id)
-       if(!res.empty)
-       { 
-            var lable=document.createElement("lable");
-                    lable.innerHTML = "החניכים שהיו במפגש";
-                    var br=document.createElement("br");
-                    $('#studentList1').append(lable);
-                    $('#studentList1').append(br);
-             res.forEach(name=>{
-                    var lable=document.createElement("lable");
-                    lable.innerHTML = name;
-                    var br=document.createElement("br");
-                    $('#studentList1').append(lable);
-                    $('#studentList1').append(br);
-                })
-                var lable=document.createElement("lable");
-                    lable.innerHTML = "החניכים שלא היו במפגש";
-                    var br=document.createElement("br");
-                    $('#studentList1').append(lable);
-                    $('#studentList1').append(br);
-                res2.forEach(name=>{
-                    var lable=document.createElement("lable");
-                    lable.innerHTML = name;
-                    var br=document.createElement("br");
-                    $('#studentList1').append(lable);
-                    $('#studentList1').append(br);
-                })
-        }
-     }
+    
 
     async componentDidMount() {
         var href =  window.location.href.split("/",5)
-        // console.log(href)
         auth.onAuthStateChanged(async user=>{
             if(user)
             {
@@ -241,10 +276,13 @@ if(this.state.loadPage){
                     this.setState({loadPage:true})
                     this.loadSpinner(true,"מיבא נתוני משתמש")
                     var nameTeams =  await db.collection("Teams").where("old", "==",false).get();
+                   var newOptions = [];
+                   
                     nameTeams.forEach(doc=>{
-                        options.push({ value: doc.ref, label: doc.data().name })
-                        options.sort((a, b) =>(a.label > b.label) ? 1 : -1)
+                        newOptions.push({ value: doc.ref, label: doc.data().name })
+                        newOptions.sort((a, b) =>(a.label > b.label) ? 1 : -1)
                     })
+                    this.setState({options: newOptions})
                     this.loadSpinner(false,"")
                     return
                 }
@@ -267,7 +305,35 @@ if(this.state.loadPage){
         })
 
     }
+     async handleSubmitFeedbackByDate(event){
 
+        $("#studentList1").replaceWith('<div id="studentList1">')
+       var res= (await getTeamFeedbackByDate(this.state.teamPath.id, event.label)).studentsComes
+        var res2=(await getstudentSdidntCome(this.state.teamName,res))
+        console.log("teamName2",this.state.teamName)
+       if(res.length != 0)
+        { 
+            this.setState({results: res })
+            if(res2.length != 0){
+                 this.setState({results2: res2 })
+        }
+
+        }
+       
+       
+              /*  var lable=document.createElement("lable");
+                    lable.innerHTML = "החניכים שלא היו במפגש";
+                var  br=document.createElement("br");
+                    $('#studentList1').append(lable);
+                    $('#studentList1').append(br);
+                res2.forEach(name=>{
+                    lable=document.createElement("lable");
+                    lable.innerHTML = name;
+                    br=document.createElement("br");
+                    $('#studentList1').append(lable);
+                    $('#studentList1').append(br);
+                })*/
+     }
    /* async handleChangeDate(event)
     {
         var name = event.target.name;
