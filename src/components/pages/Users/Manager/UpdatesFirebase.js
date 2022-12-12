@@ -379,7 +379,7 @@ class UpdatesFirebase extends Component {
                                                 filename={"מנחים עסקיים.csv"}
                                                 className="btn btn-primary"
                                                 target="_blank"
-                                            >
+                                                >
                                                 <button>
                                                     הורדת פרטי קשר מנחים עסקיים
                                                 </button>
@@ -389,7 +389,7 @@ class UpdatesFirebase extends Component {
                             }
                             {
                                 (!this.state.BusinessMentor || !this.state.showBusinessMentor)?'':
-                                    this.stateBusinessMentor.map((BusinessMentor,index) => (
+                                    this.state.BusinessMentor.map((BusinessMentor,index) => (
                                         <Grid  item xs={12}  key={index}>
                                             <hr/>
                                             {this.card(BusinessMentor.data(),index)}
@@ -627,10 +627,9 @@ class UpdatesFirebase extends Component {
         } else if (user === 'teamEmpty') {
             emptyTeamOptions = []
             temp = 'Teams'
-        } else if (user === 'Teams') {
+        } else if (user === 'Teams') 
             TeamOptions = []
-            temp = 'Teams'
-        } else if (user === 'students')
+          else if (user === 'students')
             studentsOptions = []
         var allUsers = []
         await db.collection(temp).get().then(res => {
@@ -658,7 +657,7 @@ class UpdatesFirebase extends Component {
                         else {
                             var found = false
                             for (var newGuide in tempTeam) {
-                                if (!found && tempTeam[newGuide].data().guide && tempTeam[newGuide].data().guide.id === res.id)
+                                if (!found &&  [newGuide].data().guide && tempTeam[newGuide].data().guide.id === res.id)
                                     found = true
                             }
                             if (!found) {
@@ -870,7 +869,7 @@ class UpdatesFirebase extends Component {
 
                                     }
                                     this.setState({guideTeamPath:teamPath,guideTeamName:teamName,userID:user.ID})
-
+                                 
                                 }} />
                             </Grid>
                             <Grid item xs={4}>

@@ -4,7 +4,6 @@ import {getTeamFeedback, getTeamFeedbackByDate,getstudentSdidntCome,db, auth, ge
 import Select from 'react-select'
 import Grid from "@material-ui/core/Grid";
 import $ from 'jquery'
-
 import ClipLoader from "react-spinners/ClipLoader";
 
  //var options = []
@@ -310,7 +309,6 @@ if(this.state.loadPage){
         $("#studentList1").replaceWith('<div id="studentList1">')
        var res= (await getTeamFeedbackByDate(this.state.teamPath.id, event.label)).studentsComes
         var res2=(await getstudentSdidntCome(this.state.teamName,res))
-        console.log("teamName2",this.state.teamName)
        if(res.length != 0)
         { 
             this.setState({results: res })
