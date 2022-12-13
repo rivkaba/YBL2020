@@ -303,9 +303,22 @@ class UpdatesFirebase extends Component {
                             {
                                 // console.log("בחר קבוצה")
                             }
-                        }}>מחק</button>
+                        }}>מחק</button> 
+                       
+                       <button onClick={async ()=>{
+                            if(this.state.teamPath) {
+                            var res = await  db.collection("Teams").where('name','==',this.state.teamName).get()
+                            res.docs.forEach(async team=>{
+                                    team.ref.update({
+                                        old: true   
+                                    })
+                                    alert("הקבוצה הועברה בהצלחה!");
+                                })
+                            }
+                            else
+                             alert("יש לבחור קבוצה")
+                        }}>העבר לארכיון</button>
                     </Grid>
-
                     <Grid item xs={12}>
                         <div className="text-below-image">
                             <button onClick={()=>{
