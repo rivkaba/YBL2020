@@ -340,23 +340,25 @@ class UpdatesFirebase extends Component {
                             }}> ארכיון הקבוצות</button>
                     </Grid>
                      <Grid item xs={6} hidden={!this.state.showTeam}>
-                        <button onClick={async ()=>{
                                 
-                               /* var res = await  db.collection("Teams").where('name','==',this.state.teamName).get()
-                                res.docs.forEach(async team=>{
-                                        team.ref.update({
-                                            old: true   
-                                        })
-                                        alert("הקבוצה הועברה בהצלחה!");
-                                    })
-                                }
-                                else
-                                 alert("יש לבחור קבוצה")*/
+                               <button onClick={async ()=>{
+                             this.setState({StudentTeam:true})
+                               
                             }}>פרטי קבוצות קיימות</button>
                     </Grid>
                     <Grid item xs={8} hidden={!this.state.archive}>
                      
                         <Select  placeholder={" בחר קבוצה "} options={oldTeam} onChange={(e)=>{
+                            this.setState({teamPath:(e.value).path,teamName:e.label})
+                        }} required/>
+                    </Grid>
+                    <Grid item xs={12} hidden={!this.state.archive}>
+                     
+                        
+                    </Grid>
+                     <Grid item xs={8} hidden={!this.state.StudentTeam}>
+                     
+                        <Select  placeholder={" בחר קבוצה "} options={options} onChange={(e)=>{
                             this.setState({teamPath:(e.value).path,teamName:e.label})
                         }} required/>
                     </Grid>
@@ -987,16 +989,26 @@ class UpdatesFirebase extends Component {
                                         this.getAllUsers('guides')
                                     }
                                     else
+                                        if(user.type==='students' )
                                     {
-                                        // console.log('in8')
-                                        // console.log(user.uid)
                                         updateTeam = await db.collection('students').doc(user.uid)
                                         updateTeam.update({
-                                            teamName:this.state["guideTeamName"],
-                                            team:this.state["guideTeamPath"]
+                                            teamName:this.state.guideTeamName[0],
+                                            team:this.state.guideTeamPath[0]
                                         })
                                         // console.log('in9')
                                         this.getAllUsers('students')
+                                    }
+                                    else
+                                        if(user.type==='BusinessMentor' )
+                                    {
+                                        updateTeam = await db.collection('BusinessMentor').doc(user.uid)
+                                        updateTeam.update({
+                                            teamName:this.state.guideTeamName[0],
+                                            team:this.state.guideTeamPath[0]
+                                        })
+                                        // console.log('in9')
+                                        this.getAllUsers('BusinessMentor')
                                     }
                                     this.loadSpinner(false,'')
 
