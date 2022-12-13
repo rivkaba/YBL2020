@@ -253,9 +253,7 @@ class UpdatesFirebase extends Component {
                     </Grid>
                     <Grid item xs={8} hidden={!this.state.delete}>
                         <Select  placeholder={" בחר קבוצה "} options={options} onChange={(e)=>{
-                            // console.log(e.label,e.value);
                            this.setState({teamPath:(e.value).path,teamName:e.label})
-                           console.log(((e.value)));
                         }} required/>
                     </Grid>
                     <Grid item xs={4} hidden={!this.state.delete} >
@@ -310,11 +308,6 @@ class UpdatesFirebase extends Component {
                        
                        <button onClick={async ()=>{
                             if(this.state.teamPath) {
-                           /* var res = await  db.collection("Teams").where('name','==',this.state.teamName).get()
-                            res.docs.forEach(async team=>{
-                                    team.ref.update({
-                                        old: true   
-                                    })*/
                                     await db.doc(this.state.teamPath).update({
                                             old: true
                                         }).then(function() {
@@ -323,8 +316,6 @@ class UpdatesFirebase extends Component {
                                     console.error("Error removing document: ", error);
                                 });
                                 window.location.reload(true);
-
-                               // })
                             }
                             else
                              alert("יש לבחור קבוצה")
@@ -335,22 +326,20 @@ class UpdatesFirebase extends Component {
                             this.setState({showTeam:!this.state.showTeam})
                         }}>{this.state.showTeam?'הסתר רשימת קבוצות':'הצג רשימת קבוצות'} </button>
                     </Grid>
-                    <Grid item xs={4} hidden={!this.state.showTeame} >
+                    <Grid item xs={4} hidden={!this.state.showTeam} >
                         <button onClick={async ()=>{
-                          /*   this.getAllUsers('oldTeam')
+                             this.getAllUsers('oldTeam')
                              this.setState({archive:true})
-                                if(this.state.teamPath) {
-                                var res = await  db.collection("Teams").where('old','==',true).get()
-                               /* res.docs.forEach(async team=>{
-                                        team
-                                        alert("הקבוצה הועברה בהצלחה!");
-                                    })
-                                }
-                                else
-                                 alert("יש לבחור קבוצה")*/
+                             this.setState({OldTeam:null})
+                            
+                             var nameTeams =  await db.collection("Teams").where("old", "==",true).get();
+                             nameTeams.forEach(doc=>{
+                                oldTeam.push({ value: doc.ref, label: doc.data().name })
+                                oldTeam.sort((a, b) =>(a.label > b.label) ? 1 : -1)
+                    })
                             }}> ארכיון הקבוצות</button>
                     </Grid>
-                     <Grid item xs={4} hidden={!this.state.showTeame}>
+                     <Grid item xs={6} hidden={!this.state.showTeam}>
                         <button onClick={async ()=>{
                                 
                                /* var res = await  db.collection("Teams").where('name','==',this.state.teamName).get()
@@ -366,6 +355,7 @@ class UpdatesFirebase extends Component {
                             }}>פרטי קבוצות קיימות</button>
                     </Grid>
                     <Grid item xs={8} hidden={!this.state.archive}>
+                     
                         <Select  placeholder={" בחר קבוצה "} options={oldTeam} onChange={(e)=>{
                             this.setState({teamPath:(e.value).path,teamName:e.label})
                         }} required/>
@@ -662,7 +652,7 @@ class UpdatesFirebase extends Component {
                 (user === 'BusinessMentorEmpty' && this.state.BusinessMentorEmpty && this.state.BusinessMentorEmpty > 1) ||
                 (user === 'studentEmpty' && this.state.StudentEmpty && this.state.StudentEmpty > 1) ||
                 (user === 'teamEmpty' && this.state.TeamEmpty && this.state.TeamEmpty > 1) ||
-                (user === 'oldTeam' && this.state.oldTeam && this.state.oldTeam > 1)/* ||
+                (user === 'oldTeam' && this.state.oldTeam && this.state.OldTeam > 1)/* ||
                 (user === 'Teams' && this.state.Teams && this.state.Teams > 1)*/)
             ) {
                 this.loadSpinner(false, "")
@@ -688,7 +678,7 @@ class UpdatesFirebase extends Component {
             /////oldTeam
         }  else if (user === 'oldTeam') {
             oldTeam = []
-            temp = 'oldTeam'
+            temp = 'Teams'
         }
          else if (user === 'studentEmpty') {
             emptyStudentsOptions = []
@@ -714,11 +704,11 @@ class UpdatesFirebase extends Component {
                         allUsers.push(res)
                         BusinessMentorOptions.push({value: res, label: res.data().fname + ' ' + res.data().lname})
                     }////////////
-                     else if (user === 'oldTeam') {
+                     else if (user === 'oldTeam'&& res.data().old===true) {
                     allUsers.push(res)
                     oldTeam.push({value: res, label: res.name})
                     oldTeam.sort((a, b) =>(a.label > b.label) ? 1 : -1)
-
+                    console.log(oldTeam)
                      } 
                       else if (user === 'guides') {
                         allUsers.push(res)
