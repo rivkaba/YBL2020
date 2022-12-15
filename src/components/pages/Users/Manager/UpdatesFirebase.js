@@ -5,6 +5,7 @@ import Select from "react-select";
 import ClipLoader from "react-spinners/ClipLoader";
 import {CSVLink} from "react-csv";
 
+
 var oldTeam = []
 var options = []
 var guidesOptions = []
@@ -41,7 +42,9 @@ class UpdatesFirebase extends Component {
                 showTeamWithoutGuide:false,
                 showGuideWithoutTeam:false,
                 showStudentWithoutTeam:false,
-
+                teams:[],
+                sTeam:[],
+                ssTeam:[]
             }
         this.handleSubmit = this.handleSubmit.bind(this)
         this.handleChangeDate = this.handleChangeDate.bind(this)
@@ -327,41 +330,69 @@ class UpdatesFirebase extends Component {
                         }}>{this.state.showTeam?'הסתר רשימת קבוצות':'הצג רשימת קבוצות'} </button>
                     </Grid>
                     <Grid item xs={4} hidden={!this.state.showTeam} >
-                        <button onClick={async ()=>{
-                             this.getAllUsers('oldTeam')
-                             this.setState({archive:true})
-                             this.setState({OldTeam:null})
-                            
+                        <button onClick={async ()=>{  
+                            oldTeam=[]
                              var nameTeams =  await db.collection("Teams").where("old", "==",true).get();
                              nameTeams.forEach(doc=>{
                                 oldTeam.push({ value: doc.ref, label: doc.data().name })
-                                oldTeam.sort((a, b) =>(a.label > b.label) ? 1 : -1)
-                    })
+                                oldTeam.sort((a, b) =>(a.label > b.label) ? 1 : -1)         
+                         })
+                                this.setState({teams:oldTeam})
+                                this.setState({archive:true})
                             }}> ארכיון הקבוצות</button>
                     </Grid>
                      <Grid item xs={6} hidden={!this.state.showTeam}>
                                 
                                <button onClick={async ()=>{
-                             this.setState({StudentTeam:true})
+                                 this.setState({StudentTeam:true})
+                                  this.setState({archive:false})
+                                 this.setState({teams:options})
                                
                             }}>פרטי קבוצות קיימות</button>
                     </Grid>
-                    <Grid item xs={8} hidden={!this.state.archive}>
+                    <Grid item xs={8} hidden={!this.state.archive &&!this.state.StudentTeam}>
                      
-                        <Select  placeholder={" בחר קבוצה "} options={oldTeam} onChange={(e)=>{
+                        <Select  placeholder={" בחר קבוצה "} options={this.state.teams} onChange={async(e)=>{
                             this.setState({teamPath:(e.value).path,teamName:e.label})
+                            // this.setState({guideTeamPath,guideTeamName
+                            var STeam=[]
+                            var SSTeam=[]
+                            var res1= await db.collection("students").where('teamName','==',e.label).get()
+                            res1.forEach( res => {
+                                 STeam.push({value: res, label: res.data().fname + ' ' + res.data().lname})
+                                 SSTeam.push(res);
+                                  }) 
+                           
+                             this.setState({sTeam:STeam})
+                            console.log("sTeam",this.state.sTeam);
+                          
+                            this.setState({ssTeam:SSTeam})
+                             console.log("ssTeam",this.state.ssTeam);
+                             
                         }} required/>
                     </Grid>
-                    <Grid item xs={12} hidden={!this.state.archive}>
-                     
-                        
+                    <Grid item xs={8} hidden={!this.state.teamPath}>
+                                      
+                            
+                               <div> נמצאו: {this.state.sTeam.length} חניכים
+                                    <Select  placeholder={" מצא חניך "} options={this.state.sTeam} onChange={(e)=>{
+                                        // console.log(e.label,e.value);
+                                  
+                                        this.setState({ssTeam:[e.value]})
+                                    }} />
+                                </div>
+                            
+                               {
+                                    this.state.ssTeam.map((user,index) => (
+                                        <Grid  item xs={12}  key={index}>
+                                            <hr/>
+                                            {this.card(user.data(),index)}
+                                        </Grid >
+                                    ))
+                               }
+                      
                     </Grid>
-                     <Grid item xs={8} hidden={!this.state.StudentTeam}>
-                     
-                        <Select  placeholder={" בחר קבוצה "} options={options} onChange={(e)=>{
-                            this.setState({teamPath:(e.value).path,teamName:e.label})
-                        }} required/>
-                    </Grid>
+                   
                     <Grid item xs={12}>
                         <div className="text-below-image">
                             <button onClick={()=>{
@@ -529,8 +560,6 @@ class UpdatesFirebase extends Component {
                                             {this.card(user.data(),index)}
                                         </Grid >
                                     ))
-
-
                             }
                         </div>
 
@@ -653,8 +682,8 @@ class UpdatesFirebase extends Component {
                 (user === 'guidesEmpty' && this.state.GuidesEmpty && this.state.GuidesEmpty > 1) ||
                 (user === 'BusinessMentorEmpty' && this.state.BusinessMentorEmpty && this.state.BusinessMentorEmpty > 1) ||
                 (user === 'studentEmpty' && this.state.StudentEmpty && this.state.StudentEmpty > 1) ||
-                (user === 'teamEmpty' && this.state.TeamEmpty && this.state.TeamEmpty > 1) ||
-                (user === 'oldTeam' && this.state.oldTeam && this.state.OldTeam > 1)/* ||
+                (user === 'teamEmpty' && this.state.TeamEmpty && this.state.TeamEmpty > 1)/* ||
+                (user === 'oldTeam' && this.state.oldTeam && this.state.OldTeam > 1) ||
                 (user === 'Teams' && this.state.Teams && this.state.Teams > 1)*/)
             ) {
                 this.loadSpinner(false, "")
@@ -678,10 +707,10 @@ class UpdatesFirebase extends Component {
             emptyBusinessMentorOptions = []
             temp = 'BusinessMentor'
             /////oldTeam
-        }  else if (user === 'oldTeam') {
+        }  /*else if (user === 'oldTeam') {
             oldTeam = []
             temp = 'Teams'
-        }
+        }*/
          else if (user === 'studentEmpty') {
             emptyStudentsOptions = []
             temp = 'students'
@@ -706,12 +735,12 @@ class UpdatesFirebase extends Component {
                         allUsers.push(res)
                         BusinessMentorOptions.push({value: res, label: res.data().fname + ' ' + res.data().lname})
                     }////////////
-                     else if (user === 'oldTeam'&& res.data().old===true) {
+                   /*  else if (user === 'oldTeam'&& res.data().old===true) {
                     allUsers.push(res)
                     oldTeam.push({value: res, label: res.name})
                     oldTeam.sort((a, b) =>(a.label > b.label) ? 1 : -1)
                     console.log(oldTeam)
-                     } 
+                     } */
                       else if (user === 'guides') {
                         allUsers.push(res)
                         guidesOptions.push({value: res, label: res.data().fname + ' ' + res.data().lname})
@@ -780,9 +809,9 @@ class UpdatesFirebase extends Component {
             this.setState({StudentEmpty: allUsers})
         else if (user === 'teamEmpty')
             this.setState({TeamEmpty: allUsers})
-        else if (user === 'oldTeam')
+       /* else if (user === 'oldTeam')
             this.setState({oldTeam: allUsers})
-       /* else if (user === 'Teams') {
+         else if (user === 'Teams') {
             this.setState({Teams: allUsers})
         }*/
 
@@ -914,7 +943,7 @@ class UpdatesFirebase extends Component {
                         <h4> ת.ז: {user.ID}</h4>
                         <h4> קבוצה: {user.teamName}</h4>
                         <Grid container spacing={2}>
-                            <Grid item xs={8}>
+                            <Grid item xs={8} hidden={this.state.archive}>
                                 <Select  placeholder={" החלף קבוצה "} options={options} onChange={(e)=>{
                                     // console.log(e.label,e.value);
                                     user.optionss = e.label

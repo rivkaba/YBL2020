@@ -1,4 +1,3 @@
-
 import React from "react";
 import {auth, db, getUser, signOut} from '../../../../firebase/firebase'
 import { RadioGroup ,FormControlLabel, Radio } from '@material-ui/core';
@@ -12,7 +11,7 @@ class StudentOpened extends React.Component {
         super(props);
         this.state = {
             loadPage:false,
-            spinner: [true,'πΰ μδξϊιο δγσ πθςο'],
+            spinner: [true,'Χ Χ ΧΧ”ΧΧªΧ™Χ Χ”Χ“Χ£ Χ ΧΧΆΧ'],
             isLoad:false,
             user: props.location,
             error:false,
@@ -121,13 +120,13 @@ class StudentOpened extends React.Component {
 
         //Send data to firebase
 
-        this.loadSpinner(true,"ωεμη πϊεπι ξωεα")
+        this.loadSpinner(true,"Χ©Χ•ΧΧ— Χ ΧªΧ•Χ Χ™ ΧΧ©Χ•Χ‘")
         var path = auth.currentUser.uid
         try{
             await db.collection("students").doc(path).collection('Opening questionnaire').doc('form').set({
                 form: this.state.finalForm
             }).then(()=>{
-                alert(" ϊεγδ, δθετρ πωμη αδφμηδ")
+                alert(" ΧªΧ•Χ“Χ”, Χ”ΧΧ•Χ¤Χ΅ Χ Χ©ΧΧ— Χ‘Χ”Χ¦ΧΧ—Χ”")
                 window.location.reload(true);
             })
 
@@ -217,10 +216,10 @@ class StudentOpened extends React.Component {
         this.setState({spinner:spinner})
     }
     async  logout() {
-        //ξρκ θςιπδ
+        //ΧΧ΅Χ ΧΧΆΧ™Χ Χ”
         await auth.signOut();
         window.location.href = '/';
-        //ριεν ξρκ θςιπδ
+        //Χ΅Χ™Χ•Χ ΧΧ΅Χ ΧΧΆΧ™Χ Χ”
     }
 
 
@@ -269,14 +268,15 @@ class StudentOpened extends React.Component {
             }
 
             <div id="attendreport" className="sec-design" dir='rtl'>
-                <h2>ωμεν {this.state.user.displayName} </h2>
+                <h2>Χ©ΧΧ•Χ {this.state.user.displayName} </h2>
 
                 <div id="box" className="chekbox">
                     <label id="checkbox" className="title-input" htmlFor="name">
-                        αΰιζδ ξιγδ δξτβω διεν ηιγω μκ / μξγϊ γαψιν ηγωιν?
+                 
+
+                    Χ‘ΧΧ™Χ–Χ” ΧΧ™Χ“Χ” Χ”ΧΧ¤Χ’Χ© Χ”Χ™Χ•Χ Χ—Χ™Χ“Χ© ΧΧ / ΧΧΧ“Χª Χ“Χ‘Χ¨Χ™Χ Χ—Χ“Χ©Χ™Χ?
                     </label>
                     <br/>
-
                     <div>
                         <RadioGroup
                             aria-label="new"
@@ -285,8 +285,8 @@ class StudentOpened extends React.Component {
                             onChange={this.handleRadioButton}
                             row={true}
                         >
-                            <FormControlLabel value="0" labelPlacement="end" control={<Radio/>} label="ζλψ"/>
-                            <FormControlLabel value="1" labelPlacement="end" control={<Radio/>} label="πχαδ"/>
+                            <FormControlLabel value="0" labelPlacement="end" control={<Radio/>} label="Χ–Χ›Χ¨"/>
+                            <FormControlLabel value="1" labelPlacement="end" control={<Radio/>} label="Χ Χ§Χ‘Χ”"/>
                         </RadioGroup>
                         <div id="name-group" className="form-group">
                             {/* <label id="feedback" className="title-input" htmlFor="name">Other </label> */}
@@ -314,14 +314,14 @@ class StudentOpened extends React.Component {
                             {/* <label id="feedback" className="title-input" htmlFor="name">Other </label> */}
                             <input type="text" className="form-control" 
                             style={this.state.isFeedbackError === true ? { border: '2px solid red' } : { border: '' } }                        
-                            name="age" placeholder="βιμ
+                            name="age" placeholder="Χ’Χ™Χ
                             "
                             minLength="10" onChange={this.handleChange} required/>
                         </div>
                     </div>
                     <div>
                         <label id="checkbox" className="title-input" htmlFor="name">
-                        ιω μι ξιεξπειεϊ ωιςζψε μι μδωϊμα αωεχ δςαεγδ (ςξιγδ αζξπιν, ιλεμϊ δφβδ ςφξιϊ, δϊξγδ).   
+                        Χ™Χ© ΧΧ™ ΧΧ™Χ•ΧΧ Χ•Χ™Χ•Χª Χ©Χ™ΧΆΧ–Χ¨Χ• ΧΧ™ ΧΧ”Χ©ΧªΧΧ‘ Χ‘Χ©Χ•Χ§ Χ”ΧΆΧ‘Χ•Χ“Χ” (ΧΆΧΧ™Χ“Χ” Χ‘Χ–ΧΧ Χ™Χ, Χ™Χ›Χ•ΧΧª Χ”Χ¦Χ’Χ” ΧΆΧ¦ΧΧ™Χª, Χ”ΧªΧΧ“Χ”).   
 
                         </label>
                         <br/>
@@ -333,16 +333,16 @@ class StudentOpened extends React.Component {
                             row={true}
                         >
                                 <FormControlLabel value="0" labelPlacement="end" control={<Radio/>}
-                                                label="αξιγδ ξεςθδ ξΰεγ"/>
-                                <FormControlLabel value="1" labelPlacement="end" control={<Radio/>} label="αξιγδ ξεςθδ"/>
-                                <FormControlLabel value="2" labelPlacement="end" control={<Radio/>} label="αξιγδ αιπεπιϊ"/>
-                                <FormControlLabel value="3" labelPlacement="end" control={<Radio/>} label="αξιγδ ψαδ"/>
-                                <FormControlLabel value="4" labelPlacement="end" control={<Radio/>} label="αξιγδ ψαδ ξΰεγ"/>
+                                                label="Χ‘ΧΧ™Χ“Χ” ΧΧ•ΧΆΧΧ” ΧΧΧ•Χ“"/>
+                                <FormControlLabel value="1" labelPlacement="end" control={<Radio/>} label="Χ‘ΧΧ™Χ“Χ” ΧΧ•ΧΆΧΧ”"/>
+                                <FormControlLabel value="2" labelPlacement="end" control={<Radio/>} label="Χ‘ΧΧ™Χ“Χ” Χ‘Χ™Χ Χ•Χ Χ™Χª"/>
+                                <FormControlLabel value="3" labelPlacement="end" control={<Radio/>} label="Χ‘ΧΧ™Χ“Χ” Χ¨Χ‘Χ”"/>
+                                <FormControlLabel value="4" labelPlacement="end" control={<Radio/>} label="Χ‘ΧΧ™Χ“Χ” Χ¨Χ‘Χ” ΧΧΧ•Χ“"/>
                         </RadioGroup>
                     </div>
                     <div>
                         <label id="checkbox" className="title-input" htmlFor="name">
-                        ΰπι ξψβιω/δ αιθηεο μςξεγ εμδφιβ ξεμ χδμ 
+                        ΧΧ Χ™ ΧΧ¨Χ’Χ™Χ©/Χ” Χ‘Χ™ΧΧ—Χ•Χ ΧΧΆΧΧ•Χ“ Χ•ΧΧ”Χ¦Χ™Χ’ ΧΧ•Χ Χ§Χ”Χ 
 
                         </label>
                         <br/>
@@ -354,16 +354,16 @@ class StudentOpened extends React.Component {
                             row={true}
                         >
                                 <FormControlLabel value="0" labelPlacement="end" control={<Radio/>}
-                                                label="αξιγδ ξεςθδ ξΰεγ"/>
-                                <FormControlLabel value="1" labelPlacement="end" control={<Radio/>} label="αξιγδ ξεςθδ"/>
-                                <FormControlLabel value="2" labelPlacement="end" control={<Radio/>} label="αξιγδ αιπεπιϊ"/>
-                                <FormControlLabel value="3" labelPlacement="end" control={<Radio/>} label="αξιγδ ψαδ"/>
-                                <FormControlLabel value="4" labelPlacement="end" control={<Radio/>} label="αξιγδ ψαδ ξΰεγ"/>
+                                                label="Χ‘ΧΧ™Χ“Χ” ΧΧ•ΧΆΧΧ” ΧΧΧ•Χ“"/>
+                                <FormControlLabel value="1" labelPlacement="end" control={<Radio/>} label="Χ‘ΧΧ™Χ“Χ” ΧΧ•ΧΆΧΧ”"/>
+                                <FormControlLabel value="2" labelPlacement="end" control={<Radio/>} label="Χ‘ΧΧ™Χ“Χ” Χ‘Χ™Χ Χ•Χ Χ™Χª"/>
+                                <FormControlLabel value="3" labelPlacement="end" control={<Radio/>} label="Χ‘ΧΧ™Χ“Χ” Χ¨Χ‘Χ”"/>
+                                <FormControlLabel value="4" labelPlacement="end" control={<Radio/>} label="Χ‘ΧΧ™Χ“Χ” Χ¨Χ‘Χ” ΧΧΧ•Χ“"/>
                         </RadioGroup>
                     </div>
                     <div>
                         <label id="checkbox" className="title-input" htmlFor="name">
-                        ΰπι ξψβιω/δ αθεη μδϊξεγγ ςν ψΰιεο ςαεγδ 
+                        ΧΧ Χ™ ΧΧ¨Χ’Χ™Χ©/Χ” Χ‘ΧΧ•Χ— ΧΧ”ΧªΧΧ•Χ“Χ“ ΧΆΧ Χ¨ΧΧ™Χ•Χ ΧΆΧ‘Χ•Χ“Χ” 
 
                         </label>
                         <br/>
@@ -375,16 +375,16 @@ class StudentOpened extends React.Component {
                             row={true}
                         >
                                 <FormControlLabel value="0" labelPlacement="end" control={<Radio/>}
-                                                label="αξιγδ ξεςθδ ξΰεγ"/>
-                                <FormControlLabel value="1" labelPlacement="end" control={<Radio/>} label="αξιγδ ξεςθδ"/>
-                                <FormControlLabel value="2" labelPlacement="end" control={<Radio/>} label="αξιγδ αιπεπιϊ"/>
-                                <FormControlLabel value="3" labelPlacement="end" control={<Radio/>} label="αξιγδ ψαδ"/>
-                                <FormControlLabel value="4" labelPlacement="end" control={<Radio/>} label="αξιγδ ψαδ ξΰεγ"/>
+                                                label="Χ‘ΧΧ™Χ“Χ” ΧΧ•ΧΆΧΧ” ΧΧΧ•Χ“"/>
+                                <FormControlLabel value="1" labelPlacement="end" control={<Radio/>} label="Χ‘ΧΧ™Χ“Χ” ΧΧ•ΧΆΧΧ”"/>
+                                <FormControlLabel value="2" labelPlacement="end" control={<Radio/>} label="Χ‘ΧΧ™Χ“Χ” Χ‘Χ™Χ Χ•Χ Χ™Χª"/>
+                                <FormControlLabel value="3" labelPlacement="end" control={<Radio/>} label="Χ‘ΧΧ™Χ“Χ” Χ¨Χ‘Χ”"/>
+                                <FormControlLabel value="4" labelPlacement="end" control={<Radio/>} label="Χ‘ΧΧ™Χ“Χ” Χ¨Χ‘Χ” ΧΧΧ•Χ“"/>
                         </RadioGroup>
                     </div>
                     <div>
                         <label id="checkbox" className="title-input" htmlFor="name">
-                        ΰπι ιεγς/ϊ λιφγ μλϊεα χεψεϊ ηιιν αΰετο ςφξΰι    
+                        ΧΧ Χ™ Χ™Χ•Χ“ΧΆ/Χª Χ›Χ™Χ¦Χ“ ΧΧ›ΧªΧ•Χ‘ Χ§Χ•Χ¨Χ•Χª Χ—Χ™Χ™Χ Χ‘ΧΧ•Χ¤Χ ΧΆΧ¦ΧΧΧ™    
 
                         </label>
                         <br/>
@@ -396,16 +396,16 @@ class StudentOpened extends React.Component {
                             row={true}
                         >
                                 <FormControlLabel value="0" labelPlacement="end" control={<Radio/>}
-                                                label="αξιγδ ξεςθδ ξΰεγ"/>
-                                <FormControlLabel value="1" labelPlacement="end" control={<Radio/>} label="αξιγδ ξεςθδ"/>
-                                <FormControlLabel value="2" labelPlacement="end" control={<Radio/>} label="αξιγδ αιπεπιϊ"/>
-                                <FormControlLabel value="3" labelPlacement="end" control={<Radio/>} label="αξιγδ ψαδ"/>
-                                <FormControlLabel value="4" labelPlacement="end" control={<Radio/>} label="αξιγδ ψαδ ξΰεγ"/>
+                                                label="Χ‘ΧΧ™Χ“Χ” ΧΧ•ΧΆΧΧ” ΧΧΧ•Χ“"/>
+                                <FormControlLabel value="1" labelPlacement="end" control={<Radio/>} label="Χ‘ΧΧ™Χ“Χ” ΧΧ•ΧΆΧΧ”"/>
+                                <FormControlLabel value="2" labelPlacement="end" control={<Radio/>} label="Χ‘ΧΧ™Χ“Χ” Χ‘Χ™Χ Χ•Χ Χ™Χª"/>
+                                <FormControlLabel value="3" labelPlacement="end" control={<Radio/>} label="Χ‘ΧΧ™Χ“Χ” Χ¨Χ‘Χ”"/>
+                                <FormControlLabel value="4" labelPlacement="end" control={<Radio/>} label="Χ‘ΧΧ™Χ“Χ” Χ¨Χ‘Χ” ΧΧΧ•Χ“"/>
                         </RadioGroup>
                     </div>
                     <div>
                         <label id="checkbox" className="title-input" htmlFor="name">
-                        ΰπι ξΰξιο/δ ωΰφμιη μδωιβ ΰϊ δςαεγδ ωΰπι ψεφδ αςϊιγ  
+                        ΧΧ Χ™ ΧΧΧΧ™Χ/Χ” Χ©ΧΧ¦ΧΧ™Χ— ΧΧ”Χ©Χ™Χ’ ΧΧª Χ”ΧΆΧ‘Χ•Χ“Χ” Χ©ΧΧ Χ™ Χ¨Χ•Χ¦Χ” Χ‘ΧΆΧªΧ™Χ“  
 
                         </label>
                         <br/>
@@ -417,16 +417,16 @@ class StudentOpened extends React.Component {
                             row={true}
                         >
                                 <FormControlLabel value="0" labelPlacement="end" control={<Radio/>}
-                                                label="αξιγδ ξεςθδ ξΰεγ"/>
-                                <FormControlLabel value="1" labelPlacement="end" control={<Radio/>} label="αξιγδ ξεςθδ"/>
-                                <FormControlLabel value="2" labelPlacement="end" control={<Radio/>} label="αξιγδ αιπεπιϊ"/>
-                                <FormControlLabel value="3" labelPlacement="end" control={<Radio/>} label="αξιγδ ψαδ"/>
-                                <FormControlLabel value="4" labelPlacement="end" control={<Radio/>} label="αξιγδ ψαδ ξΰεγ"/>
+                                                label="Χ‘ΧΧ™Χ“Χ” ΧΧ•ΧΆΧΧ” ΧΧΧ•Χ“"/>
+                                <FormControlLabel value="1" labelPlacement="end" control={<Radio/>} label="Χ‘ΧΧ™Χ“Χ” ΧΧ•ΧΆΧΧ”"/>
+                                <FormControlLabel value="2" labelPlacement="end" control={<Radio/>} label="Χ‘ΧΧ™Χ“Χ” Χ‘Χ™Χ Χ•Χ Χ™Χª"/>
+                                <FormControlLabel value="3" labelPlacement="end" control={<Radio/>} label="Χ‘ΧΧ™Χ“Χ” Χ¨Χ‘Χ”"/>
+                                <FormControlLabel value="4" labelPlacement="end" control={<Radio/>} label="Χ‘ΧΧ™Χ“Χ” Χ¨Χ‘Χ” ΧΧΧ•Χ“"/>
                         </RadioGroup>
                     </div>
                     <div>
                         <label id="checkbox" className="title-input" htmlFor="name">
-                        ΰπι ξΰεγ ψεφδ μδωϊμα αωεχ δςαεγδ αςϊιγ  
+                        ΧΧ Χ™ ΧΧΧ•Χ“ Χ¨Χ•Χ¦Χ” ΧΧ”Χ©ΧªΧΧ‘ Χ‘Χ©Χ•Χ§ Χ”ΧΆΧ‘Χ•Χ“Χ” Χ‘ΧΆΧªΧ™Χ“  
 
                         </label>
                         <br/>
@@ -438,16 +438,16 @@ class StudentOpened extends React.Component {
                             row={true}
                         >
                                 <FormControlLabel value="0" labelPlacement="end" control={<Radio/>}
-                                                label="αξιγδ ξεςθδ ξΰεγ"/>
-                                <FormControlLabel value="1" labelPlacement="end" control={<Radio/>} label="αξιγδ ξεςθδ"/>
-                                <FormControlLabel value="2" labelPlacement="end" control={<Radio/>} label="αξιγδ αιπεπιϊ"/>
-                                <FormControlLabel value="3" labelPlacement="end" control={<Radio/>} label="αξιγδ ψαδ"/>
-                                <FormControlLabel value="4" labelPlacement="end" control={<Radio/>} label="αξιγδ ψαδ ξΰεγ"/>
+                                                label="Χ‘ΧΧ™Χ“Χ” ΧΧ•ΧΆΧΧ” ΧΧΧ•Χ“"/>
+                                <FormControlLabel value="1" labelPlacement="end" control={<Radio/>} label="Χ‘ΧΧ™Χ“Χ” ΧΧ•ΧΆΧΧ”"/>
+                                <FormControlLabel value="2" labelPlacement="end" control={<Radio/>} label="Χ‘ΧΧ™Χ“Χ” Χ‘Χ™Χ Χ•Χ Χ™Χª"/>
+                                <FormControlLabel value="3" labelPlacement="end" control={<Radio/>} label="Χ‘ΧΧ™Χ“Χ” Χ¨Χ‘Χ”"/>
+                                <FormControlLabel value="4" labelPlacement="end" control={<Radio/>} label="Χ‘ΧΧ™Χ“Χ” Χ¨Χ‘Χ” ΧΧΧ•Χ“"/>
                         </RadioGroup>
                     </div>
                     <div>
                         <label id="checkbox" className="title-input" htmlFor="name">
-                        ΰπι ξελπ/δ μδϊΰξυ λγι μδωϊμα αςαεγδ ωϊϊΰιν μι   
+                        ΧΧ Χ™ ΧΧ•Χ›Χ /Χ” ΧΧ”ΧªΧΧΧ¥ Χ›Χ“Χ™ ΧΧ”Χ©ΧªΧΧ‘ Χ‘ΧΆΧ‘Χ•Χ“Χ” Χ©ΧªΧªΧΧ™Χ ΧΧ™   
 
                         </label>
                         <br/>
@@ -459,16 +459,16 @@ class StudentOpened extends React.Component {
                             row={true}
                         >
                                 <FormControlLabel value="0" labelPlacement="end" control={<Radio/>}
-                                                label="αξιγδ ξεςθδ ξΰεγ"/>
-                                <FormControlLabel value="1" labelPlacement="end" control={<Radio/>} label="αξιγδ ξεςθδ"/>
-                                <FormControlLabel value="2" labelPlacement="end" control={<Radio/>} label="αξιγδ αιπεπιϊ"/>
-                                <FormControlLabel value="3" labelPlacement="end" control={<Radio/>} label="αξιγδ ψαδ"/>
-                                <FormControlLabel value="4" labelPlacement="end" control={<Radio/>} label="αξιγδ ψαδ ξΰεγ"/>
+                                                label="Χ‘ΧΧ™Χ“Χ” ΧΧ•ΧΆΧΧ” ΧΧΧ•Χ“"/>
+                                <FormControlLabel value="1" labelPlacement="end" control={<Radio/>} label="Χ‘ΧΧ™Χ“Χ” ΧΧ•ΧΆΧΧ”"/>
+                                <FormControlLabel value="2" labelPlacement="end" control={<Radio/>} label="Χ‘ΧΧ™Χ“Χ” Χ‘Χ™Χ Χ•Χ Χ™Χª"/>
+                                <FormControlLabel value="3" labelPlacement="end" control={<Radio/>} label="Χ‘ΧΧ™Χ“Χ” Χ¨Χ‘Χ”"/>
+                                <FormControlLabel value="4" labelPlacement="end" control={<Radio/>} label="Χ‘ΧΧ™Χ“Χ” Χ¨Χ‘Χ” ΧΧΧ•Χ“"/>
                         </RadioGroup>
                     </div>
                     <div>
                         <label id="checkbox" className="title-input" htmlFor="name">
-                        αςϊιγ, λωΰξφς ςαεγδ, ιδιδ μι ηωεα μδφμιη αδ εμδιωΰψ αδ μΰεψκ ζξο    
+                        Χ‘ΧΆΧªΧ™Χ“, Χ›Χ©ΧΧΧ¦ΧΆ ΧΆΧ‘Χ•Χ“Χ”, Χ™Χ”Χ™Χ” ΧΧ™ Χ—Χ©Χ•Χ‘ ΧΧ”Χ¦ΧΧ™Χ— Χ‘Χ” Χ•ΧΧ”Χ™Χ©ΧΧ¨ Χ‘Χ” ΧΧΧ•Χ¨Χ Χ–ΧΧ    
                         </label>
                         <br/>
                         <RadioGroup
@@ -479,16 +479,16 @@ class StudentOpened extends React.Component {
                             row={true}
                         >
                                 <FormControlLabel value="0" labelPlacement="end" control={<Radio/>}
-                                                label="αξιγδ ξεςθδ ξΰεγ"/>
-                                <FormControlLabel value="1" labelPlacement="end" control={<Radio/>} label="αξιγδ ξεςθδ"/>
-                                <FormControlLabel value="2" labelPlacement="end" control={<Radio/>} label="αξιγδ αιπεπιϊ"/>
-                                <FormControlLabel value="3" labelPlacement="end" control={<Radio/>} label="αξιγδ ψαδ"/>
-                                <FormControlLabel value="4" labelPlacement="end" control={<Radio/>} label="αξιγδ ψαδ ξΰεγ"/>
+                                                label="Χ‘ΧΧ™Χ“Χ” ΧΧ•ΧΆΧΧ” ΧΧΧ•Χ“"/>
+                                <FormControlLabel value="1" labelPlacement="end" control={<Radio/>} label="Χ‘ΧΧ™Χ“Χ” ΧΧ•ΧΆΧΧ”"/>
+                                <FormControlLabel value="2" labelPlacement="end" control={<Radio/>} label="Χ‘ΧΧ™Χ“Χ” Χ‘Χ™Χ Χ•Χ Χ™Χª"/>
+                                <FormControlLabel value="3" labelPlacement="end" control={<Radio/>} label="Χ‘ΧΧ™Χ“Χ” Χ¨Χ‘Χ”"/>
+                                <FormControlLabel value="4" labelPlacement="end" control={<Radio/>} label="Χ‘ΧΧ™Χ“Χ” Χ¨Χ‘Χ” ΧΧΧ•Χ“"/>
                         </RadioGroup>
                     </div>
                     <div>
                         <label id="checkbox" className="title-input" htmlFor="name">
-                        ΰπι ξωχις/δ ξηωαδ μβαι δςϊιγ δξχφεςι ωμι    
+                        ΧΧ Χ™ ΧΧ©Χ§Χ™ΧΆ/Χ” ΧΧ—Χ©Χ‘Χ” ΧΧ’Χ‘Χ™ Χ”ΧΆΧªΧ™Χ“ Χ”ΧΧ§Χ¦Χ•ΧΆΧ™ Χ©ΧΧ™    
                         </label>
                         <br/>
                         <RadioGroup
@@ -499,16 +499,16 @@ class StudentOpened extends React.Component {
                             row={true}
                         >
                                 <FormControlLabel value="0" labelPlacement="end" control={<Radio/>}
-                                                label="αξιγδ ξεςθδ ξΰεγ"/>
-                                <FormControlLabel value="1" labelPlacement="end" control={<Radio/>} label="αξιγδ ξεςθδ"/>
-                                <FormControlLabel value="2" labelPlacement="end" control={<Radio/>} label="αξιγδ αιπεπιϊ"/>
-                                <FormControlLabel value="3" labelPlacement="end" control={<Radio/>} label="αξιγδ ψαδ"/>
-                                <FormControlLabel value="4" labelPlacement="end" control={<Radio/>} label="αξιγδ ψαδ ξΰεγ"/>
+                                                label="Χ‘ΧΧ™Χ“Χ” ΧΧ•ΧΆΧΧ” ΧΧΧ•Χ“"/>
+                                <FormControlLabel value="1" labelPlacement="end" control={<Radio/>} label="Χ‘ΧΧ™Χ“Χ” ΧΧ•ΧΆΧΧ”"/>
+                                <FormControlLabel value="2" labelPlacement="end" control={<Radio/>} label="Χ‘ΧΧ™Χ“Χ” Χ‘Χ™Χ Χ•Χ Χ™Χª"/>
+                                <FormControlLabel value="3" labelPlacement="end" control={<Radio/>} label="Χ‘ΧΧ™Χ“Χ” Χ¨Χ‘Χ”"/>
+                                <FormControlLabel value="4" labelPlacement="end" control={<Radio/>} label="Χ‘ΧΧ™Χ“Χ” Χ¨Χ‘Χ” ΧΧΧ•Χ“"/>
                         </RadioGroup>
                     </div>
                     <div>
                         <label id="checkbox" className="title-input" htmlFor="name">
-                        δΰν ΰϊ/δ ξϊλεεπ/ϊ μδϊβιιρ μφαΰ/ ωιψεϊ μΰεξι?    
+                        Χ”ΧΧ ΧΧª/Χ” ΧΧªΧ›Χ•Χ•Χ /Χª ΧΧ”ΧªΧ’Χ™Χ™Χ΅ ΧΧ¦Χ‘Χ/ Χ©Χ™Χ¨Χ•Χª ΧΧΧ•ΧΧ™?    
                         </label>
                         <br/>
                         <RadioGroup
@@ -519,16 +519,16 @@ class StudentOpened extends React.Component {
                             row={true}
                         >
                                 <FormControlLabel value="0" labelPlacement="end" control={<Radio/>}
-                                                label="αξιγδ ξεςθδ ξΰεγ"/>
-                                <FormControlLabel value="1" labelPlacement="end" control={<Radio/>} label="αξιγδ ξεςθδ"/>
-                                <FormControlLabel value="2" labelPlacement="end" control={<Radio/>} label="αξιγδ αιπεπιϊ"/>
-                                <FormControlLabel value="3" labelPlacement="end" control={<Radio/>} label="αξιγδ ψαδ"/>
-                                <FormControlLabel value="4" labelPlacement="end" control={<Radio/>} label="αξιγδ ψαδ ξΰεγ"/>
+                                                label="Χ‘ΧΧ™Χ“Χ” ΧΧ•ΧΆΧΧ” ΧΧΧ•Χ“"/>
+                                <FormControlLabel value="1" labelPlacement="end" control={<Radio/>} label="Χ‘ΧΧ™Χ“Χ” ΧΧ•ΧΆΧΧ”"/>
+                                <FormControlLabel value="2" labelPlacement="end" control={<Radio/>} label="Χ‘ΧΧ™Χ“Χ” Χ‘Χ™Χ Χ•Χ Χ™Χª"/>
+                                <FormControlLabel value="3" labelPlacement="end" control={<Radio/>} label="Χ‘ΧΧ™Χ“Χ” Χ¨Χ‘Χ”"/>
+                                <FormControlLabel value="4" labelPlacement="end" control={<Radio/>} label="Χ‘ΧΧ™Χ“Χ” Χ¨Χ‘Χ” ΧΧΧ•Χ“"/>
                         </RadioGroup>
                     </div>
                     <div>
                         <label id="checkbox" className="title-input" htmlFor="name">
-                        ΰπι ξΰξιπ/δ ωΰφμιη μδωιβ λμ ξθψδ αηιιν  
+                        ΧΧ Χ™ ΧΧΧΧ™Χ /Χ” Χ©ΧΧ¦ΧΧ™Χ— ΧΧ”Χ©Χ™Χ’ Χ›Χ ΧΧΧ¨Χ” Χ‘Χ—Χ™Χ™Χ  
                         </label>
                         <br/>
                         <RadioGroup
@@ -539,16 +539,16 @@ class StudentOpened extends React.Component {
                             row={true}
                         >
                                 <FormControlLabel value="0" labelPlacement="end" control={<Radio/>}
-                                                label="αξιγδ ξεςθδ ξΰεγ"/>
-                                <FormControlLabel value="1" labelPlacement="end" control={<Radio/>} label="αξιγδ ξεςθδ"/>
-                                <FormControlLabel value="2" labelPlacement="end" control={<Radio/>} label="αξιγδ αιπεπιϊ"/>
-                                <FormControlLabel value="3" labelPlacement="end" control={<Radio/>} label="αξιγδ ψαδ"/>
-                                <FormControlLabel value="4" labelPlacement="end" control={<Radio/>} label="αξιγδ ψαδ ξΰεγ"/>
+                                                label="Χ‘ΧΧ™Χ“Χ” ΧΧ•ΧΆΧΧ” ΧΧΧ•Χ“"/>
+                                <FormControlLabel value="1" labelPlacement="end" control={<Radio/>} label="Χ‘ΧΧ™Χ“Χ” ΧΧ•ΧΆΧΧ”"/>
+                                <FormControlLabel value="2" labelPlacement="end" control={<Radio/>} label="Χ‘ΧΧ™Χ“Χ” Χ‘Χ™Χ Χ•Χ Χ™Χª"/>
+                                <FormControlLabel value="3" labelPlacement="end" control={<Radio/>} label="Χ‘ΧΧ™Χ“Χ” Χ¨Χ‘Χ”"/>
+                                <FormControlLabel value="4" labelPlacement="end" control={<Radio/>} label="Χ‘ΧΧ™Χ“Χ” Χ¨Χ‘Χ” ΧΧΧ•Χ“"/>
                         </RadioGroup>
                     </div>
                     <div>
                         <label id="checkbox" className="title-input" htmlFor="name">
-                        χεψεϊ ηιιν  
+                        Χ§Χ•Χ¨Χ•Χª Χ—Χ™Χ™Χ  
                         </label>
                         <br/>
                         <RadioGroup
@@ -559,17 +559,17 @@ class StudentOpened extends React.Component {
                             row={true}
                         >
                                 <FormControlLabel value="0" labelPlacement="end" control={<Radio/>}
-                                                label="μΰ ιεγς/ϊ αλμμ"/>
-                                <FormControlLabel value="1" labelPlacement="end" control={<Radio/>} label="ιεγςϊ ξςθ ξΰεγ"/>
-                                <FormControlLabel value="2" labelPlacement="end" control={<Radio/>} label="ιεγς/ϊ ξρτιχ "/>
-                                <FormControlLabel value="3" labelPlacement="end" control={<Radio/>} label="ιεγς/ϊ δψαδ  "/>
-                                <FormControlLabel value="4" labelPlacement="end" control={<Radio/>} label="ιεγς/ϊ δψαδ ξΰεγ
+                                                label="ΧΧ Χ™Χ•Χ“ΧΆ/Χª Χ‘Χ›ΧΧ"/>
+                                <FormControlLabel value="1" labelPlacement="end" control={<Radio/>} label="Χ™Χ•Χ“ΧΆΧª ΧΧΆΧ ΧΧΧ•Χ“"/>
+                                <FormControlLabel value="2" labelPlacement="end" control={<Radio/>} label="Χ™Χ•Χ“ΧΆ/Χª ΧΧ΅Χ¤Χ™Χ§ "/>
+                                <FormControlLabel value="3" labelPlacement="end" control={<Radio/>} label="Χ™Χ•Χ“ΧΆ/Χª Χ”Χ¨Χ‘Χ”  "/>
+                                <FormControlLabel value="4" labelPlacement="end" control={<Radio/>} label="Χ™Χ•Χ“ΧΆ/Χª Χ”Χ¨Χ‘Χ” ΧΧΧ•Χ“
 "/>
                         </RadioGroup>
                     </div>
                     <div>
                         <label id="checkbox" className="title-input" htmlFor="name">
-                        ψΰιεο ςαεγδ 
+                        Χ¨ΧΧ™Χ•Χ ΧΆΧ‘Χ•Χ“Χ” 
                         </label>
                         <br/>
                         <RadioGroup
@@ -580,18 +580,18 @@ class StudentOpened extends React.Component {
                             row={true}
                         >
                                 <FormControlLabel value="0" labelPlacement="end" control={<Radio/>}
-                                                label="μΰ ιεγς/ϊ αλμμ"/>
-                                <FormControlLabel value="1" labelPlacement="end" control={<Radio/>} label="ιεγςϊ ξςθ ξΰεγ"/>
-                                <FormControlLabel value="2" labelPlacement="end" control={<Radio/>} label="ιεγς/ϊ ξρτιχ "/>
-                                <FormControlLabel value="3" labelPlacement="end" control={<Radio/>} label="ιεγς/ϊ δψαδ  "/>
-                                <FormControlLabel value="4" labelPlacement="end" control={<Radio/>} label="ιεγς/ϊ δψαδ ξΰεγ
+                                                label="ΧΧ Χ™Χ•Χ“ΧΆ/Χª Χ‘Χ›ΧΧ"/>
+                                <FormControlLabel value="1" labelPlacement="end" control={<Radio/>} label="Χ™Χ•Χ“ΧΆΧª ΧΧΆΧ ΧΧΧ•Χ“"/>
+                                <FormControlLabel value="2" labelPlacement="end" control={<Radio/>} label="Χ™Χ•Χ“ΧΆ/Χª ΧΧ΅Χ¤Χ™Χ§ "/>
+                                <FormControlLabel value="3" labelPlacement="end" control={<Radio/>} label="Χ™Χ•Χ“ΧΆ/Χª Χ”Χ¨Χ‘Χ”  "/>
+                                <FormControlLabel value="4" labelPlacement="end" control={<Radio/>} label="Χ™Χ•Χ“ΧΆ/Χª Χ”Χ¨Χ‘Χ” ΧΧΧ•Χ“
 "/>
                         </RadioGroup>
                     </div>
 
                     <div>
                         <label id="checkbox" className="title-input" htmlFor="name">
-                        λϊιαϊ ϊελπιϊ ςρχιϊ  
+                        Χ›ΧªΧ™Χ‘Χª ΧªΧ•Χ›Χ Χ™Χª ΧΆΧ΅Χ§Χ™Χª  
                         </label>
                         <br/>
                         <RadioGroup
@@ -602,17 +602,17 @@ class StudentOpened extends React.Component {
                             row={true}
                         >
                                 <FormControlLabel value="0" labelPlacement="end" control={<Radio/>}
-                                                label="μΰ ιεγς/ϊ αλμμ"/>
-                                <FormControlLabel value="1" labelPlacement="end" control={<Radio/>} label="ιεγςϊ ξςθ ξΰεγ"/>
-                                <FormControlLabel value="2" labelPlacement="end" control={<Radio/>} label="ιεγς/ϊ ξρτιχ "/>
-                                <FormControlLabel value="3" labelPlacement="end" control={<Radio/>} label="ιεγς/ϊ δψαδ  "/>
-                                <FormControlLabel value="4" labelPlacement="end" control={<Radio/>} label="ιεγς/ϊ δψαδ ξΰεγ
+                                                label="ΧΧ Χ™Χ•Χ“ΧΆ/Χª Χ‘Χ›ΧΧ"/>
+                                <FormControlLabel value="1" labelPlacement="end" control={<Radio/>} label="Χ™Χ•Χ“ΧΆΧª ΧΧΆΧ ΧΧΧ•Χ“"/>
+                                <FormControlLabel value="2" labelPlacement="end" control={<Radio/>} label="Χ™Χ•Χ“ΧΆ/Χª ΧΧ΅Χ¤Χ™Χ§ "/>
+                                <FormControlLabel value="3" labelPlacement="end" control={<Radio/>} label="Χ™Χ•Χ“ΧΆ/Χª Χ”Χ¨Χ‘Χ”  "/>
+                                <FormControlLabel value="4" labelPlacement="end" control={<Radio/>} label="Χ™Χ•Χ“ΧΆ/Χª Χ”Χ¨Χ‘Χ” ΧΧΧ•Χ“
 "/>
                         </RadioGroup>
                     </div>
                     <div>
                         <label id="checkbox" className="title-input" htmlFor="name">
-                        ϊλπεο βΰπθ ςαεγδ    
+                        ΧªΧ›Χ Χ•Χ Χ’ΧΧ Χ ΧΆΧ‘Χ•Χ“Χ”    
                         </label>
                         <br/>
                         <RadioGroup
@@ -623,17 +623,17 @@ class StudentOpened extends React.Component {
                             row={true}
                         >
                                 <FormControlLabel value="0" labelPlacement="end" control={<Radio/>}
-                                                label="μΰ ιεγς/ϊ αλμμ"/>
-                                <FormControlLabel value="1" labelPlacement="end" control={<Radio/>} label="ιεγςϊ ξςθ ξΰεγ"/>
-                                <FormControlLabel value="2" labelPlacement="end" control={<Radio/>} label="ιεγς/ϊ ξρτιχ "/>
-                                <FormControlLabel value="3" labelPlacement="end" control={<Radio/>} label="ιεγς/ϊ δψαδ  "/>
-                                <FormControlLabel value="4" labelPlacement="end" control={<Radio/>} label="ιεγς/ϊ δψαδ ξΰεγ
+                                                label="ΧΧ Χ™Χ•Χ“ΧΆ/Χª Χ‘Χ›ΧΧ"/>
+                                <FormControlLabel value="1" labelPlacement="end" control={<Radio/>} label="Χ™Χ•Χ“ΧΆΧª ΧΧΆΧ ΧΧΧ•Χ“"/>
+                                <FormControlLabel value="2" labelPlacement="end" control={<Radio/>} label="Χ™Χ•Χ“ΧΆ/Χª ΧΧ΅Χ¤Χ™Χ§ "/>
+                                <FormControlLabel value="3" labelPlacement="end" control={<Radio/>} label="Χ™Χ•Χ“ΧΆ/Χª Χ”Χ¨Χ‘Χ”  "/>
+                                <FormControlLabel value="4" labelPlacement="end" control={<Radio/>} label="Χ™Χ•Χ“ΧΆ/Χª Χ”Χ¨Χ‘Χ” ΧΧΧ•Χ“
 "/>
                         </RadioGroup>
                     </div>
                     <div>
                         <label id="checkbox" className="title-input" htmlFor="name">
-                        ξδ ΰϊ/δ ξφτδ μμξεγ αϊελπιϊ?
+                        ΧΧ” ΧΧª/Χ” ΧΧ¦Χ¤Χ” ΧΧΧΧ•Χ“ Χ‘ΧªΧ•Χ›Χ Χ™Χª?
                         </label>
                         <div id="name-group" className="form-group">
                             {/* <label id="feedback" className="title-input" htmlFor="name">Other </label> */}
@@ -645,7 +645,7 @@ class StudentOpened extends React.Component {
                     </div>
                     <div>
                         <label id="checkbox" className="title-input" htmlFor="name">
-                        ξδ ΰϊ/δ ξψβιω/δ ωΰϊ/δ φψικ/δ μμξεγ αϊελπιϊ λγι μδφμιη μδωϊμα αςαεγδ ωΰϊ/δ ψεφδ ?
+                        ΧΧ” ΧΧª/Χ” ΧΧ¨Χ’Χ™Χ©/Χ” Χ©ΧΧª/Χ” Χ¦Χ¨Χ™Χ/Χ” ΧΧΧΧ•Χ“ Χ‘ΧªΧ•Χ›Χ Χ™Χª Χ›Χ“Χ™ ΧΧ”Χ¦ΧΧ™Χ— ΧΧ”Χ©ΧªΧΧ‘ Χ‘ΧΆΧ‘Χ•Χ“Χ” Χ©ΧΧª/Χ” Χ¨Χ•Χ¦Χ” ?
                         </label>
                         <div id="name-group" className="form-group">
                             {/* <label id="feedback" className="title-input" htmlFor="name">Other </label> */}
@@ -658,16 +658,16 @@ class StudentOpened extends React.Component {
                     </div>
         </div>
 
-        <button id="confirm-form" className="btn btn-info" onClick={this.handleSubmit}>γεεη πεληεϊ εωμη ξωεα
+        <button id="confirm-form" className="btn btn-info" onClick={this.handleSubmit}>Χ“Χ•Χ•Χ— Χ Χ•Χ›Χ—Χ•Χª Χ•Χ©ΧΧ— ΧΧ©Χ•Χ‘
                 </button>
                 <button id="feedback-button" className="btn btn-info" onClick={() => {
                     this.loadPage()
                     this.BackPage()
-                }}>ηζψδ μϊτψιθ
+                }}>Χ—Χ–Χ¨Χ” ΧΧªΧ¤Χ¨Χ™Χ
                 </button>
                 <button id="logout" className="btn btn-info" onClick={() => {
                     signOut()
-                }}>δϊπϊχ
+                }}>Χ”ΧªΧ ΧªΧ§
                 </button>
 </div></div>);
    
