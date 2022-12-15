@@ -1,4 +1,5 @@
 
+
 import React from 'react'
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 import HomePage from './components/pages/HomePage/HomePage';
@@ -18,19 +19,20 @@ import test_g_f from "./components/pages/Users/Guide/test_g_f";
 import TempStudent from "./components/pages/Users/Student/TempStudent";
 import TempGuide from "./components/pages/Users/Guide/TempGuide";
 import TempManager from './components/pages/Users/Manager/TempManager';
-
-
 import UserApproval from "./components/pages/Users/Manager/UserApproval";
 import notFound from "./404";
 import AttendReport from "./components/pages/Users/Manager/mngAttendReport";
 import FeedbackStudents from "./components/pages/Users/Manager/mngStudFeedback";
+//import FeedbackTrips from "./components/pages/Users/Manager/MngTrips";
 import FeedbackGuides from "./components/pages/Users/Manager/mngGuideFeedback";
 import UpdatesFirebase from "./components/pages/Users/Manager/UpdatesFirebase";
 import StudentFeedback from "./components/pages/Users/Student/stud_feedback";
 import StudentOpened from "./components/pages/Users/Student/stud_opened";
+//import StudentSummary from "./components/pages/Users/Student/stud_summary";
 import bmGuideFeedback from "./components/pages/Users/BusinessMentor/bmGuideFeedback";
 import Profile from "./components/pages/Users/profile";
 import GuideReports from "./components/pages/Users/Guide/guide_attend_report";
+import TripReport from "./components/pages/Users/Guide/TripReport";
 import GuideFeedback from "./components/pages/Users/Guide/guide_feedback";
 import Wait from "./components/pages/Users/await";
 
@@ -58,6 +60,8 @@ function LoadPage() {
                     <Route exact path="/Student/:id" component={Students} />
                     <Route exact path="/Student/:id/Feedback" component={StudentFeedback} />
                     <Route exact path="/Student/:id/Opened" component={StudentOpened} />
+                   {/* <Route exact path="/Student/:id/Summary" component={StudentSummary} />*/}
+
                     <Route exact path="/Student/:id/Profile" component={Profile} />
                     <Route exact path="/Student/:id/:404" component={notFound} />
                     <Route exact path="/Student/:id/:page/:404" component={notFound} />
@@ -66,6 +70,7 @@ function LoadPage() {
                     <Route exact path="/Guide/:id" component={Guides} />
                     <Route exact path="/Guide/:id/Reports" component={GuideReports} />
                     <Route exact path="/Guide/:id/Feedback" component={GuideFeedback} />
+                    <Route exact path="/Guide/:id/Trips" component={TripReport} />
                     <Route exact path="/Guide/:id/profile" component={Profile} />
                     <Route exact path="/Guide/:id/:404" component={notFound} />
                     <Route exact path="/Guide/:id/:page/:404" component={notFound} />
@@ -84,6 +89,8 @@ function LoadPage() {
                     <Route exact path="/Manager/:id/Reports" component={AttendReport} />
                     <Route exact path="/Manager/:id/Feedbacks/Guide" component={FeedbackGuides} />
                     <Route exact path="/Manager/:id/Feedbacks/Student" component={FeedbackStudents} />
+                    {/*<Route exact path="/Manager/:id/Feedbacks/Trips" component={FeedbackTrips} />*/}
+
                     <Route exact path="/Manager/:id/profile" component={Profile} />
                     <Route exact path="/Manager/:id/:404" component={notFound} />
                     <Route exact path="/Manager/:id/:page/:404" component={notFound} />
