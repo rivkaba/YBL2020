@@ -49,7 +49,7 @@ class StudentFeedback extends React.Component {
 
 
     }
-
+    
 
     async sendDataToFirebase(form)
     {

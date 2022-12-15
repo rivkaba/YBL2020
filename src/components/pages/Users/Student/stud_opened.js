@@ -27,7 +27,7 @@ class StudentOpened extends React.Component {
             searchTerm:"",
             searchResults:[],
             finalForm: {
-                sexe: '',
+                gender: '',
                 age: '',
                 q1: '',
                 q2: '',
@@ -44,7 +44,7 @@ class StudentOpened extends React.Component {
                 q2_2: '',
                 q2_3: '',
                 q2_4: '',
-                waitingProgram: '',
+                hopeTostudy: '',
                 needTostudy: '',
             },            
             search: true,
@@ -125,7 +125,7 @@ class StudentOpened extends React.Component {
         try{
             await db.collection("students").doc(path).collection('Opening questionnaire').doc('form').set({
                 form: this.state.finalForm
-            }).then(()=>{
+            }).then(async()=>{
                 alert(" תודה, הטופס נשלח בהצלחה")
                 window.location.reload(true);
             })
@@ -142,16 +142,18 @@ class StudentOpened extends React.Component {
 
     handleSubmit = (event) =>
     {
-
+        var lack=false;
+        var i=0;
         for (const key in this.state.finalForm) {
+            i++;
             if (this.state.finalForm[key] == "") {
-                alert('all fields are required coucou')
-            } else {
-                this.sendDataToFirebase()
+                lack=true;
+                alert('חסרה תשובה מס '+ i)
             }
         } 
-
-
+        if (lack===false)
+                this.sendDataToFirebase()
+            }
 
         
 
@@ -163,7 +165,7 @@ class StudentOpened extends React.Component {
         // }
 
 
-    }
+    
     loadPage(event){
         this.setState({loading:event})
         //    this.render()
@@ -269,18 +271,30 @@ class StudentOpened extends React.Component {
 
             <div id="attendreport" className="sec-design" dir='rtl'>
                 <h2>שלום {this.state.user.displayName} </h2>
-
+  
+               <h2> שאלון פתיחת שנה - תוכנית עתיד לנוער</h2>
+חניכי וחניכות "מנהיגות עסקית צעירה" בתוכנית "עתיד לנוער" שלום רב,
+זהו המפגש הראשון בתוכנית, ואנחנו מאחלים לכם בהצלחה! :)
+בפניכם שאלון קצר הנוגע לתכנים השונים בהם תעסקו במהלך השנה. 
+אנא קראו את השאלות וענו בהתאם לתחושותיכם. 
+זכרו, השאלון אנונימי ואין תשובות נכונות ולא נכונות. אתם מתבקשים לענות את התשובה הכי נכונה עבורכם.
+                 <br/>
+                  <br/>
+                <label id="checkbox" className="title-input" htmlFor="name">
+                                 <b>  חלק א'</b>
+             <h4>אנא סמן/י את התשובות הרלנווטיות לגביך/לגבייך</h4>
+                    </label>
+                    <br/>
                 <div id="box" className="chekbox">
-                    <label id="checkbox" className="title-input" htmlFor="name">
-                 
 
-                    באיזה מידה המפגש היום חידש לך / למדת דברים חדשים?
+                    <label id="checkbox" className="title-input" htmlFor="name">
+                   מגדר
                     </label>
                     <br/>
                     <div>
                         <RadioGroup
                             aria-label="new"
-                            name="sexe"
+                            name="gender"
                             // value={location}
                             onChange={this.handleRadioButton}
                             row={true}
@@ -292,11 +306,17 @@ class StudentOpened extends React.Component {
                             {/* <label id="feedback" className="title-input" htmlFor="name">Other </label> */}
                             <input type="text" className="form-control" 
                             style={this.state.isFeedbackError === true ? { border: '2px solid red' } : { border: '' } }                        
-                            name="sexe" placeholder="Other"
+                            name="gender" placeholder="אחר"
                             minLength="10" onChange={this.handleChange} required/>
                         </div>
                     </div>
                     <div>
+                       <br/>
+
+                       <label id="checkbox" className="title-input" htmlFor="name">
+                   גיל
+                    </label>
+                    <br/>
                         <RadioGroup
                             aria-label="new"
                             name="age"
@@ -314,12 +334,18 @@ class StudentOpened extends React.Component {
                             {/* <label id="feedback" className="title-input" htmlFor="name">Other </label> */}
                             <input type="text" className="form-control" 
                             style={this.state.isFeedbackError === true ? { border: '2px solid red' } : { border: '' } }                        
-                            name="age" placeholder="גיל
-                            "
+                            name="age" placeholder="אחר"
                             minLength="10" onChange={this.handleChange} required/>
                         </div>
                     </div>
                     <div>
+                     <br/>
+                             <br/>
+                     <label id="checkbox" className="title-input" htmlFor="name">
+                                 <b>  חלק ב'</b>
+             <h4>אנא סמן/י באיזו מידה את/ה מסכים/ה עם הנאמר בכל אחד מהמשפטים הבאים?</h4>
+                    </label>
+                    <br/>
                         <label id="checkbox" className="title-input" htmlFor="name">
                         יש לי מיומנויות שיעזרו לי להשתלב בשוק העבודה (עמידה בזמנים, יכולת הצגה עצמית, התמדה).   
 
@@ -339,6 +365,8 @@ class StudentOpened extends React.Component {
                                 <FormControlLabel value="3" labelPlacement="end" control={<Radio/>} label="במידה רבה"/>
                                 <FormControlLabel value="4" labelPlacement="end" control={<Radio/>} label="במידה רבה מאוד"/>
                         </RadioGroup>
+                                <br/>
+
                     </div>
                     <div>
                         <label id="checkbox" className="title-input" htmlFor="name">
@@ -360,6 +388,8 @@ class StudentOpened extends React.Component {
                                 <FormControlLabel value="3" labelPlacement="end" control={<Radio/>} label="במידה רבה"/>
                                 <FormControlLabel value="4" labelPlacement="end" control={<Radio/>} label="במידה רבה מאוד"/>
                         </RadioGroup>
+                                   <br/>
+
                     </div>
                     <div>
                         <label id="checkbox" className="title-input" htmlFor="name">
@@ -381,6 +411,8 @@ class StudentOpened extends React.Component {
                                 <FormControlLabel value="3" labelPlacement="end" control={<Radio/>} label="במידה רבה"/>
                                 <FormControlLabel value="4" labelPlacement="end" control={<Radio/>} label="במידה רבה מאוד"/>
                         </RadioGroup>
+                                   <br/>
+
                     </div>
                     <div>
                         <label id="checkbox" className="title-input" htmlFor="name">
@@ -402,6 +434,8 @@ class StudentOpened extends React.Component {
                                 <FormControlLabel value="3" labelPlacement="end" control={<Radio/>} label="במידה רבה"/>
                                 <FormControlLabel value="4" labelPlacement="end" control={<Radio/>} label="במידה רבה מאוד"/>
                         </RadioGroup>
+                                  <br/>
+
                     </div>
                     <div>
                         <label id="checkbox" className="title-input" htmlFor="name">
@@ -423,6 +457,8 @@ class StudentOpened extends React.Component {
                                 <FormControlLabel value="3" labelPlacement="end" control={<Radio/>} label="במידה רבה"/>
                                 <FormControlLabel value="4" labelPlacement="end" control={<Radio/>} label="במידה רבה מאוד"/>
                         </RadioGroup>
+                               <br/>
+
                     </div>
                     <div>
                         <label id="checkbox" className="title-input" htmlFor="name">
@@ -444,6 +480,8 @@ class StudentOpened extends React.Component {
                                 <FormControlLabel value="3" labelPlacement="end" control={<Radio/>} label="במידה רבה"/>
                                 <FormControlLabel value="4" labelPlacement="end" control={<Radio/>} label="במידה רבה מאוד"/>
                         </RadioGroup>
+                               <br/>
+
                     </div>
                     <div>
                         <label id="checkbox" className="title-input" htmlFor="name">
@@ -465,6 +503,8 @@ class StudentOpened extends React.Component {
                                 <FormControlLabel value="3" labelPlacement="end" control={<Radio/>} label="במידה רבה"/>
                                 <FormControlLabel value="4" labelPlacement="end" control={<Radio/>} label="במידה רבה מאוד"/>
                         </RadioGroup>
+                                  <br/>
+
                     </div>
                     <div>
                         <label id="checkbox" className="title-input" htmlFor="name">
@@ -485,6 +525,8 @@ class StudentOpened extends React.Component {
                                 <FormControlLabel value="3" labelPlacement="end" control={<Radio/>} label="במידה רבה"/>
                                 <FormControlLabel value="4" labelPlacement="end" control={<Radio/>} label="במידה רבה מאוד"/>
                         </RadioGroup>
+                                 <br/>
+
                     </div>
                     <div>
                         <label id="checkbox" className="title-input" htmlFor="name">
@@ -505,6 +547,8 @@ class StudentOpened extends React.Component {
                                 <FormControlLabel value="3" labelPlacement="end" control={<Radio/>} label="במידה רבה"/>
                                 <FormControlLabel value="4" labelPlacement="end" control={<Radio/>} label="במידה רבה מאוד"/>
                         </RadioGroup>
+                                 <br/>
+
                     </div>
                     <div>
                         <label id="checkbox" className="title-input" htmlFor="name">
@@ -525,6 +569,7 @@ class StudentOpened extends React.Component {
                                 <FormControlLabel value="3" labelPlacement="end" control={<Radio/>} label="במידה רבה"/>
                                 <FormControlLabel value="4" labelPlacement="end" control={<Radio/>} label="במידה רבה מאוד"/>
                         </RadioGroup>
+                                           <br/>
                     </div>
                     <div>
                         <label id="checkbox" className="title-input" htmlFor="name">
@@ -547,6 +592,13 @@ class StudentOpened extends React.Component {
                         </RadioGroup>
                     </div>
                     <div>
+                            <br/>
+                             <br/>
+                     <label id="checkbox" className="title-input" htmlFor="name">
+                                 <b> חלק ג'</b>
+             <h4>עד כמה את/ה מרגיש/ה שאת/ה יודעת על כל אחד מהנושאים הבאים?</h4>
+                    </label>
+
                         <label id="checkbox" className="title-input" htmlFor="name">
                         קורות חיים  
                         </label>
@@ -566,6 +618,8 @@ class StudentOpened extends React.Component {
                                 <FormControlLabel value="4" labelPlacement="end" control={<Radio/>} label="יודע/ת הרבה מאוד
 "/>
                         </RadioGroup>
+                                        <br/>
+
                     </div>
                     <div>
                         <label id="checkbox" className="title-input" htmlFor="name">
@@ -587,6 +641,7 @@ class StudentOpened extends React.Component {
                                 <FormControlLabel value="4" labelPlacement="end" control={<Radio/>} label="יודע/ת הרבה מאוד
 "/>
                         </RadioGroup>
+                                        <br/>
                     </div>
 
                     <div>
@@ -609,6 +664,7 @@ class StudentOpened extends React.Component {
                                 <FormControlLabel value="4" labelPlacement="end" control={<Radio/>} label="יודע/ת הרבה מאוד
 "/>
                         </RadioGroup>
+                                       <br/>
                     </div>
                     <div>
                         <label id="checkbox" className="title-input" htmlFor="name">
@@ -632,6 +688,13 @@ class StudentOpened extends React.Component {
                         </RadioGroup>
                     </div>
                     <div>
+                    <br/>
+                             <br/>
+                     <label id="checkbox" className="title-input" htmlFor="name">
+                                 <b>  חלק ד'</b>
+                    </label>
+                    <br/>
+                  
                         <label id="checkbox" className="title-input" htmlFor="name">
                         מה את/ה מצפה ללמוד בתוכנית?
                         </label>
@@ -639,9 +702,10 @@ class StudentOpened extends React.Component {
                             {/* <label id="feedback" className="title-input" htmlFor="name">Other </label> */}
                             <input type="text" className="form-control" 
                             style={this.state.isFeedbackError === true ? { border: '2px solid red' } : { border: '' } }                        
-                            name="waitingProgram" placeholder="your answer"
-                            minLength="10" onChange={this.handleChange} required/>
+                            name="hopeTostudy" placeholder="תשובתך"
+                            minLength="10" onChange={this.handleChange} required/>         
                         </div>
+                         <br/>
                     </div>
                     <div>
                         <label id="checkbox" className="title-input" htmlFor="name">
@@ -651,14 +715,17 @@ class StudentOpened extends React.Component {
                             {/* <label id="feedback" className="title-input" htmlFor="name">Other </label> */}
                             <input type="text" className="form-control" 
                             style={this.state.isFeedbackError === true ? { border: '2px solid red' } : { border: '' } }                        
-                            name="needTostudy" placeholder="your answer
-                            "
+                           name="needTostudy" placeholder="תשובתך "
                             minLength="10" onChange={this.handleChange} required/>
-                        </div>
+                                      
+                        </div> 
+                       <br/>
+                        <br/>
+                      <b>  תודה ובהצלחה!!</b>
                     </div>
         </div>
 
-        <button id="confirm-form" className="btn btn-info" onClick={this.handleSubmit}>דווח נוכחות ושלח משוב
+        <button id="confirm-form" className="btn btn-info" onClick={this.handleSubmit}>שלח שאלון
                 </button>
                 <button id="feedback-button" className="btn btn-info" onClick={() => {
                     this.loadPage()
