@@ -16,6 +16,7 @@
     "react": "^16.13.1",
     "react-anchor-link-smooth-scroll": "^1.0.12",
     "react-csv": "^2.0.3",
+    "react-data-table-component": "^7.5.3",
     "react-dom": "^16.13.1",
     "react-moment": "^1.0.0",
     "react-promise-tracker": "^2.1.0",

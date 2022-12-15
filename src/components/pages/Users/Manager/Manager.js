@@ -1,3 +1,4 @@
+
 import React from "react";
 import {auth, getUser, signOut} from '../../../../firebase/firebase'
 import {NextPage} from "../UserPage";
@@ -130,11 +131,17 @@ class Manager extends React.Component {
                         return
                     }}>צפייה במשובי חניכים<span
                         className="fa fa-arrow-right"></span></button>
+
                     <button id="feedback-button" className="btn btn-info" onClick={() => {
                         this.ChangePage("Feedbacks/Guide")
                         return
                     }}>צפייה במשובי
                         מדריכים<span
+                        className="fa fa-arrow-right"></span></button>
+                                            <button id="feedback-button" className="btn btn-info" onClick={() => {
+                        this.ChangePage("Feedbacks/Trips")
+                        return
+                    }}>דוח נסיעות מדריך<span
                             className="fa fa-arrow-right"></span></button>
                     <button id="report-button" className="btn btn-info" onClick={() => {
                         NextPage(this.props, "Profile", this.state.user)

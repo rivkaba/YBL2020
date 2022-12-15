@@ -23,7 +23,7 @@ import UserApproval from "./components/pages/Users/Manager/UserApproval";
 import notFound from "./404";
 import AttendReport from "./components/pages/Users/Manager/mngAttendReport";
 import FeedbackStudents from "./components/pages/Users/Manager/mngStudFeedback";
-//import FeedbackTrips from "./components/pages/Users/Manager/MngTrips";
+import FeedbackTrips from "./components/pages/Users/Manager/MngTrips";
 import FeedbackGuides from "./components/pages/Users/Manager/mngGuideFeedback";
 import UpdatesFirebase from "./components/pages/Users/Manager/UpdatesFirebase";
 import StudentFeedback from "./components/pages/Users/Student/stud_feedback";
@@ -89,7 +89,7 @@ function LoadPage() {
                     <Route exact path="/Manager/:id/Reports" component={AttendReport} />
                     <Route exact path="/Manager/:id/Feedbacks/Guide" component={FeedbackGuides} />
                     <Route exact path="/Manager/:id/Feedbacks/Student" component={FeedbackStudents} />
-                    {/*<Route exact path="/Manager/:id/Feedbacks/Trips" component={FeedbackTrips} />*/}
+                    <Route exact path="/Manager/:id/Feedbacks/Trips" component={FeedbackTrips} />
 
                     <Route exact path="/Manager/:id/profile" component={Profile} />
                     <Route exact path="/Manager/:id/:404" component={notFound} />
