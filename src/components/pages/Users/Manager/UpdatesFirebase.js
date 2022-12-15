@@ -357,15 +357,15 @@ class UpdatesFirebase extends Component {
                             // this.setState({guideTeamPath,guideTeamName
                             var STeam=[]
                             var SSTeam=[]
+                            var guide= await db.collection("guides").where('teamName','==',e.label).get();
+                             guide.forEach( guide => {SSTeam.push(guide)})
                             var res1= await db.collection("students").where('teamName','==',e.label).get()
                             res1.forEach( res => {
                                  STeam.push({value: res, label: res.data().fname + ' ' + res.data().lname})
                                  SSTeam.push(res);
                                   }) 
-                           
                              this.setState({sTeam:STeam})
                             console.log("sTeam",this.state.sTeam);
-                          
                             this.setState({ssTeam:SSTeam})
                              console.log("ssTeam",this.state.ssTeam);
                              
@@ -935,8 +935,10 @@ class UpdatesFirebase extends Component {
         return(
             <div id="name-group" className="form-group" dir="rtl">
                 <div className="report" id="report">
+                 <Grid item xs={8} hidden={!(user.type=='guides')}>
+                     <h8> מדריך </h8>
+                 </Grid>
                     <div>
-
                         <h4> שם: {user.fname+' '+ user.lname} </h4>
                         <h4> טלפון: {user.phone}</h4>
                         <h4> אימייל: {user.email}</h4>
