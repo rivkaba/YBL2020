@@ -1,5 +1,5 @@
 import React from "react";
-import {auth, getUser, signOut} from '../../../../firebase/firebase'
+import {auth, db ,getUser, signOut} from '../../../../firebase/firebase'
 import {NextPage} from "../UserPage";
 import ClipLoader from "react-spinners/ClipLoader";
 
@@ -24,7 +24,23 @@ class Student extends React.Component {
         this.setState({spinner:spinner})
     }
 
-
+    async exsist(){
+    var path = auth.currentUser.uid;
+     try{
+        var exsist4= await db.collection("students").doc(path).collection('Opening questionnaire').doc('form')
+                            if(exsist4.empty){ 
+                                console.log("exsist4",exsist4)
+                            alert("כבר מלאת שאלון פתיחה")
+                           
+                             return true;
+                            }else
+                             return false;
+        } catch(error) {
+            alert(error.message)
+           // this.loadSpinner(false)
+       }
+    }
+      
 
     async componentDidMount() {
         var href =  window.location.href.split("/",5)
@@ -128,9 +144,18 @@ class Student extends React.Component {
                             NextPage(this.props, "Feedback", this.state.user)
                         }}>מילוי משוב<span
                             className="fa fa-arrow-right"></span></button>
-                          <button id="feedback-button" className="btn btn-info" onClick={() => {
-                            NextPage(this.props, "Opened", this.state.user)
+                          <button id="feedback-button" className="btn btn-info" onClick={async() => {
+                            // this.exsist()
+                             // if(this.exsist()===false){
+                                    NextPage(this.props, "Opened", this.state.user)
+                             // }
                         }}>שאלון הפתיחה<span
+                            className="fa fa-arrow-right"></span></button>
+                          <button id="feedback-button" className="btn btn-info" onClick={async() => {
+                            // this.exsist()
+                            //  if(this.exsist()===false){
+                                    NextPage(this.props, "Summary", this.state.user)
+                        }}>שאלון סיום<span
                             className="fa fa-arrow-right"></span></button>
                         <button id="report-button" className="btn btn-info" onClick={() => {
                             NextPage(this.props, "Profile", this.state.user)
@@ -168,7 +193,7 @@ class Student extends React.Component {
                 </div>
             }</div>)
     }
-
+  
     loadUser(page)
     {
         this.props.history.push({

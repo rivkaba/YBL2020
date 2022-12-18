@@ -13,7 +13,7 @@ class BusinessMentor extends React.Component {
 
 
         this.state = {
-            spinner: [true,'Please wait, the page is loading'],
+            spinner: [true,'נא להמתין ,הדף נטען'],
             page:'menu',
             user: props.location,
             error:false,
@@ -59,7 +59,7 @@ class BusinessMentor extends React.Component {
 
                 if(type === "wait")
                 {
-                    alert('����� ����� �� ���� �� �����')
+                    alert('המנהל עדיין לא אישר את הבקשה')
                     window.location.href = '/Login';
                     return
                 }
@@ -123,21 +123,21 @@ if(this.state.loadPage) {
                 <button id="feedback-button" className="btn btn-info" onClick={() => {
                    this.ChangePage("Feedbacks/Guides")
                       return
-                }}>Viewing instructor feedback<span
+                }}>הצגת משובי מדריכים<span
                     className="fa fa-arrow-right"></span></button>
                 <button id="report-button" className="btn btn-info" onClick={() => {
                     NextPage(this.props, "Profile", this.state.user)
-                }}>update profile or password<span
+                }}>עדכון פרופיל או סיסמה<span
                     className="fa fa-arrow-right"></span></button>
                 <button id="logout" className="btn btn-info" onClick={() => {
                     signOut()
-                }}>sign out
+                }}>התנתק
                 </button>
                 {/*<button id="report-button" className="btn btn-info" onClick={()=>{*/}
                 {/*    this.props.history.push({*/}
                 {/*        pathname: `User`,*/}
                 {/*        data: this.state.user // your data array of objects*/}
-                {/*    })}} >���� ��� ������<span*/}
+                {/*    })}} >חזרה לדף בדיקות<span*/}
                 {/*    className="fa fa-arrow-right"></span></button>*/}
             </div>
         </div>

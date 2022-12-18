@@ -5,7 +5,7 @@ import './Student.css'
 import ClipLoader from "react-spinners/ClipLoader";
 
 
-class StudentOpened extends React.Component {
+class StudentSummary extends React.Component {
 
     constructor(props) {
         super(props);
@@ -44,8 +44,14 @@ class StudentOpened extends React.Component {
                 q2_2: '',
                 q2_3: '',
                 q2_4: '',
-                hopeTostudy: '',
-                needTostudy: '',
+                q3_1: '',
+                q3_2: '',
+                q3_3: '',
+                q3_4: '',
+                q4_1: '',
+                q4_2: '',
+                experience: '',
+                take: '',
             },            
             search: true,
             searchQuery: null,
@@ -123,7 +129,7 @@ class StudentOpened extends React.Component {
         this.loadSpinner(true,"שולח נתוני שאלון")
         var path = auth.currentUser.uid
         try{
-            await db.collection("students").doc(path).collection('Opening questionnaire').doc('form').set({
+            await db.collection("students").doc(path).collection('Summary questionnaire').doc('form').set({
                 form: this.state.finalForm
             }).then(async()=>{
                 alert(" תודה, הטופס נשלח בהצלחה")
@@ -134,8 +140,6 @@ class StudentOpened extends React.Component {
             alert(error.message)
             this.loadSpinner(false)
         }
-
-
         this.loadSpinner(false)
 
     }
@@ -272,19 +276,19 @@ class StudentOpened extends React.Component {
             <div id="attendreport" className="sec-design" dir='rtl'>
                 <h2>שלום {this.state.user.displayName} </h2>
   
-               <h2> שאלון פתיחת שנה - תוכנית עתיד לנוער</h2>
-חניכי וחניכות "מנהיגות עסקית צעירה" בתוכנית "עתיד לנוער" שלום רב,
-זהו המפגש הראשון בתוכנית, ואנחנו מאחלים לכם בהצלחה! :)
-בפניכם שאלון קצר הנוגע לתכנים השונים בהם תעסקו במהלך השנה. 
+               <h2> שאלון סיכום שנה - תוכנית "עתיד לנוער" </h2>
+               חניכות וחניכי מנהיגות עסקית צעירה תוכנית עתיד לנוער שלום רב,
+שנת הפעילות הסתיימה ולנו חשוב להבין ממכם מהם הנקודות לשימור והנקודות לשיפור.  
+בפניכם שאלון קצר הנוגע לתכנים השונים בהם עסקתם בתוכנית.
 אנא קראו את השאלות וענו בהתאם לתחושותיכם. 
-זכרו, השאלון אנונימי ואין תשובות נכונות ולא נכונות. אתם מתבקשים לענות את התשובה הכי נכונה עבורכם.
+זכרו, השאלון אנונימי ואין תשובות נכונות ולא נכונות. אתם מתבקשים לענות את התשובה הכי נכונה עבורכם 
+.<br/>
                  <br/>
                   <br/>
                 <label id="checkbox" className="title-input" htmlFor="name">
                                  <b>  חלק א'</b>
-             <h4>אנא סמן/י את התשובות הרלנווטיות לגביך/לגבייך</h4>
+             <h4>מ-ת-ח-י-ל-י-ם!</h4>
                     </label>
-                    <br/>
                 <div id="box" className="chekbox">
 
                     <label id="checkbox" className="title-input" htmlFor="name">
@@ -331,7 +335,7 @@ class StudentOpened extends React.Component {
                             <FormControlLabel value="19" labelPlacement="end" control={<Radio/>} label="19"/>
                         </RadioGroup>
                         <div id="name-group" className="form-group">
-                            {/* <label id="feedback" className="title-input" htmlFor="name">Other </label> */}
+
                             <input type="text" className="form-control" 
                             style={this.state.isFeedbackError === true ? { border: '2px solid red' } : { border: '' } }                        
                             name="age" placeholder="אחר"
@@ -342,7 +346,6 @@ class StudentOpened extends React.Component {
                      <br/>
                              <br/>
                      <label id="checkbox" className="title-input" htmlFor="name">
-                                 <b>  חלק ב'</b>
              <h4>אנא סמן/י באיזו מידה את/ה מסכים/ה עם הנאמר בכל אחד מהמשפטים הבאים?</h4>
                     </label>
                     <br/>
@@ -592,13 +595,10 @@ class StudentOpened extends React.Component {
                         </RadioGroup>
                     </div>
                     <div>
-                            <br/>
                              <br/>
                      <label id="checkbox" className="title-input" htmlFor="name">
-                                 <b> חלק ג'</b>
              <h4>עד כמה את/ה מרגיש/ה שאת/ה יודעת על כל אחד מהנושאים הבאים?</h4>
                     </label>
-
                         <label id="checkbox" className="title-input" htmlFor="name">
                         קורות חיים  
                         </label>
@@ -643,6 +643,7 @@ class StudentOpened extends React.Component {
                         </RadioGroup>
                                         <br/>
                     </div>
+
                     <div>
                         <label id="checkbox" className="title-input" htmlFor="name">
                         כתיבת תוכנית עסקית  
@@ -686,41 +687,193 @@ class StudentOpened extends React.Component {
 "/>
                         </RadioGroup>
                     </div>
+                     <div>
+                            <br/>
+                             <br/>
+                     <label id="checkbox" className="title-input" htmlFor="name">
+                                                                 <b>  חלק ב'</b>
+             <h4>לפניכם שאלות על תכנים שלמדתם במהלך השנה,  אנא סמן/י עד כמה למדת מכל אחד מהאירועים הבאים? </h4>
+                    </label>
+
+                        <label id="checkbox" className="title-input" htmlFor="name">
+                        ימי שיא   
+                        </label>
+                        <br/>
+                        <RadioGroup
+                            aria-label="new"
+                            name="q3_1"
+                            // value={location}
+                            onChange={this.handleRadioButton}
+                            row={true}
+                        >
+                                <FormControlLabel value="0" labelPlacement="end" control={<Radio/>}
+                                                label="לא למדתי בכלל"/>
+                                <FormControlLabel value="1" labelPlacement="end" control={<Radio/>} label="למדתי מעט מאוד"/>
+                                <FormControlLabel value="2" labelPlacement="end" control={<Radio/>} label="למדתי מספיק "/>
+                                <FormControlLabel value="3" labelPlacement="end" control={<Radio/>} label="למדתי הרבה "/>
+                                <FormControlLabel value="4" labelPlacement="end" control={<Radio/>} label="למדתי הרבה מאוד"/>
+                                 <FormControlLabel value="5" labelPlacement="end" control={<Radio/>} label="לא הגעתי לפעילות זו"/>
+                        </RadioGroup>
+                                        <br/>
+
+                    </div>
+                     <div>
+                        <label id="checkbox" className="title-input" htmlFor="name">
+                        ועדת היגוי   
+                        </label>
+                        <br/>
+                        <RadioGroup
+                            aria-label="new"
+                            name="q3_2"
+                            // value={location}
+                            onChange={this.handleRadioButton}
+                            row={true}
+                        >
+                                <FormControlLabel value="0" labelPlacement="end" control={<Radio/>}
+                                                label="לא למדתי בכלל"/>
+                                <FormControlLabel value="1" labelPlacement="end" control={<Radio/>} label="למדתי מעט מאוד"/>
+                                <FormControlLabel value="2" labelPlacement="end" control={<Radio/>} label="למדתי מספיק "/>
+                                <FormControlLabel value="3" labelPlacement="end" control={<Radio/>} label="למדתי הרבה "/>
+                                <FormControlLabel value="4" labelPlacement="end" control={<Radio/>} label="למדתי הרבה מאוד"/>
+                                 <FormControlLabel value="5" labelPlacement="end" control={<Radio/>} label="לא הגעתי לפעילות זו"/>
+                        </RadioGroup>
+                                        <br/>
+
+                    </div>
+                     <div>
+                        <label id="checkbox" className="title-input" htmlFor="name">
+                        הפקת מיזם חברתי   
+                        </label>
+                        <br/>
+                        <RadioGroup
+                            aria-label="new"
+                            name="q3_3"
+                            // value={location}
+                            onChange={this.handleRadioButton}
+                            row={true}
+                        >
+                                <FormControlLabel value="0" labelPlacement="end" control={<Radio/>}
+                                                label="לא למדתי בכלל"/>
+                                <FormControlLabel value="1" labelPlacement="end" control={<Radio/>} label="למדתי מעט מאוד"/>
+                                <FormControlLabel value="2" labelPlacement="end" control={<Radio/>} label="למדתי מספיק "/>
+                                <FormControlLabel value="3" labelPlacement="end" control={<Radio/>} label="למדתי הרבה "/>
+                                <FormControlLabel value="4" labelPlacement="end" control={<Radio/>} label="למדתי הרבה מאוד"/>
+                                 <FormControlLabel value="5" labelPlacement="end" control={<Radio/>} label="לא הגעתי לפעילות זו"/>
+                        </RadioGroup>
+                                        <br/>
+
+                    </div>
+                     <div>
+                        <label id="checkbox" className="title-input" htmlFor="name">
+                        הכשרה מקצועית  
+                        </label>
+                        <br/>
+                        <RadioGroup
+                            aria-label="new"
+                            name="q3_4"
+                            // value={location}
+                            onChange={this.handleRadioButton}
+                            row={true}
+                        >
+                                <FormControlLabel value="0" labelPlacement="end" control={<Radio/>}
+                                                label="לא למדתי בכלל"/>
+                                <FormControlLabel value="1" labelPlacement="end" control={<Radio/>} label="למדתי מעט מאוד"/>
+                                <FormControlLabel value="2" labelPlacement="end" control={<Radio/>} label="למדתי מספיק "/>
+                                <FormControlLabel value="3" labelPlacement="end" control={<Radio/>} label="למדתי הרבה "/>
+                                <FormControlLabel value="4" labelPlacement="end" control={<Radio/>} label="למדתי הרבה מאוד"/>
+                                 <FormControlLabel value="5" labelPlacement="end" control={<Radio/>} label="לא הגעתי לפעילות זו"/>
+                        </RadioGroup>
+
+                    </div>
+                     <div>
+                            <br/>
+                             <br/>
+                     <label id="checkbox" className="title-input" htmlFor="name">
+             <h4>עד כמה הרגשת שאת/ה למדת על עולם התעסוקה והעסקים מהדמויות הבאות? </h4>
+                    </label>
+                     <label id="checkbox" className="title-input" htmlFor="name">       
+             (עד כמה הרגשת שהליווי של כל אחת מהדמויות הבאות היה משמעותי עבורך?)
+                    </label>
+                    <br/>
+                        <label id="checkbox" className="title-input" htmlFor="name">    
+מדריכ/ת הקבוצה
+
+                        </label>
+                        <br/>
+                        <RadioGroup
+                            aria-label="new"
+                            name="q4_1"
+                            // value={location}
+                            onChange={this.handleRadioButton}
+                            row={true}
+                        >
+                                <FormControlLabel value="0" labelPlacement="end" control={<Radio/>}
+                                                label="לא למדתי בכלל"/>
+                                <FormControlLabel value="1" labelPlacement="end" control={<Radio/>} label="למדתי מעט מאוד"/>
+                                <FormControlLabel value="2" labelPlacement="end" control={<Radio/>} label="למדתי מספיק "/>
+                                <FormControlLabel value="3" labelPlacement="end" control={<Radio/>} label="למדתי הרבה "/>
+                                <FormControlLabel value="4" labelPlacement="end" control={<Radio/>} label="למדתי הרבה מאוד"/>
+                        </RadioGroup>
+                                        <br/>
+
+                    </div>
+                      <div>
+                        <label id="checkbox" className="title-input" htmlFor="name">    
+מנחה עסקי/ת                        </label>
+                        <br/>
+                        <RadioGroup
+                            aria-label="new"
+                            name="q4_2"
+                            // value={location}
+                            onChange={this.handleRadioButton}
+                            row={true}
+                        >
+                                <FormControlLabel value="0" labelPlacement="end" control={<Radio/>}
+                                                label="לא למדתי בכלל"/>
+                                <FormControlLabel value="1" labelPlacement="end" control={<Radio/>} label="למדתי מעט מאוד"/>
+                                <FormControlLabel value="2" labelPlacement="end" control={<Radio/>} label="למדתי מספיק "/>
+                                <FormControlLabel value="3" labelPlacement="end" control={<Radio/>} label="למדתי הרבה "/>
+                                <FormControlLabel value="4" labelPlacement="end" control={<Radio/>} label="למדתי הרבה מאוד"/>
+                        </RadioGroup>
+                    </div>
                     <div>
                     <br/>
                              <br/>
                      <label id="checkbox" className="title-input" htmlFor="name">
-                                 <b>  חלק ד'</b>
+             <h4>כמעט סיימנו... </h4>
                     </label>
                     <br/>
                   
                         <label id="checkbox" className="title-input" htmlFor="name">
-                        מה את/ה מצפה ללמוד בתוכנית?
+                        מה הייתה החוויה הכי משמעותית עבורך בתוכנית?
                         </label>
                         <div id="name-group" className="form-group">
                             {/* <label id="feedback" className="title-input" htmlFor="name">Other </label> */}
                             <input type="text" className="form-control" 
                             style={this.state.isFeedbackError === true ? { border: '2px solid red' } : { border: '' } }                        
-                            name="hopeTostudy" placeholder="תשובתך"
+                            name="experience" placeholder="תשובתך"
                             minLength="10" onChange={this.handleChange} required/>         
                         </div>
                          <br/>
                     </div>
                     <div>
                         <label id="checkbox" className="title-input" htmlFor="name">
-                        מה את/ה מרגיש/ה שאת/ה צריך/ה ללמוד בתוכנית כדי להצליח להשתלב בעבודה שאת/ה רוצה ?
-                        </label>
+מה את/ה לוקח/ת איתך מהתוכנית להמשך הדרך?                       
+</label>
                         <div id="name-group" className="form-group">
                             {/* <label id="feedback" className="title-input" htmlFor="name">Other </label> */}
                             <input type="text" className="form-control" 
                             style={this.state.isFeedbackError === true ? { border: '2px solid red' } : { border: '' } }                        
-                           name="needTostudy" placeholder="תשובתך "
+                           name="take" placeholder="תשובתך "
                             minLength="10" onChange={this.handleChange} required/>
                                       
                         </div> 
                        <br/>
                         <br/>
                       <b>  תודה ובהצלחה!!</b>
+            <br/>
+צוות מנהיגות עסקית צעירה,
+תוכנית 'עתיד לנוער'. 
                     </div>
         </div>
 
@@ -776,4 +929,4 @@ class StudentOpened extends React.Component {
 }
 
 
-export  default  StudentOpened;
+export  default  StudentSummary;

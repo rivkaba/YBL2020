@@ -28,7 +28,7 @@ import FeedbackGuides from "./components/pages/Users/Manager/mngGuideFeedback";
 import UpdatesFirebase from "./components/pages/Users/Manager/UpdatesFirebase";
 import StudentFeedback from "./components/pages/Users/Student/stud_feedback";
 import StudentOpened from "./components/pages/Users/Student/stud_opened";
-//import StudentSummary from "./components/pages/Users/Student/stud_summary";
+import StudentSummary from "./components/pages/Users/Student/StudentSummary";
 import bmGuideFeedback from "./components/pages/Users/BusinessMentor/bmGuideFeedback";
 import Profile from "./components/pages/Users/profile";
 import GuideReports from "./components/pages/Users/Guide/guide_attend_report";
@@ -60,7 +60,7 @@ function LoadPage() {
                     <Route exact path="/Student/:id" component={Students} />
                     <Route exact path="/Student/:id/Feedback" component={StudentFeedback} />
                     <Route exact path="/Student/:id/Opened" component={StudentOpened} />
-                   {/* <Route exact path="/Student/:id/Summary" component={StudentSummary} />*/}
+                    <Route exact path="/Student/:id/Summary" component={StudentSummary} />
 
                     <Route exact path="/Student/:id/Profile" component={Profile} />
                     <Route exact path="/Student/:id/:404" component={notFound} />
