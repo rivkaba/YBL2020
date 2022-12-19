@@ -345,7 +345,7 @@ render() {
                         <Grid item xs={12}>
                         <b> החלף תפקיד: </b><br/>
                         </Grid>
-                        <Grid item xs={3}>
+                        <Grid item xs={2}>
 
                             <div>
                                 <label>
@@ -357,7 +357,7 @@ render() {
                             </div>
                         </Grid>
                                
-                        <Grid item xs={3}>
+                        <Grid item xs={2}>
                             <div>
 
                                 <label>
@@ -381,7 +381,7 @@ render() {
                             </div>
                         </Grid>
                       
-                        <Grid item xs={3}>
+                        <Grid item xs={2}>
                             <div>
 
                                 <label>
@@ -392,9 +392,8 @@ render() {
                                 </label>
                             </div>
                         </Grid>
-                        <Grid item xs={3}>
+                        <Grid item xs={2}>
                             <div>
-
                                 <label>
                                     <input id ={"testers"+index} type="radio" value="testers"  onClick={e => {
                                         this.radio(e,index,user)
@@ -411,7 +410,6 @@ render() {
                             </div>
 
                         </Grid> */}
-
                         <Grid item xs={6}>
                             <button
                                 style={{backgroundColor: "rgb(50,248,6)"}}

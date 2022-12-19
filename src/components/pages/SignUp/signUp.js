@@ -171,7 +171,7 @@ class SignUp extends React.Component {
                             />
                         </Grid>
 
-                        <Grid item xs={6}>
+                        <Grid item xs={4}>
                             <div>
 
                                 <label>
@@ -181,7 +181,7 @@ class SignUp extends React.Component {
                                 </label>
                             </div>
                         </Grid>
-                        <Grid item xs={6}>
+                        <Grid item xs={4}>
                             <div>
 
                                 <label>
@@ -191,7 +191,7 @@ class SignUp extends React.Component {
                                 </label>
                             </div>
                         </Grid>
-                         <Grid item xs={6}>
+                         <Grid item xs={4}>
                             <div>
                                 <label>
                                     <input type="radio" value="BusinessMentor" checked={this.state.type==='BusinessMentor'} onChange={e =>

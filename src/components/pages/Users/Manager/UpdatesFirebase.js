@@ -44,7 +44,8 @@ class UpdatesFirebase extends Component {
                 showStudentWithoutTeam:false,
                 teams:[],
                 sTeam:[],
-                ssTeam:[]
+                ssTeam:[],
+                ss1Team:[]
             }
         this.handleSubmit = this.handleSubmit.bind(this)
         this.handleChangeDate = this.handleChangeDate.bind(this)
@@ -255,8 +256,10 @@ class UpdatesFirebase extends Component {
                         }}>{this.state.delete?'הסתר מחיקת קבוצה':'הצג מחיקת קבוצה'} </button>
                     </Grid>
                     <Grid item xs={8} hidden={!this.state.delete}>
-                        <Select  placeholder={" בחר קבוצה "} options={options} onChange={(e)=>{
-                           this.setState({teamPath:(e.value).path,teamName:e.label})
+                        <Select  placeholder={" בחר קבוצה "} options={options} onChange={async(e)=>{
+                            this.loadSpinner(true,"מיבא קבוצה")
+                          await this.setState({teamPath:(e.value).path,teamName:e.label})
+                           this.loadSpinner(false," ")
                         }} required/>
                     </Grid>
                     <Grid item xs={4} hidden={!this.state.delete} >
@@ -324,12 +327,13 @@ class UpdatesFirebase extends Component {
                              alert("יש לבחור קבוצה")
                         }}>העבר לארכיון</button>
                     </Grid>
-                     <Grid item xs={12}>
+                    <Grid item xs={12}>
                         <button onClick={()=>{
+                           // this.loadSpinner(true,"מיבא נתוני משתמשים")
                             this.setState({showTeam:!this.state.showTeam})
                         }}>{this.state.showTeam?'הסתר רשימת קבוצות':'הצג רשימת קבוצות'} </button>
                     </Grid>
-                    <Grid item xs={4} hidden={!this.state.showTeam} >
+                    <Grid item xs={6} hidden={!this.state.showTeam} >
                         <button onClick={async ()=>{  
                             oldTeam=[]
                              var nameTeams =  await db.collection("Teams").where("old", "==",true).get();
@@ -350,7 +354,7 @@ class UpdatesFirebase extends Component {
                                
                             }}>פרטי קבוצות קיימות</button>
                     </Grid>
-                    <Grid item xs={8} hidden={!this.state.archive &&!this.state.StudentTeam}>
+                    <Grid item xs={8} hidden={(!this.state.archive &&!this.state.StudentTeam)||!this.state.showTeam}>
                      
                         <Select  placeholder={" בחר קבוצה "} options={this.state.teams} onChange={async(e)=>{
                             this.setState({teamPath:(e.value).path,teamName:e.label})
@@ -358,9 +362,9 @@ class UpdatesFirebase extends Component {
                             var STeam=[]
                             var SSTeam=[]
                             var guide= await db.collection("guides").where('teamName','==',e.label).get();
-                             guide.forEach( guide => {SSTeam.push(guide)})
+                             guide.forEach(async guide => {SSTeam.push(guide)})
                             var res1= await db.collection("students").where('teamName','==',e.label).get()
-                            res1.forEach( res => {
+                            res1.forEach(async res => {
                                  STeam.push({value: res, label: res.data().fname + ' ' + res.data().lname})
                                  SSTeam.push(res);
                                   }) 
@@ -371,7 +375,7 @@ class UpdatesFirebase extends Component {
                              
                         }} required/>
                     </Grid>
-                    <Grid item xs={8} hidden={!this.state.teamPath}>
+                    <Grid item xs={8} hidden={!this.state.teamPath||!this.state.showTeam}>
                                       
                             
                                <div> נמצאו: {this.state.sTeam.length} חניכים
@@ -379,6 +383,7 @@ class UpdatesFirebase extends Component {
                                         // console.log(e.label,e.value);
                                   
                                         this.setState({ssTeam:[e.value]})
+                                         console.log("e.value",e.value.data())
                                     }} />
                                 </div>
                             
@@ -386,7 +391,7 @@ class UpdatesFirebase extends Component {
                                     this.state.ssTeam.map((user,index) => (
                                         <Grid  item xs={12}  key={index}>
                                             <hr/>
-                                            {this.card(user.data(),index)}
+                                            {this.card(user,index)}
                                         </Grid >
                                     ))
                                }
@@ -622,7 +627,74 @@ class UpdatesFirebase extends Component {
                         </div>
 
                     </Grid>
-
+                  
+                     <Grid item xs={12}>
+                        <button onClick={()=>{
+                            this.setState({showTeam:!this.state.showTeam})
+                        }}>{this.state.showTeam?'הסתר שאלון פתיחה וסיום חונך':'הצג שאלון פתיחה וסיום חונך'} </button>
+                    </Grid>
+                    <Grid item xs={6} hidden={!this.state.showTeam} >
+                        <button onClick={async ()=>{  
+                            oldTeam=[]
+                             var nameTeams =  await db.collection("Teams").where("old", "==",true).get();
+                             nameTeams.forEach(doc=>{
+                                oldTeam.push({ value: doc.ref, label: doc.data().name })
+                                oldTeam.sort((a, b) =>(a.label > b.label) ? 1 : -1)         
+                         })
+                                this.setState({teams:oldTeam})
+                                this.setState({archive:true})
+                            }}> מקבוצות ישנות</button>
+                    </Grid>
+                     <Grid item xs={6} hidden={!this.state.showTeam}>
+                                
+                               <button onClick={async ()=>{
+                                 this.setState({StudentTeam:true})
+                                  this.setState({archive:false})
+                                 this.setState({teams:options})
+                               
+                            }}>מקבוצות קיימות</button>
+                    </Grid>
+                    <Grid item xs={8} hidden={(!this.state.archive &&!this.state.StudentTeam)||!this.state.showTeam}>
+                     
+                        <Select  placeholder={" בחר קבוצה "} options={this.state.teams} onChange={async(e)=>{
+                            this.setState({teamPath:(e.value).path,teamName:e.label})
+                            // this.setState({guideTeamPath,guideTeamName
+                          /*  var STeam=[]
+                            var SSTeam=[]
+                            var res1= await db.collection("students").where('teamName','==',e.label).get()
+                            res1.forEach(async res => {
+                                 STeam.push({value: res, label: res.data().fname + ' ' + res.data().lname})
+                                 SSTeam.push(res);
+                                  }) 
+                             this.setState({sTeam:STeam})
+                            console.log("sTeam",this.state.sTeam);
+                            this.setState({ssTeam:SSTeam})
+                             console.log("ssTeam",this.state.ssTeam);*/
+                          this.srudent();
+                             
+                        }} required/>
+                    </Grid>
+                    <Grid item xs={8} hidden={!this.state.teamPath||!this.state.showTeam}>
+                                      
+                            
+                               <div> נמצאו: {this.state.sTeam.length} חניכים
+                                    <Select  placeholder={" מצא חניך "} options={this.state.sTeam} onChange={(e)=>{
+                                        // console.log(e.label,e.value);
+                                        this.setState({ssTeam:[e.value[0].data()]})
+                                        console.log("e.value",e.value[0].data())
+                                    }} />
+                                </div>
+                            
+                               {
+                                    this.state.ssTeam.map((user,index) => (
+                                        <Grid  item xs={12}  key={index}> 
+                                            <hr/>
+                                            {this.cardQuestionnaire(user,index)}
+                                        </Grid >
+                                    ))
+                               }
+                    </Grid>
+                    
 
 
 
@@ -775,7 +847,7 @@ class UpdatesFirebase extends Component {
                      /////////
                 } else if (user === 'teamEmpty' && !res.data().guide && res.data().old===false) {
                     allUsers.push(res)
-                    emptyTeamOptions.push({value: res, label: res.name})
+                    emptyTeamOptions.push({value: res, label: res.data().name})
                     emptyTeamOptions.sort((a, b) =>(a.label > b.label) ? 1 : -1)
 
                 } /*else if (user === 'Teams' && res.data().guide) {
@@ -1066,7 +1138,180 @@ class UpdatesFirebase extends Component {
         )
     }
 
+    cardQuestionnaire(user,index)
+    {
+        return(
+            <div id="name-group" className="form-group" dir="rtl">
+                <div className="report" id="report">
+                    <div>
+                        <h4> שם: {user.fname+' '+ user.lname} </h4>
+                        <h4> טלפון: {user.phone}</h4>
+                        <h4> אימייל: {user.email}</h4>
+                        <h4> ת.ז: {user.ID}</h4>
+                        <h4> קבוצה: {user.teamName}</h4>
+                        <Grid container spacing={2}>
+                            <Grid item xs={8} >
+                             <button onClick={async ()=>{
+                                 this.setState({opening:true})
+                            }}>שאלון פתיחה</button>
+                             <button onClick={async ()=>{ 
+                                 this.setState({summary:true})
+                            }}>שאלון סיום</button>
+                             //////
 
+
+                             /////////
+                            </Grid>
+                            <Grid item xs={4}>
+                                <button hidden={!this.state["guideTeamName"] || user.ID !== this.state.userID } onClick={async ()=>{
+                                    this.loadSpinner(true,"מעדכן נתונים")
+                                    // console.log('in1')
+                                    if(user.type==='guides' || user.type==='testers') {
+                                        // console.log('in2')
+                                        // console.log(user.uid)
+
+                                        if(this.state["guideTeamPath"]) {
+                                            try {
+                                                var updateTeam;
+
+                                                var oldGuide = await db.collection('Teams').doc(this.state.guideTeamPath[index].id).get()
+                                                // console.log('in5')
+                                                // console.log(oldGuide.data())
+
+                                                await db.doc((oldGuide.data().guide).path).update({
+                                                    teamName: null,
+                                                    team: null
+                                                })
+
+                                                // console.log('in6')
+
+                                            } catch (e) {
+                                                console.log('לקבוצה לא היה מדריך לפני')
+                                                // console.log(e)
+                                            }
+                                            try {
+                                                await db.collection('Teams').doc(user.team.id).update({
+                                                    guide: null
+                                                })
+                                            } catch {
+                                                console.log("למדריך לא הייתה קבוצה לפני")
+                                            }
+                                        }
+                                        updateTeam = await db.collection('guides').doc(user.uid)
+                                        await updateTeam.update({
+                                            teamName:this.state["guideTeamName"][0],
+                                            team:this.state["guideTeamPath"][0]
+                                        })
+
+
+                                        await db.collection('Teams').doc(this.state["guideTeamPath"][0].id).update({
+                                            guide: updateTeam
+                                        })
+                                        this.getAllUsers('guides')
+                                    }
+                                    else
+                                        if(user.type==='students' )
+                                    {
+                                        updateTeam = await db.collection('students').doc(user.uid)
+                                        updateTeam.update({
+                                            teamName:this.state.guideTeamName[0],
+                                            team:this.state.guideTeamPath[0]
+                                        })
+                                        // console.log('in9')
+                                        this.getAllUsers('students')
+                                    }
+                                    else
+                                        if(user.type==='BusinessMentor' )
+                                    {
+                                        updateTeam = await db.collection('BusinessMentor').doc(user.uid)
+                                        updateTeam.update({
+                                            teamName:this.state.guideTeamName[0],
+                                            team:this.state.guideTeamPath[0]
+                                        })
+                                        // console.log('in9')
+                                        this.getAllUsers('BusinessMentor')
+                                    }
+                                    this.loadSpinner(false,'')
+
+                                    if(this.state.showGuides)
+                                        this.getAllUsers("guides")
+                                        /////
+                                    if(this.state.showBusinessMentor)
+                                        this.getAllUsers("BusinessMentor")
+                                        /////
+                                    if(this.state.showStudents)
+                                        this.getAllUsers("students")
+                                    if(this.state.showGuideWithoutTeam)
+                                        this.getAllUsers("guidesEmpty")
+                                    if(this.state.showStudentWithoutTeam)
+                                        this.getAllUsers("StudentEmpty")
+                                    alert('הוחלפה קבוצה')
+                                }}>החלף</button>
+                            </Grid>
+                        </Grid>
+                    </div>
+                </div>
+            </div>
+
+        )
+    }
+   async srudent(){                        
+        this.loadSpinner(true,"מיבא סטודנטים")
+                               var options=[]
+        this.setState({options:options,show:false})
+        console.log("teamName",this.state.teamName)
+        var nameStudent = await db.collection("students").where('teamName','==',this.state.teamName).get()
+           // .orderBy('name','asc')
+            
+            console.log("teamName",this.state.teamName)
+              console.log("nameStudent",nameStudent)
+              
+        // console.log("in 1")
+        var Studentcollection = nameStudent.docs.map( async function(doc) {
+              console.log("doc.id",doc.id)
+            var Opening = await db.collection("students").doc(doc.id).collection("Opening questionnaire")
+                .get()
+                  console.log("Opening",Opening)
+
+            if(!Opening.empty)
+            {
+                var forms=[]
+                Opening.forEach(async function(doc){
+                    if(doc.data().form)
+                    {
+                        forms.push(doc.data().form)
+                        console.log("forms",forms)
+                    }
+                })
+                return [doc,forms]
+            }
+        })
+
+        Promise.all(Studentcollection).then(res => {
+            var sTeam=[];
+            var ssTeam=[];
+            var v;
+            res.forEach(item=>{
+                // console.log("in 3")
+                if(item){
+                    sTeam.push({ value: item, label:  item[0].data().fname + ' ' + item[0].data().lname})
+                    
+                //  ssTeam.push({ value:item[0].data()})
+                   
+                  //  console.log("item[0].data()",item[0].data())
+                }                                       
+            })
+            sTeam.sort((a, b) =>(a.label > b.label) ? 1 : -1)
+            sTeam.forEach(item=>{
+                ssTeam.push(item.value[0].data())
+                console.log("item.value[0]}",item.value[0].data())
+            })
+             
+            this.setState({sTeam:sTeam,ssTeam:ssTeam})
+            // console.log("in 4")
+            this.loadSpinner(false,"")
+        })
+    }
     // attendReport() {
     //
     //     return(

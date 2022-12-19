@@ -26,22 +26,25 @@ class Student extends React.Component {
 
     async exsist(){
     var path = auth.currentUser.uid;
-     try{
-        var exsist4= await db.collection("students").doc(path).collection('Opening questionnaire').doc('form')
-                            if(exsist4.empty){ 
+    // try{
+        var exsist4= await db.collection("students").doc(path).collection('Opening questionnaire').get()
+                            if(!exsist4.empty){ 
                                 console.log("exsist4",exsist4)
                             alert("כבר מלאת שאלון פתיחה")
-                           
-                             return true;
+                            this.setState({exsist:true});
+                            console.log(this.state.exsist)
+                             console.log("exsist4",exsist4)
+
                             }else
-                             return false;
-        } catch(error) {
-            alert(error.message)
+                           this.setState({exsist:false});
+     //   } catch(error) {
+          // alert(error.message)
            // this.loadSpinner(false)
-       }
+     //  }
     }
       
 
+    ////////////
     async componentDidMount() {
         var href =  window.location.href.split("/",5)
         // console.log(href)
@@ -145,10 +148,12 @@ class Student extends React.Component {
                         }}>מילוי משוב<span
                             className="fa fa-arrow-right"></span></button>
                           <button id="feedback-button" className="btn btn-info" onClick={async() => {
-                            // this.exsist()
-                             // if(this.exsist()===false){
+                           // await this.exsist()
+                          //  var exsist = this.exsist();
+                            //  if(this.state.exsist===false){
+                               //   alert(false)
                                     NextPage(this.props, "Opened", this.state.user)
-                             // }
+                             //  }
                         }}>שאלון הפתיחה<span
                             className="fa fa-arrow-right"></span></button>
                           <button id="feedback-button" className="btn btn-info" onClick={async() => {
