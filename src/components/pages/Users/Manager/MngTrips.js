@@ -15,10 +15,8 @@ export default function MngTrips() {
             var trips = await db.collectionGroup("trips").get();
             var allTrips = [];
             trips.forEach((doc) => {
-                console.log('doc.data()',doc.data())
                 allTrips.push(doc.data());
               });
-              console.log('allTrips',allTrips)
               setTrips(allTrips);
               setFilteredTrips(allTrips)
 

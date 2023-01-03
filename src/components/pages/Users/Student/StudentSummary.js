@@ -122,7 +122,7 @@ class StudentSummary extends React.Component {
 
     }
 
-    sendDataToFirebase = async (collection) => {
+    sendDataToFirebase = async () => {
 
         //Send data to firebase
 
@@ -807,12 +807,12 @@ class StudentSummary extends React.Component {
                             onChange={this.handleRadioButton}
                             row={true}
                         >
-                                <FormControlLabel value="0" labelPlacement="end" control={<Radio/>}
+                                <FormControlLabel value="1" labelPlacement="end" control={<Radio/>}
                                                 label="לא למדתי בכלל"/>
-                                <FormControlLabel value="1" labelPlacement="end" control={<Radio/>} label="למדתי מעט מאוד"/>
-                                <FormControlLabel value="2" labelPlacement="end" control={<Radio/>} label="למדתי מספיק "/>
-                                <FormControlLabel value="3" labelPlacement="end" control={<Radio/>} label="למדתי הרבה "/>
-                                <FormControlLabel value="4" labelPlacement="end" control={<Radio/>} label="למדתי הרבה מאוד"/>
+                                <FormControlLabel value="2" labelPlacement="end" control={<Radio/>} label="למדתי מעט מאוד"/>
+                                <FormControlLabel value="3" labelPlacement="end" control={<Radio/>} label="למדתי מספיק "/>
+                                <FormControlLabel value="4" labelPlacement="end" control={<Radio/>} label="למדתי הרבה "/>
+                                <FormControlLabel value="5" labelPlacement="end" control={<Radio/>} label="למדתי הרבה מאוד"/>
                         </RadioGroup>
                                         <br/>
 
@@ -828,12 +828,12 @@ class StudentSummary extends React.Component {
                             onChange={this.handleRadioButton}
                             row={true}
                         >
-                                <FormControlLabel value="0" labelPlacement="end" control={<Radio/>}
+                                <FormControlLabel value="1" labelPlacement="end" control={<Radio/>}
                                                 label="לא למדתי בכלל"/>
-                                <FormControlLabel value="1" labelPlacement="end" control={<Radio/>} label="למדתי מעט מאוד"/>
-                                <FormControlLabel value="2" labelPlacement="end" control={<Radio/>} label="למדתי מספיק "/>
-                                <FormControlLabel value="3" labelPlacement="end" control={<Radio/>} label="למדתי הרבה "/>
-                                <FormControlLabel value="4" labelPlacement="end" control={<Radio/>} label="למדתי הרבה מאוד"/>
+                                <FormControlLabel value="2" labelPlacement="end" control={<Radio/>} label="למדתי מעט מאוד"/>
+                                <FormControlLabel value="3" labelPlacement="end" control={<Radio/>} label="למדתי מספיק "/>
+                                <FormControlLabel value="4" labelPlacement="end" control={<Radio/>} label="למדתי הרבה "/>
+                                <FormControlLabel value="5" labelPlacement="end" control={<Radio/>} label="למדתי הרבה מאוד"/>
                         </RadioGroup>
                     </div>
                     <div>

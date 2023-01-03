@@ -4,7 +4,8 @@ import Grid from "@material-ui/core/Grid";
 import Select from "react-select";
 import ClipLoader from "react-spinners/ClipLoader";
 import {CSVLink} from "react-csv";
-
+ 
+var form:[]
 
 var oldTeam = []
 var options = []
@@ -42,11 +43,17 @@ class UpdatesFirebase extends Component {
                 showTeamWithoutGuide:false,
                 showGuideWithoutTeam:false,
                 showStudentWithoutTeam:false,
+                summary:false,
+                opening:false,
+                load:false,
+                showQ:false,
                 teams:[],
                 sTeam:[],
                 ssTeam:[],
                 ss1Team:[],
-                form:[]
+                ssTeam1:[],
+                sTeam1:[],
+             //   form:[]
             }
         this.handleSubmit = this.handleSubmit.bind(this)
         this.handleChangeDate = this.handleChangeDate.bind(this)
@@ -360,39 +367,39 @@ class UpdatesFirebase extends Component {
                         <Select  placeholder={" בחר קבוצה "} options={this.state.teams} onChange={async(e)=>{
                             this.setState({teamPath:(e.value).path,teamName:e.label})
                             // this.setState({guideTeamPath,guideTeamName
-                            var STeam=[]
-                            var SSTeam=[]
+                            var STeam1=[]
+                            var SSTeam1=[]
                             var guide= await db.collection("guides").where('teamName','==',e.label).get();
-                             guide.forEach(async guide => {SSTeam.push(guide)})
+                             guide.forEach(async guide => {SSTeam1.push(guide)})
                             var res1= await db.collection("students").where('teamName','==',e.label).get()
                             res1.forEach(async res => {
-                                 STeam.push({value: res, label: res.data().fname + ' ' + res.data().lname})
-                                 SSTeam.push(res);
+                                 STeam1.push({value: res, label: res.data().fname + ' ' + res.data().lname})
+                                 SSTeam1.push(res);
                                   }) 
-                             this.setState({sTeam:STeam})
-                            console.log("sTeam",this.state.sTeam);
-                            this.setState({ssTeam:SSTeam})
-                             console.log("ssTeam",this.state.ssTeam);
+                             this.setState({sTeam1:STeam1})
+                            console.log("sTeam",this.state.sTeam1);
+                            this.setState({ssTeam1:SSTeam1})
+                             console.log("ssTeam",this.state.ssTeam1);
                              
                         }} required/>
                     </Grid>
                     <Grid item xs={8} hidden={!this.state.teamPath||!this.state.showTeam}>
                                       
                             
-                               <div> נמצאו: {this.state.sTeam.length} חניכים
-                                    <Select  placeholder={" מצא חניך "} options={this.state.sTeam} onChange={(e)=>{
+                               <div> נמצאו: {this.state.sTeam1.length} חניכים
+                                    <Select  placeholder={" מצא חניך "} options={this.state.sTeam1} onChange={(e)=>{
                                         // console.log(e.label,e.value);
                                   
-                                        this.setState({ssTeam:[e.value]})
+                                        this.setState({ssTeam1:[e.value]})
                                          console.log("e.value",e.value.data())
                                     }} />
                                 </div>
                             
                                {
-                                    this.state.ssTeam.map((user,index) => (
+                                    this.state.ssTeam1.map((user,index) => (
                                         <Grid  item xs={12}  key={index}>
                                             <hr/>
-                                            {this.card(user,index)}
+                                            {this.card(user.data(),index)}
                                         </Grid >
                                     ))
                                }
@@ -628,13 +635,12 @@ class UpdatesFirebase extends Component {
                         </div>
 
                     </Grid>
-                  
                      <Grid item xs={12}>
                         <button onClick={()=>{
-                            this.setState({showTeam:!this.state.showTeam})
-                        }}>{this.state.showTeam?'הסתר שאלון פתיחה וסיום חונך':'הצג שאלון פתיחה וסיום חונך'} </button>
+                            this.setState({showQ:!this.state.showQ})
+                        }}>{this.state.showQ?'הסתר שאלון פתיחה וסיום חונך':'הצג שאלון פתיחה וסיום חונך'} </button>
                     </Grid>
-                    <Grid item xs={6} hidden={!this.state.showTeam} >
+                    <Grid item xs={6} hidden={!this.state.showQ} >
                         <button onClick={async ()=>{  
                             oldTeam=[]
                              var nameTeams =  await db.collection("Teams").where("old", "==",true).get();
@@ -643,32 +649,46 @@ class UpdatesFirebase extends Component {
                                 oldTeam.sort((a, b) =>(a.label > b.label) ? 1 : -1)         
                          })
                                 this.setState({teams:oldTeam})
-                                this.setState({archive:true})
+                                this.setState({archiveQ:true})
                             }}> מקבוצות ישנות</button>
                     </Grid>
-                     <Grid item xs={6} hidden={!this.state.showTeam}>
+                     <Grid item xs={6} hidden={!this.state.showQ}>
                                 
                                <button onClick={async ()=>{
-                                 this.setState({StudentTeam:true})
-                                  this.setState({archive:false})
+                                 this.setState({StudentTeamQ:true})
+                                  this.setState({archiveQ:false})
                                  this.setState({teams:options})
                                
                             }}>מקבוצות קיימות</button>
                     </Grid>
-                    <Grid item xs={8} hidden={(!this.state.archive &&!this.state.StudentTeam)||!this.state.showTeam}>
+                    <Grid item xs={8} hidden={(!this.state.archiveQ &&!this.state.StudentTeamQ)||!this.state.showQ}>
                      
                         <Select  placeholder={" בחר קבוצה "} options={this.state.teams} onChange={async(e)=>{
                             this.setState({teamPath:(e.value).path,teamName:e.label})
-                          this.srudent();
+                          // this.student("Opening questionnaire");
                         }} required/>
                     </Grid>
-                    <Grid item xs={20} hidden={!this.state.teamPath||!this.state.showTeam}>
-                                      
+                     <Grid item xs={8}  hidden={!this.state.teamPath||!this.state.showQ}>
+                             <button onClick={async ()=>{                                                                 
+                                  await this.student("Opening questionnaire"); 
+                                   await this.setState({opening:true})
+                                  await this.setState({summary:false})
+                            }}>שאלון פתיחה</button>
+                             <button onClick={async ()=>{ 
+                                 
+                            await  this.student("Summary questionnaire");
+                            await this.setState({summary:true})
+                                 await this.setState({opening:false})
+                             }}>שאלון סיום</button>                                 
+
+                            </Grid>
+                    <Grid item xs={20} hidden={(!this.state.opening&&!this.state.summary)}>
                             
                                <div> נמצאו: {this.state.sTeam.length} חניכים
                                     <Select item xs={12} placeholder={" מצא חניך "} options={this.state.sTeam} onChange={(e)=>{
                                         // console.log(e.label,e.value);
-                                        this.setState({ssTeam:[e.value[0].data()],from:[e.value[1]]})
+                                        this.setState({ssTeam:[e.value[0].data()]})
+                                        form=[e.value[1]];
                                     }} />
                                 </div>
                             
@@ -1127,9 +1147,9 @@ class UpdatesFirebase extends Component {
 
     cardQuestionnaire(user,index)
     {
-        console.log("this.state.from",this.state.form)
-         var form=this.state.form[index]; 
-        console.log("form",form)
+        console.log("this.state.from",form)
+         var form1=form[index]; 
+        console.log("form",form1)
         return(
             <div id="name-group" className="form-group" dir="rtl">
                 <div className="report" id="report">
@@ -1140,23 +1160,21 @@ class UpdatesFirebase extends Component {
                         <h4> ת.ז: {user.ID}</h4>
                         <h4> קבוצה: {user.teamName}</h4>
                         <Grid container spacing={2}>
-                            <Grid item xs={8} >
-                             <button onClick={async ()=>{
-                                 this.setState({opening:true})
-                            }}>שאלון פתיחה</button>
-                             <button onClick={async ()=>{ 
-                                 this.setState({summary:true})
-                            }}>שאלון סיום</button>
-                            </Grid>
+                          <Grid item xs={20}hidden={!this.state.opening }>
+                          <b><label>שאלון פתיחה</label></b>
+                           <h4></h4>
+                          </Grid>
+                           <Grid item xs={20}hidden={!this.state.summary}>
+                          <b><label>שאלון סיום</label></b>
+                           <h4></h4>
+                          </Grid>
                             <Grid item xs={20}hidden={!this.state.opening && !this.state.summary }>
-                                <div dir="rtl">
-                                <b><label>שאלון פתיחה</label></b> 
-                                                             <h4></h4>
+                                <div dir="rtl">    
                                  <b> <label>  חלק א'</label></b>
                                  <h4></h4>
 
-                               <h8><label> מגדר:  {form[0].gender}</label></h8>
-                                <h8><label> גיל: {form[0].age}</label> </h8>
+                               <h8><label> מגדר:  {form1[0].gender}</label></h8>
+                                <h8><label> גיל: {form1[0].age}</label> </h8>
                                 <h4></h4>
 
                              <b>   חלק ב'</b>
@@ -1166,101 +1184,101 @@ class UpdatesFirebase extends Component {
    <h4></h4>
  <h8><label id="insert-name" className="title-input"><h8>יש לי מיומנויות שיעזרו לי להשתלב בשוק העבודה (עמידה בזמנים, יכולת הצגה עצמית, התמדה):
 </h8></label></h8>
-                                {(form[0].q1 === "0")?('בכלל לא'):
-                                    (form[0].q1 === "1")?('במידה מועטה'):
-                                        (form[0].q1 === "2")?('במידה סבירה'):
-                                            (form[0].q1 === "3")?('במידה רבה'):
-                                                (form[0].q1 === "4")?('במידה רבה מאוד'):('')
+                                {(form1[0].q1 === "0")?('בכלל לא'):
+                                    (form1[0].q1 === "1")?('במידה מועטה'):
+                                        (form1[0].q1 === "2")?('במידה סבירה'):
+                                            (form1[0].q1 === "3")?('במידה רבה'):
+                                                (form1[0].q1 === "4")?('במידה רבה מאוד'):('')
                                 }
                                  <h4></h4>
                                   <h8><label id="insert-name" className="title-input"><h8>אני מרגיש/ה ביטחון לעמוד ולהציג מול קהל:
 </h8></label></h8>
-                                {(form[0].q2 === "0")?('בכלל לא'):
-                                    (form[0].q2 === "1")?('במידה מועטה'):
-                                        (form[0].q2 === "2")?('במידה סבירה'):
-                                            (form[0].q2 === "3")?('במידה רבה'):
-                                                (form[0].q2 === "4")?('במידה רבה מאוד'):('')
+                                {(form1[0].q2 === "0")?('בכלל לא'):
+                                    (form1[0].q2 === "1")?('במידה מועטה'):
+                                        (form1[0].q2 === "2")?('במידה סבירה'):
+                                            (form1[0].q2 === "3")?('במידה רבה'):
+                                                (form1[0].q2 === "4")?('במידה רבה מאוד'):('')
                                 }
                                  <h4></h4>
                                   <h8><label id="insert-name" className="title-input"><h8>אני מרגיש/ה בטוח להתמודד עם ראיון עבודה:
 </h8></label></h8>
-                                {(form[0].q3 === "0")?('בכלל לא'):
-                                    (form[0].q3 === "1")?('במידה מועטה'):
-                                        (form[0].q3 === "2")?('במידה סבירה'):
-                                            (form[0].q3 === "3")?('במידה רבה'):
-                                                (form[0].q3 === "4")?('במידה רבה מאוד'):('')
+                                {(form1[0].q3 === "0")?('בכלל לא'):
+                                    (form1[0].q3 === "1")?('במידה מועטה'):
+                                        (form1[0].q3 === "2")?('במידה סבירה'):
+                                            (form1[0].q3 === "3")?('במידה רבה'):
+                                                (form1[0].q3 === "4")?('במידה רבה מאוד'):('')
                                 }
                                  <h4></h4>
                                    <h8><label id="insert-name" className="title-input"><h8>אני יודע/ת כיצד לכתוב קורות חיים באופן עצמאי:
 </h8></label></h8>
-                                {(form[0].q4 === "0")?('בכלל לא'):
-                                    (form[0].q4 === "1")?('במידה מועטה'):
-                                        (form[0].q4 === "2")?('במידה סבירה'):
-                                            (form[0].q4 === "3")?('במידה רבה'):
-                                                (form[0].q4 === "4")?('במידה רבה מאוד'):('')
+                                {(form1[0].q4 === "0")?('בכלל לא'):
+                                    (form1[0].q4 === "1")?('במידה מועטה'):
+                                        (form1[0].q4 === "2")?('במידה סבירה'):
+                                            (form1[0].q4 === "3")?('במידה רבה'):
+                                                (form1[0].q4 === "4")?('במידה רבה מאוד'):('')
                                 }
                                  <h4></h4>
                                   <h8><label id="insert-name" className="title-input"><h8>אני מאמין/ה שאצליח להשיג את העבודה שאני רוצה בעתיד:
 </h8></label></h8>
-                                {(form[0].q5 === "0")?('בכלל לא'):
-                                    (form[0].q5 === "1")?('במידה מועטה'):
-                                        (form[0].q5 === "2")?('במידה סבירה'):
-                                            (form[0].q5 === "3")?('במידה רבה'):
-                                                (form[0].q5 === "4")?('במידה רבה מאוד'):('')
+                                {(form1[0].q5 === "0")?('בכלל לא'):
+                                    (form1[0].q5 === "1")?('במידה מועטה'):
+                                        (form1[0].q5 === "2")?('במידה סבירה'):
+                                            (form1[0].q5 === "3")?('במידה רבה'):
+                                                (form1[0].q5 === "4")?('במידה רבה מאוד'):('')
                                 }
                                  <h4></h4>
                                    <h8><label id="insert-name" className="title-input"><h8>אני מאוד רוצה להשתלב בשוק העבודה בעתיד:
 </h8></label></h8>
-                                {(form[0].q6 === "0")?('בכלל לא'):
-                                    (form[0].q6 === "1")?('במידה מועטה'):
-                                        (form[0].q6 === "2")?('במידה סבירה'):
-                                            (form[0].q6 === "3")?('במידה רבה'):
-                                                (form[0].q6 === "4")?('במידה רבה מאוד'):('')
+                                {(form1[0].q6 === "0")?('בכלל לא'):
+                                    (form1[0].q6 === "1")?('במידה מועטה'):
+                                        (form1[0].q6 === "2")?('במידה סבירה'):
+                                            (form1[0].q6 === "3")?('במידה רבה'):
+                                                (form1[0].q6 === "4")?('במידה רבה מאוד'):('')
                                 }
                                  <h4></h4>
                                    <h8><label id="insert-name" className="title-input"><h8>אני מוכנ/ה להתאמץ כדי להשתלב בעבודה שתתאים לי:
 </h8></label></h8>
-                                {(form[0].q7 === "0")?('בכלל לא'):
-                                    (form[0].q7 === "1")?('במידה מועטה'):
-                                        (form[0].q7 === "2")?('במידה סבירה'):
-                                            (form[0].q7 === "3")?('במידה רבה'):
-                                                (form[0].q7 === "4")?('במידה רבה מאוד'):('')
+                                {(form1[0].q7 === "0")?('בכלל לא'):
+                                    (form1[0].q7 === "1")?('במידה מועטה'):
+                                        (form1[0].q7 === "2")?('במידה סבירה'):
+                                            (form1[0].q7 === "3")?('במידה רבה'):
+                                                (form1[0].q7 === "4")?('במידה רבה מאוד'):('')
                                 }
                                  <h4></h4>
                                  <h8><label id="insert-name" className="title-input"><h8>בעתיד, כשאמצע עבודה, יהיה לי חשוב להצליח בה ולהישאר בה לאורך זמן:
 </h8></label></h8>
-                                {(form[0].q8 === "0")?('בכלל לא'):
-                                    (form[0].q8 === "1")?('במידה מועטה'):
-                                        (form[0].q8 === "2")?('במידה סבירה'):
-                                            (form[0].q8 === "3")?('במידה רבה'):
-                                                (form[0].q8 === "4")?('במידה רבה מאוד'):('')
+                                {(form1[0].q8 === "0")?('בכלל לא'):
+                                    (form1[0].q8 === "1")?('במידה מועטה'):
+                                        (form1[0].q8 === "2")?('במידה סבירה'):
+                                            (form1[0].q8 === "3")?('במידה רבה'):
+                                                (form1[0].q8 === "4")?('במידה רבה מאוד'):('')
                                 }
                                  <h4></h4>
                                   <h8><label id="insert-name" className="title-input"><h8>אני משקיע/ה מחשבה לגבי העתיד המקצועי שלי:
 </h8></label></h8>
-                                {(form[0].q9 === "0")?('בכלל לא'):
-                                    (form[0].q9 === "1")?('במידה מועטה'):
-                                        (form[0].q9 === "2")?('במידה סבירה'):
-                                            (form[0].q9 === "3")?('במידה רבה'):
-                                                (form[0].q9 === "4")?('במידה רבה מאוד'):('')
+                                {(form1[0].q9 === "0")?('בכלל לא'):
+                                    (form1[0].q9 === "1")?('במידה מועטה'):
+                                        (form1[0].q9 === "2")?('במידה סבירה'):
+                                            (form1[0].q9 === "3")?('במידה רבה'):
+                                                (form1[0].q9 === "4")?('במידה רבה מאוד'):('')
                                 }
                                  <h4></h4>
                                   <h8><label id="insert-name" className="title-input"><h8>האם את/ה מתכוונ/ת להתגייס לצבא/ שירות לאומי?:
 </h8></label></h8>
-                                {(form[0].q10 === "0")?('בכלל לא'):
-                                    (form[0].q10 === "1")?('במידה מועטה'):
-                                        (form[0].q10 === "2")?('במידה סבירה'):
-                                            (form[0].q10 === "3")?('במידה רבה'):
-                                                (form[0].q10 === "4")?('במידה רבה מאוד'):('')
+                                {(form1[0].q10 === "0")?('בכלל לא'):
+                                    (form1[0].q10 === "1")?('במידה מועטה'):
+                                        (form1[0].q10 === "2")?('במידה סבירה'):
+                                            (form1[0].q10 === "3")?('במידה רבה'):
+                                                (form1[0].q10 === "4")?('במידה רבה מאוד'):('')
                                 }
                                  <h4></h4>
                                   <h8><label id="insert-name" className="title-input"><h8>אני מאמינ/ה שאצליח להשיג כל מטרה בחיים:
 </h8></label></h8>
-                                {(form[0].q11 === "0")?('בכלל לא'):
-                                    (form[0].q11 === "1")?('במידה מועטה'):
-                                        (form[0].q11 === "2")?('במידה סבירה'):
-                                            (form[0].q11 === "3")?('במידה רבה'):
-                                                (form[0].q11 === "4")?('במידה רבה מאוד'):('')
+                                {(form1[0].q11 === "0")?('בכלל לא'):
+                                    (form1[0].q11 === "1")?('במידה מועטה'):
+                                        (form1[0].q11 === "2")?('במידה סבירה'):
+                                            (form1[0].q11 === "3")?('במידה רבה'):
+                                                (form1[0].q11 === "4")?('במידה רבה מאוד'):('')
                                 }
                                  <h4></h4>
                                
@@ -1272,52 +1290,133 @@ class UpdatesFirebase extends Component {
  <h8><label id="insert-name" className="title-input"><h8>
 קורות חיים:
 </h8></label></h8>
-                                {(form[0].q2_1 === "0")?('לא יודע/ת בכלל'):
-                                    (form[0].q2_1 === "1")?('יודע/ת מעט מאוד'):
-                                        (form[0].q2_1 === "2")?('יודע/ת מספיק'):
-                                            (form[0].q2_1 === "3")?('יודע/ת הרבה'):
-                                                (form[0].q2_1 === "4")?('יודע/ת הרבה מאוד'):('')
+                                {(form1[0].q2_1 === "0")?('לא יודע/ת בכלל'):
+                                    (form1[0].q2_1 === "1")?('יודע/ת מעט מאוד'):
+                                        (form1[0].q2_1 === "2")?('יודע/ת מספיק'):
+                                            (form1[0].q2_1 === "3")?('יודע/ת הרבה'):
+                                                (form1[0].q2_1 === "4")?('יודע/ת הרבה מאוד'):('')
                                 }
                                  <h4></h4>
                                   <h8><label id="insert-name" className="title-input"><h8>
 ראיון עבודה:
 </h8></label></h8>
-                                {(form[0].q2_2 === "0")?('לא יודע/ת בכלל'):
-                                    (form[0].q2_2 === "1")?('יודע/ת מעט מאוד'):
-                                        (form[0].q2_2 === "2")?('יודע/ת מספיק'):
-                                            (form[0].q2_2 === "3")?('יודע/ת הרבה'):
-                                                (form[0].q2_2 === "4")?('יודע/ת הרבה מאוד'):('')
+                                {(form1[0].q2_2 === "0")?('לא יודע/ת בכלל'):
+                                    (form1[0].q2_2 === "1")?('יודע/ת מעט מאוד'):
+                                        (form1[0].q2_2 === "2")?('יודע/ת מספיק'):
+                                            (form1[0].q2_2 === "3")?('יודע/ת הרבה'):
+                                                (form1[0].q2_2 === "4")?('יודע/ת הרבה מאוד'):('')
                                 }
                                  <h4></h4>
                                   <h8><label id="insert-name" className="title-input"><h8>
 כתיבת תוכנית עסקית:
 </h8></label></h8>
-                                {(form[0].q2_3 === "0")?('לא יודע/ת בכלל'):
-                                    (form[0].q2_3 === "1")?('יודע/ת מעט מאוד'):
-                                        (form[0].q2_3 === "2")?('יודע/ת מספיק'):
-                                            (form[0].q2_3 === "3")?('יודע/ת הרבה'):
-                                                (form[0].q2_3 === "4")?('יודע/ת הרבה מאוד'):('')
+                                {(form1[0].q2_3 === "0")?('לא יודע/ת בכלל'):
+                                    (form1[0].q2_3 === "1")?('יודע/ת מעט מאוד'):
+                                        (form1[0].q2_3 === "2")?('יודע/ת מספיק'):
+                                            (form1[0].q2_3 === "3")?('יודע/ת הרבה'):
+                                                (form1[0].q2_3 === "4")?('יודע/ת הרבה מאוד'):('')
                                 }
                                  <h4></h4>
                                   <h8><label id="insert-name" className="title-input"><h8>
 תכנון גאנט עבודה:
 </h8></label></h8>
-                                {(form[0].q2_4 === "0")?('לא יודע/ת בכלל'):
-                                    (form[0].q2_4 === "1")?('יודע/ת מעט מאוד'):
-                                        (form[0].q2_4 === "2")?('יודע/ת מספיק'):
-                                            (form[0].q2_4 === "3")?('יודע/ת הרבה'):
-                                                (form[0].q2_4 === "4")?('יודע/ת הרבה מאוד'):('')
+                                {(form1[0].q2_4 === "0")?('לא יודע/ת בכלל'):
+                                    (form1[0].q2_4 === "1")?('יודע/ת מעט מאוד'):
+                                        (form1[0].q2_4 === "2")?('יודע/ת מספיק'):
+                                            (form1[0].q2_4 === "3")?('יודע/ת הרבה'):
+                                                (form1[0].q2_4 === "4")?('יודע/ת הרבה מאוד'):('')
                                 }
                                  <h4></h4>
 
-                                  <b> חלק ד' (ואחרון)</b>
+                            
+                     
+                                  <b> חלק ד'</b>
                              <h4></h4>
-
+ <Grid item xs={20}hidden={!this.state.opening}>
                              <b>מה את/ה מצפה ללמוד בתוכנית?</b>
-                             <h8><label>  {form[0].hopeTostudy}</label></h8>
+                             <h8><label>  {form1[0].hopeTostudy}</label></h8>
                                 <h4></h4> 
                                 <b>מה את/ה מרגיש/ה שאת/ה צריך/ה ללמוד בתוכנית כדי להצליח להשתלב בעבודה שאת/ה רוצה ?</b>
-                             <h8><label>  {form[0].needTostudy}</label></h8>
+                             <h8><label>  {form1[0].needTostudy}</label></h8>
+                             </Grid>
+                             <Grid item xs={20}hidden={!this.state.summary}>
+                            < b>לפניכם שאלות על תכנים שלמדתם במהלך השנה,  אנא סמן/י עד כמה למדת מכל אחד מהאירועים הבאים? </b>
+   <h4></h4>
+ <h8><label id="insert-name" className="title-input"><h8>
+ימי שיא 	:
+</h8></label></h8>
+                                {(form1[0].q3_1 === "0")?('לא למדתי בכלל'):
+                                    (form1[0].q3_1 === "1")?('למדתי מעט מאוד'):
+                                        (form1[0].q3_1 === "2")?('למדתי מספיק'):
+                                            (form1[0].q3_1 === "3")?('למדתי הרבהה'):
+                                                (form1[0].q3_1 === "4")?('למדתי הרבה מאוד'):
+                                                       (form1[0].q3_1 === "4")?('לא הגעתי לפעילות זו'):('')
+                                }
+                                 <h4></h4>
+                                  <h8><label id="insert-name" className="title-input"><h8>
+ועדת היגוי 	:
+</h8></label></h8>
+                                {(form1[0].q3_2 === "0")?('לא למדתי בכלל'):
+                                    (form1[0].q3_2 === "1")?('למדתי מעט מאוד'):
+                                        (form1[0].q3_2 === "2")?('למדתי מספיק'):
+                                            (form1[0].q3_2 === "3")?('למדתי הרבהה'):
+                                                (form1[0].q3_2 === "4")?('למדתי הרבה מאוד'):
+                                                       (form1[0].q3_2 === "4")?('לא הגעתי לפעילות זו'):('')
+                                }
+                                 <h4></h4>
+                                  <h8><label id="insert-name" className="title-input"><h8>
+והפקת מיזם חברתי 	:
+</h8></label></h8>
+                                {(form1[0].q3_3 === "0")?('לא למדתי בכלל'):
+                                    (form1[0].q3_3 === "1")?('למדתי מעט מאוד'):
+                                        (form1[0].q3_3 === "2")?('למדתי מספיק'):
+                                            (form1[0].q3_3 === "3")?('למדתי הרבהה'):
+                                                (form1[0].q3_3 === "4")?('למדתי הרבה מאוד'):
+                                                       (form1[0].q3_3 === "4")?('לא הגעתי לפעילות זו'):('')
+                                }
+                                 <h4></h4>
+                                  <h8><label id="insert-name" className="title-input"><h8>
+                                הכשרה מקצועית 	:
+</h8></label></h8>
+                                {(form1[0].q3_4 === "0")?('לא למדתי בכלל'):
+                                    (form1[0].q3_4 === "1")?('למדתי מעט מאוד'):
+                                        (form1[0].q3_4 === "2")?('למדתי מספיק'):
+                                            (form1[0].q3_4 === "3")?('למדתי הרבהה'):
+                                                (form1[0].q3_4 === "4")?('למדתי הרבה מאוד'):
+                                                       (form1[0].q3_4 === "4")?('לא הגעתי לפעילות זו'):('')
+                                }
+                                 <h4></h4>
+
+                                   < b>עד כמה הרגשת שאת/ה למדת על עולם התעסוקה והעסקים מהדמויות הבאות? </b>
+   <h4></h4>
+ <h8><label id="insert-name" className="title-input"><h8>
+מדריכ/ת הקבוצה	:
+</h8></label></h8>
+                                {(form1[0].q4_1 === "1")?('לא למדתי בכלל'):
+                                    (form1[0].q4_1 === "2")?('למדתי מעט מאוד'):
+                                        (form1[0].q4_1 === "3")?('למדתי מספיק'):
+                                            (form1[0].q4_1 === "4")?('למדתי הרבהה'):
+                                                (form1[0].q4_1 === "5")?('למדתי הרבה מאוד'):('')
+                                }
+                                 <h4></h4>
+                                  <h8><label id="insert-name" className="title-input"><h8>
+מנחה עסקי/ת	:
+</h8></label></h8>
+                                {(form1[0].q4_2 === "1")?('לא למדתי בכלל'):
+                                    (form1[0].q4_2 === "2")?('למדתי מעט מאוד'):
+                                        (form1[0].q4_2 === "3")?('למדתי מספיק'):
+                                            (form1[0].q4_2 === "4")?('למדתי הרבהה'):
+                                                (form1[0].q4_2 === "5")?('למדתי הרבה מאוד'):('')
+                                }
+                                 <h4></h4>
+
+                                  <b> מה הייתה החוויה הכי משמעותית עבורך בתוכנית?</b>
+                             <h8><label>  {form1[0].experience}</label></h8>
+                              <h4></h4>
+                              <b> מה את/ה לוקח/ת איתך מהתוכנית להמשך הדרך?</b>
+                             <h8><label>  {form1[0].take}</label></h8>
+
+                                                  </Grid>
 
                                 </div>
                             </Grid>
@@ -1329,28 +1428,28 @@ class UpdatesFirebase extends Component {
 
         )
     }
-   async srudent(){                        
+   async student(type){                        
         this.loadSpinner(true,"מיבא סטודנטים");
         var options=[]
        // var forms=[]
         this.setState({options:options,show:false})
         var nameStudent = await db.collection("students").where('teamName','==',this.state.teamName).get()              
         var Studentcollection = nameStudent.docs.map( async function(doc) {
-            var Opening = await db.collection("students").doc(doc.id).collection("Opening questionnaire").doc("form").get()
+            var questionnaire = await db.collection("students").doc(doc.id).collection(type).doc("form").get()
                  
-                console.log("Opening",Opening)
-            if(Opening.exists)
-            {var forms=[]
+                console.log("type",type)
+            if(questionnaire.exists)
+            { var forms=[]
               /*  
                 Opening.forEach(async function(doc){
                     if(doc.data().form)
                     {
-                        forms.push(doc.data().form)
+                        forms.push(doc.data().form) 
                         console.log("forms",forms)
                     }
                 })*/
                 
-                forms.push(Opening.data().form);
+                forms.push(questionnaire.data().form);
                 console.log("forms",forms)
                 
                 return [doc,forms]
@@ -1361,79 +1460,30 @@ class UpdatesFirebase extends Component {
         Promise.all(Studentcollection).then(res => {
             var sTeam=[];
             var ssTeam=[];
-            var forms=[];
-            res.forEach(item=>{
+            var forms1=[];
+
+            res.forEach(async item=>{
                 // console.log("in 3")
                 if(item){
                     sTeam.push({ value: item, label:  item[0].data().fname + ' ' + item[0].data().lname})
                     
                   ssTeam.push(item[0].data())
-                  forms.push(item[1])
-                  console.log("item[1].data())",item[1]);
-                  this.setState({form:forms})
-                  console.log("forms1",forms);
-                                    console.log("form",this.state.form);
-
-                }                                       
+                  forms1.push(item[1])
+                // this.setState({form:forms1})
+                          form=forms1
+                }                        
+                      
             })
-            sTeam.sort((a, b) =>(a.label > b.label) ? 1 : -1)
+           sTeam.sort((a, b) =>(a.label > b.label) ? 1 : -1)
              
-            this.setState({sTeam:sTeam,ssTeam:ssTeam})
-             this.setState({form:forms})
-                  console.log("forms1",forms);
-                                    console.log("form",this.state.form);
-          
+            this.setState({sTeam:sTeam,ssTeam:ssTeam})  
+                                     //  form=forms1
 
-
+           //  this.setState({form:forms1})
+         
             this.loadSpinner(false,"")
         })
     }
-    // attendReport() {
-    //
-    //     return(
-    //         <div id="instactorReport" className="sec-design" dir='rtl'>
-    //             <Grid container spacing={2}>
-    //                 <Grid item xs={12}>
-    //                     <input type="text" name="team" placeholder="שם קבוצה חדשה" onChange={this.handleChange}/>
-    //                 </Grid>
-    //                 <Grid item xs={6} >
-    //                     <button onClick={()=>{CreateNewTeam(this.state.teamName)}}>צור קבוצה חדשה</button>
-    //                 </Grid>
-    //                 <Grid item xs={6}>
-    //                     <button onClick={()=>{
-    //                     if(this.state.teamName && this.state.teamName.length > 0)
-    //                         this.setState({replaceTeamName:true})
-    //                     else
-    //                         alert("שם הקבוצה החדשה לא יכול להיות ריק")
-    //                     }}>החלף שם לקבוצה קיימת </button>
-    //                 </Grid>
-    //                 <Grid item xs={8} hidden={!this.state.replaceTeamName}>
-    //                 <Select  placeholder={" בחר קבוצה להחלפת שם "} options={options} onChange={(e)=>{
-    //                         console.log(e.label,e.value);
-    //                         this.setState({teamPath:e.value})
-    //                     }} required/>
-    //
-    //                 </Grid>
-    //                 <Grid item xs={4} hidden={!this.state.replaceTeamName} >
-    //                     <button onClick={()=>{
-    //                         console.log("בוצעה החלפה")
-    //                         this.setState({replaceTeamName:false})
-    //                     }}>אישור החלפה</button>
-    //                 </Grid>
-    //                     <Grid item xs={12}>
-    //                         <div className="text-below-image">
-    //
-    //                             <button onClick={this.handleSubmit} >רשימת מדריכים</button>
-    //                             <div></div>
-    //                             <button id="feedback-button" className="btn btn-info" onClick={()=>{BackPage(this.props,this.state.user)}}>חזרה לתפריט</button>
-    //                         </div>
-    //
-    //                     </Grid>
-    //             </Grid>
-    //         </div>
-    //
-    //     )
-    // }
 
 
     loadUser(page)

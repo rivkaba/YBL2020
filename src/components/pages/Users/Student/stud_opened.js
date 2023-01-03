@@ -116,7 +116,7 @@ class StudentOpened extends React.Component {
 
     }
 
-    sendDataToFirebase = async (collection) => {
+    sendDataToFirebase = async () => {
 
         //Send data to firebase
 

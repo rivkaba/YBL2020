@@ -44,7 +44,7 @@ class TripReport extends React.Component {
 
     }
 
-    sendDataToFirebase = async (collection) => {
+    sendDataToFirebase = async () => {
         //Send data to firebase
         this.loadSpinner(true,"שולח נתוני נסיעות")
         var path = auth.currentUser.uid;
@@ -54,7 +54,6 @@ class TripReport extends React.Component {
             var day = date.getDate(); var month = date.getMonth() + 1; var year = date.getFullYear();
             
             var curDate = `${day}/${month}/${year}`.trim();
-            // var finalForm = {[curDate]: this.state.form};
             var displayName = this.state.user.displayName;
             console.log('displayName', displayName)
             var finalForm = {...this.state.form, displayName}

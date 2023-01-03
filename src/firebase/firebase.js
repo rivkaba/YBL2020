@@ -35,7 +35,7 @@ export async function DeleteUser(uid) {
     await db.collection("waitforapproval").doc(uid).delete();
     return;
 }
-
+  
 
 export async function CreateUser(user) {
     user.approve = true;
@@ -257,10 +257,8 @@ export async function getstudentSdidntCome(teamName,studentsComes){
        students.forEach(result=> {
              var name =result.data().fname+" "+result.data().lname;
            if (studentsComes.indexOf(name) > -1) {
-    //In the array!
             return;
            } else {
-    //Not in the array
          studentSdidntCome.push(name)
            }
          })
