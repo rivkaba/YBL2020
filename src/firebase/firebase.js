@@ -58,7 +58,7 @@ export async function CreateUser(user) {
     else{    
         if(user.type==="BusinessMentor") {
             var team=await db.collection('Teams').doc(user.team.id);
-                team.updet({
+                team.update({
                     BusinessMentor: db.doc('BusinessMentor/'+user.uid)
         })
         }    
