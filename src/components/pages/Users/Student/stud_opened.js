@@ -764,7 +764,7 @@ class StudentOpened extends React.Component {
                 .then(async(doc) => {   
     if (doc.exists)
     {
-             await  alert("כבר מלאת שאלון פתיחה")
+               alert("כבר מלאת שאלון פתיחה")
                  this.BackPage()
     }
     

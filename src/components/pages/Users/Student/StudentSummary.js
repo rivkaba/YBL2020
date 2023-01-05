@@ -257,6 +257,7 @@ class StudentSummary extends React.Component {
         console.log('state:',this.state.finalForm)
         if(this.state.loadPage)
         {
+                    this.existss();
         return (<div>
             {!this.state.spinner[0] ? "" :
                 <div id='fr'>
@@ -910,7 +911,19 @@ class StudentSummary extends React.Component {
         }</div>)
 
     }
-
+     async existss(){
+    var path = auth.currentUser.uid;
+    await  db.collection("students").doc(path).collection('Summary questionnaire').doc("form").get()
+                .then(async(doc) => {   
+    if (doc.exists)
+    {
+               alert("כבר מלאת שאלון סיום")
+                 this.BackPage()
+    }
+    
+                });
+               
+    }
     loadUser(page)
     {
         this.props.history.push({

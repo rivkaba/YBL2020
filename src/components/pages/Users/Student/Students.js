@@ -128,21 +128,11 @@ class Student extends React.Component {
                         }}>מילוי משוב<span
                             className="fa fa-arrow-right"></span></button>
                           <button id="feedback-button" className="btn btn-info" onClick={async() => {
-                          //await this.exist();
-                        
-
                                     NextPage(this.props, "Opened", this.state.user)
-                             //  }
-                         /* }
-                          else{
-                              alert(exist1)
-                        NextPage(this.props, "Profile", this.state.user)
-                          }*/
+                      
                         }}>שאלון הפתיחה<span
                             className="fa fa-arrow-right"></span></button>
                           <button id="feedback-button" className="btn btn-info" onClick={async() => {
-                            // this.exsist()
-                            //  if(this.exsist()===false){
                                     NextPage(this.props, "Summary", this.state.user)
                         }}>שאלון סיום<span
                             className="fa fa-arrow-right"></span></button>
@@ -182,47 +172,6 @@ class Student extends React.Component {
                 </div>
             }</div>)
     }
-   async existss(){
-    var path = auth.currentUser.uid;
-   /* // try{
-        var exsist4= await db.collection("students").doc(path).collection('Opening questionnaire').get()
-                            if(!exsist4.empty){ 
-                                console.log("exsist4",exsist4)
-                            alert("כבר מלאת שאלון פתיחה")
-                           // this.setState({exsist:true});
-                            exsist1=true;
-                            //console.log(this.state.exsist)
-                             console.log("exsist4",exsist4)
-
-                            }else
-                          // this.setState({exsist:false});
-                            exsist1=false;
-     //   } catch(error) {
-          // alert(error.message)
-           // this.loadSpinner(false)
-     //  }*/
-      db.collection("students").doc(path).collection('Opening questionnaire').doc("form").get()
-                .then(async(doc) => {
-    if (doc.exists)
-    { 
-       //  /*   if(questionnaire.exists)
-          //  { 
-                alert("כבר מלאת שאלון פתיחה")
-                exist1=true;
-                console.log("exsist1",exist1)
-    }else
-    {
-                            exist1=false;
-    
-                            console.log("exsist1",exist1)
-    }
-                });
-  
-       // })
-    }
-      
-
-    ////////////
   
     loadUser(page)
     {
