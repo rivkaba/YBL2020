@@ -55,15 +55,14 @@ export async function CreateUser(user) {
                 })
         }
     
-   /* else{    
+    else{    
         if(user.type==="BusinessMentor") {
             var team=await db.collection('Teams').doc(user.team.id);
-                team.set({
-                    name: user.teamName,
+                team.updet({
                     BusinessMentor: db.doc('BusinessMentor/'+user.uid)
         })
         }    
-    }*/
+    }
    }
    await  db.collection(user.type).doc(user.uid).set(user)
     await DeleteUser(user.uid)

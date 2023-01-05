@@ -669,13 +669,12 @@ class UpdatesFirebase extends Component {
                         }} required/>
                     </Grid>
                      <Grid item xs={8}  hidden={!this.state.teamPath||!this.state.showQ}>
-                             <button onClick={async ()=>{                                                                 
+                             <button onClick={async ()=>{   
                                   await this.student("Opening questionnaire"); 
                                    await this.setState({opening:true})
                                   await this.setState({summary:false})
                             }}>שאלון פתיחה</button>
                              <button onClick={async ()=>{ 
-                                 
                             await  this.student("Summary questionnaire");
                             await this.setState({summary:true})
                                  await this.setState({opening:false})
@@ -1431,27 +1430,15 @@ class UpdatesFirebase extends Component {
    async student(type){                        
         this.loadSpinner(true,"מיבא סטודנטים");
         var options=[]
-       // var forms=[]
         this.setState({options:options,show:false})
         var nameStudent = await db.collection("students").where('teamName','==',this.state.teamName).get()              
         var Studentcollection = nameStudent.docs.map( async function(doc) {
             var questionnaire = await db.collection("students").doc(doc.id).collection(type).doc("form").get()
                  
-                console.log("type",type)
             if(questionnaire.exists)
             { var forms=[]
-              /*  
-                Opening.forEach(async function(doc){
-                    if(doc.data().form)
-                    {
-                        forms.push(doc.data().form) 
-                        console.log("forms",forms)
-                    }
-                })*/
                 
-                forms.push(questionnaire.data().form);
-                console.log("forms",forms)
-                
+                forms.push(questionnaire.data().form);  
                 return [doc,forms]
             } 
            
@@ -1463,24 +1450,17 @@ class UpdatesFirebase extends Component {
             var forms1=[];
 
             res.forEach(async item=>{
-                // console.log("in 3")
                 if(item){
                     sTeam.push({ value: item, label:  item[0].data().fname + ' ' + item[0].data().lname})
                     
                   ssTeam.push(item[0].data())
                   forms1.push(item[1])
-                // this.setState({form:forms1})
-                          form=forms1
+                  form=forms1
                 }                        
                       
             })
-           sTeam.sort((a, b) =>(a.label > b.label) ? 1 : -1)
-             
+            sTeam.sort((a, b) =>(a.label > b.label) ? 1 : -1) 
             this.setState({sTeam:sTeam,ssTeam:ssTeam})  
-                                     //  form=forms1
-
-           //  this.setState({form:forms1})
-         
             this.loadSpinner(false,"")
         })
     }

@@ -4,7 +4,6 @@ import { RadioGroup ,FormControlLabel, Radio } from '@material-ui/core';
 import './Student.css'
 import ClipLoader from "react-spinners/ClipLoader";
 
-
 class StudentOpened extends React.Component {
 
     constructor(props) {
@@ -253,6 +252,7 @@ class StudentOpened extends React.Component {
         console.log('state:',this.state.finalForm)
         if(this.state.loadPage)
         {
+        this.existss();
         return (<div>
             {!this.state.spinner[0] ? "" :
                 <div id='fr'>
@@ -736,7 +736,6 @@ class StudentOpened extends React.Component {
                 }}>התנתק
                 </button>
 </div></div>);
-   
     }
         else
         return (<div> {!this.state.spinner[0] ? "" :
@@ -758,6 +757,21 @@ class StudentOpened extends React.Component {
 
     }
 
+    
+    async existss(){
+    var path = auth.currentUser.uid;
+    await  db.collection("students").doc(path).collection('Opening questionnaire').doc("form").get()
+                .then(async(doc) => {   
+    if (doc.exists)
+    {
+             await  alert("כבר מלאת שאלון פתיחה")
+                 this.BackPage()
+    }
+    
+                });
+               
+    }
+      
     loadUser(page)
     {
         this.props.history.push({
