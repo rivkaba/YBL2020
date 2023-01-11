@@ -1,5 +1,8 @@
 {
   "projects": {
-    "default": "ybl-project-b5e04"
-  }
+    "default": "ybl-project-b5e04",
+    "atid-lanoar": "finalybl"
+  },
+  "targets": {},
+  "etags": {}
 }

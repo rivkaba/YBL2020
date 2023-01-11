@@ -67,9 +67,11 @@ if(this.state.loadPage){
                         <Grid item xs={12}>
                             <Select  placeholder={" בחר קבוצה "} options={this.state.options} onChange={(e)=>{
                                 this.setState({teamPath:e.value,teamName:e.label})
-                            this.resetConfig()
                                 this.setState({optionDate: false})
                                 this.setState({optionsDate: []});
+                                 this.setState({results:[]});
+                                 this.setState({results2:[]});
+                                 this.setState({report1:false})
                             }} required/>
                             
                               {/*<Route exact path="/"><label id="date" className="title-input">:הכנס את תאריך המפגש</label>
@@ -78,8 +80,9 @@ if(this.state.loadPage){
                         <Grid item xs={12}>
                             <div className="text-below-image">
                                 <button  onClick={()=>{
-                                    this.GetDates()
-                                    // this.setState({optionDate:!this.state.optionDate})
+                                    this.setState({results:[]});
+                                    this.setState({results2:[]});
+                                     this.GetDates()
                                      this.setState({report1:!this.state.report1})
                                 }} >{this.state.optionDate?"הסתר דוח":"הצג דוח נוחכות לקבוצה זו לפי תאריך "}</button>
                             </div>
@@ -186,25 +189,13 @@ if(this.state.loadPage){
         </div>)
 }
     }
-
-    resetConfig = async() => {
-        this.setState({optionsDate : []});
-        // $("#studentList1").empty();
-        this.setState({optionDate:false})
-        // window.location.reload();
-
-        // this.setState({date:'TEST!' })
-    }
-
-
     async  GetDates()
     {
         if( !this.state.teamPath) {
-            this.setState({optionDate:false})
-            this.setState({optionsDate : []});
             alert("נא לבחור קבוצה להצגה")
             return
         } else {
+           this.loadSpinner(true,"טוען משתמשים להצגה")
             this.setState({optionDate:!this.state.optionDate})
 
           var dates = await db.collection("Teams").doc(this.state.teamPath.id).collection("Dates").get()
@@ -216,6 +207,7 @@ if(this.state.loadPage){
                         { value: doc.data(), label: doc.id }                    ]
                 }));
           })
+          this.loadSpinner(false,"");
         }
     }
 
