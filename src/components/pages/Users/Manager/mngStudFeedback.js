@@ -302,7 +302,14 @@ class FeedbackStudents extends Component {
                                 }
                             </Grid >
                         ):(<div></div>)}
-                        <button id="go-back" className="btn btn-info" onClick={()=>{this.BackPage()}}>חזור</button>
+ <Grid item xs={12}>
+                            <div className="text-below-image">
+                                <button onClick={(e)=>{
+
+                                    this.setState({report:!this.state.report})
+                                }} >{this.state.report?"הסתר משוב":"הצג משובי חניכים לפי תאריך מסויים "}</button>
+                            </div>
+                        </Grid>                         <button id="go-back" className="btn btn-info" onClick={()=>{this.BackPage()}}>חזור</button>
                     </div>
                 </div>
             </div>

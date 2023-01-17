@@ -89,7 +89,7 @@ if(this.state.loadPage){
                         </Grid>
                             {this.state.optionsDate.length == 0 ? 
                             <>
-                                <Grid item xs={12} hidden={!this.state.optionDate}>
+                               /* <Grid item xs={12} hidden={!this.state.optionDate}>
                                         <Select id = 'select'  
                                         placeholder={'בחר תאריך'} 
                                         value={'test'}  
@@ -97,7 +97,7 @@ if(this.state.loadPage){
                                             // this.setState({viewStudent:false});
                                             // this.handleSubmitFeedbackByDate(e);
                                         }} required/>
-                                        </Grid>     
+                                        </Grid>     */
                                 </>
                                 :
                                 <>
@@ -159,6 +159,8 @@ if(this.state.loadPage){
                         <Grid item xs={12}  hidden={!this.state.report}>
                             <div id="studentList" ></div>
                         </Grid>
+                          
+                        
                         <Grid item xs={12}>
                                 <button id="feedback-button" className="btn btn-info" onClick={()=>{this.BackPage()}}>חזרה לתפריט</button>
                         </Grid>
@@ -243,6 +245,11 @@ if(this.state.loadPage){
                     $('#studentList').append(lable);
                     $('#studentList').append(br);
                 })
+                var lable=document.createElement("lable");
+                    lable.innerHTML = " ";
+                    var br=document.createElement("br");
+                    $('#studentList').append(lable);
+                    $('#studentList').append(br);
             })
         }
     }
