@@ -318,13 +318,13 @@ class FeedbackStudents extends Component {
                                     teams.sort((a, b) =>(a.label > b.label) ? 1 : -1)
                                          }
                                          })
-                                    this.setState({teams:teams})
+                                    this.setState({teams:teams,forms:[],dates:[]})
                                     this.setState({report:!this.state.report})
                                 }} >{this.state.report?"הסתר משוב":"הצג משובי חניכים לפי תאריך מסויים "}</button>
                             </div>
                         </Grid>      
                         /////////////////////////////////////////////
-                         <Grid  item xs={8} hidden={!this.state.teams}>
+                         <Grid  item xs={8} hidden={!this.state.teams||!this.state.report}>
                             <Select  placeholder={" בחר קבוצה "} options={this.state.teams} onChange={async(e)=>{
                                 this.setState({team1:e.value})
                                 this.setState({datess:false})
@@ -337,7 +337,7 @@ class FeedbackStudents extends Component {
                                 this.setState({dates:dates,show1:false})
                             }} required/>
                         </Grid>
-                                <Grid item xs={8} hidden={this.state.dates.length === 0}>
+                                <Grid item xs={8} hidden={this.state.dates.length === 0||!this.state.report}>
                                         <Select id ='select'  
                                         placeholder={'בחר תאריך'}
                                         options={this.state.dates}
@@ -348,7 +348,7 @@ class FeedbackStudents extends Component {
                                          this.setState({datess:true})
                                                }} required/>
                                           </Grid>
-                                <Grid item xs={3}  hidden={!this.state.datess}>
+                                <Grid item xs={3}  hidden={!this.state.datess||!this.state.report}>
                                     <button id="viewReport" className="btn btn-info" onClick={()=>{
                                         this.setState({show1:!this.state.show1, forms:[this.state.dateFrom]})
                                         this.createCsvFile([this.state.dateFrom])
@@ -359,7 +359,7 @@ class FeedbackStudents extends Component {
                            { /*</Grid>*/}
                         </div>
                         {this.state.forms?(
-                            <Grid  item xs={12} hidden={!this.state.show1} >
+                            <Grid  item xs={12} hidden={!this.state.show1||!this.state.report} >
                                 <CSVLink
                                     data={csvData}
                                     filename={"_s_ משוב חניכים בתאריך מסויים.csv"}
@@ -378,8 +378,8 @@ class FeedbackStudents extends Component {
                                         </Grid >
                                     ))
                                 }
-                            </Grid >
-                        ):(<div></div>)}
+                                 </Grid >
+                        ):(<div></div>)}       
                         ///////////*/}
                         <button id="go-back" className="btn btn-info" onClick={()=>{this.BackPage()}}>חזור</button>
                                      { /*     </div>*/}
