@@ -32,6 +32,9 @@ class FeedbackStudents extends Component {
                 show:false,
                 loadPage:false,
                 spinner: [true,'נא להמתין הדף נטען'],
+                team:[],
+                dates:[],
+                datess:false
             }
     }
 
@@ -260,6 +263,7 @@ class FeedbackStudents extends Component {
                                     <Select id = 'select'  placeholder={" בחר קבוצה "} options={this.state.options} onChange={(e)=>{
                                         // console.log(e.label,e.value);
                                         this.setState({team:e.value,teamName:e.label})
+                                        console.log("e.value",e.value)
                                     }} required/>
                                 </Grid>
                                 <Grid item xs={3} hidden={!this.state.options}>
@@ -271,7 +275,7 @@ class FeedbackStudents extends Component {
                                 </Grid>
                                 <Grid item xs={3}  hidden={!this.state.teamName}>
                                     <button id="viewReport" className="btn btn-info" onClick={()=>{
-
+                                        console.log("this.state.team[1].docs",this.state.team[1].docs)
                                         this.setState({show:!this.state.show, forms:this.state.team[1].docs})
                                         this.createCsvFile(this.state.team[1].docs)
                                     }}>{!this.state.show?("הצג דו\"ח מפגשים"):("הסתר דו\"ח מפגשים")}<span
@@ -302,21 +306,88 @@ class FeedbackStudents extends Component {
                                 }
                             </Grid >
                         ):(<div></div>)}
- <Grid item xs={12}>
+                        <Grid item xs={12}>
                             <div className="text-below-image">
-                                <button onClick={(e)=>{
-
+                                <button onClick={async(e)=>{
+                                    this.setState({teams:[]})
+                                    var teams=[];
+                                    var nameTeams = await db.collection("Teams").where("old", "==",false).get()
+                                    nameTeams.forEach(item=>{
+                                         if(item){
+                                    teams.push({ value: item, label:item.data().name})
+                                    teams.sort((a, b) =>(a.label > b.label) ? 1 : -1)
+                                         }
+                                         })
+                                    this.setState({teams:teams})
                                     this.setState({report:!this.state.report})
                                 }} >{this.state.report?"הסתר משוב":"הצג משובי חניכים לפי תאריך מסויים "}</button>
                             </div>
-                        </Grid>                         <button id="go-back" className="btn btn-info" onClick={()=>{this.BackPage()}}>חזור</button>
-                    </div>
-                </div>
-            </div>
+                        </Grid>      
+                        /////////////////////////////////////////////
+                         <Grid  item xs={8} hidden={!this.state.teams}>
+                            <Select  placeholder={" בחר קבוצה "} options={this.state.teams} onChange={async(e)=>{
+                                this.setState({team1:e.value})
+                                this.setState({datess:false})
+                                 this.setState({dates:[]})
+                               var  dates=[]
+                                var alldDates = await db.collection("Teams").doc(e.value.id).collection("Dates").get()
+                                 alldDates.forEach(item=>{
+                                    dates.push({ value: item, label:item.id})
+                                 })
+                                this.setState({dates:dates,show1:false})
+                            }} required/>
+                        </Grid>
+                                <Grid item xs={8} hidden={this.state.dates.length === 0}>
+                                        <Select id ='select'  
+                                        placeholder={'בחר תאריך'}
+                                        options={this.state.dates}
+                                        onChange={(e)=>{  
+                                           this.setState({forms:[]})
+                                           this.setState({dateFrom:e.value,show1:false})
+                                           //,dateTo:e.value
+                                         this.setState({datess:true})
+                                               }} required/>
+                                          </Grid>
+                                <Grid item xs={3}  hidden={!this.state.datess}>
+                                    <button id="viewReport" className="btn btn-info" onClick={()=>{
+                                        this.setState({show1:!this.state.show1, forms:[this.state.dateFrom]})
+                                        this.createCsvFile([this.state.dateFrom])
+                                    }}>{!this.state.show1?("הצג דו\"ח מפגשים"):("הסתר דו\"ח מפגשים")}<span
+                                        className="fa fa-arrow-right"></span></button>
+                                </Grid>
+
+                           { /*</Grid>*/}
+                        </div>
+                        {this.state.forms?(
+                            <Grid  item xs={12} hidden={!this.state.show1} >
+                                <CSVLink
+                                    data={csvData}
+                                    filename={"_s_ משוב חניכים בתאריך מסויים.csv"}
+                                    className="btn btn-primary"
+                                    target="_blank"
+                                >
+                                    <button>
+                                        הורדת כל דוחות החניכים של הקבוצה בתאריך הנבחר
+                                    </button>
+                                </CSVLink>
+                                {
+                                    this.state.forms.map((Form,index) => (
+                                        <Grid  item xs={12}  key={index}>
+                                            <hr/>
+                                            { this.feedbacks(Form.data())}
+                                        </Grid >
+                                    ))
+                                }
+                            </Grid >
+                        ):(<div></div>)}
+                        ///////////*/}
+                        <button id="go-back" className="btn btn-info" onClick={()=>{this.BackPage()}}>חזור</button>
+                                     { /*     </div>*/}
+                                                                                        </div>
+             </div>
         )
         }
         else {
-            // console.log(this.state.spinner)
             return (
                 <div>
                     {!this.state.spinner[0] ? "" :
@@ -341,7 +412,7 @@ class FeedbackStudents extends Component {
 
     feedbacks(form)
     {
-        if(form && this.state.show) {
+        if(form && (this.state.show||this.state.show1)) {
             var date = form.date.toDate()
             var day = date.getDate()
             // console.log(day)
