@@ -32,6 +32,7 @@ export async function RegisterUser(uid,user) {
     return;
 }
 export async function DeleteUser(uid) {
+
     await db.collection("waitforapproval").doc(uid).delete();
     return;
 }

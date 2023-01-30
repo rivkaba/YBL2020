@@ -281,7 +281,7 @@ class bmGuideFeedback extends Component {
                                     <label id="insert-student" className="title-input" htmlFor="name"> &nbsp;</label>
                                     <button id="viewReport" className="btn btn-info" onClick={()=>{
                                         this.GetTeams()
-                                    }}>מצא קבוצות<span
+                                    }}>אישור תאריכים<span
                                         className="fa fa-arrow-right"></span></button>
                                  </Grid>
                                     <Grid item xs={3}  hidden={!this.state.teamName}>
