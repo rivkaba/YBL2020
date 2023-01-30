@@ -20,6 +20,9 @@ class FeedbackGuide extends Component {
                 show:false,
                 loadPage:false,
                 spinner: [true,'נא להמתין הדף נטען'],
+                 team:[],
+                dates:[],
+                datess:false
             }
     }
 
@@ -265,13 +268,106 @@ class FeedbackGuide extends Component {
                                         <Grid  item xs={12}  key={index}>
                                             <hr/>
                                             {this.feedbacks(Form.data(),index)}
-                                        </Grid >
+                                         </Grid >
                                     ))
                                 }
                             </Grid >
                         ):(<div></div>)}
+                             <Grid item xs={12}>
+                            <div className="text-below-image">
+                                <button onClick={async(e)=>{
+                                    this.setState({teams:[]})
+                                    var teams=[];
+                                    var nameTeams = await db.collection("Teams").where("old", "==",false).get()
+                                    nameTeams.forEach(item=>{
+                                         if(item){
+                                    teams.push({ value: item, label:item.data().name})
+                                    teams.sort((a, b) =>(a.label > b.label) ? 1 : -1)
+                                         }
+                                         })
+                                    this.setState({teams:teams,forms:[],dates:[]})
+                                    this.setState({report:!this.state.report})
+                                }} >{this.state.report?"הסתר משוב":"הצג משובי מדריכים לפי תאריך מסויים "}</button>
+                            </div>
+                        </Grid>      
+                        /////////////////////////////////////////////
+                         <Grid  item xs={8} hidden={!this.state.teams||!this.state.report}>
+                            <Select  placeholder={" בחר קבוצה "} options={this.state.teams} onChange={async(e)=>{
+                                this.setState({team1:e.value})
+                                this.setState({datess:false})
+                                 this.setState({dates:[]})
+                               var  dates=[]
+                                var alldDates = await db.collection("Teams").doc(e.value.id).collection("Dates").get()
+                                 alldDates.forEach(item=>{
+                                    dates.push({ value: item, label:item.id})
+                                 })
+                                this.setState({dates:dates,show1:false})
+                            }} required/>
+                        </Grid>
+                                <Grid item xs={8} hidden={this.state.dates.length === 0||!this.state.report}>
+                                        <Select id ='select'  
+                                        placeholder={'בחר תאריך'}
+                                        options={this.state.dates}
+                                        onChange={(e)=>{  
+                                           this.setState({forms:[]})
+                                           this.setState({dateFrom:e.value,dateId:e.label,show1:false})
+                                         this.setState({datess:true})
+                                               }} required/>
+                                          </Grid>
+                                <Grid item xs={3}  hidden={!this.state.datess||!this.state.report}>
+                                    <button id="viewReport" className="btn btn-info" onClick={async()=>{
+                                        var t= await db.collection("Teams").doc(this.state.team1.id).collection("Dates").doc(this.state.dateId).get()
+                                     console.log("t.data()",t.data())  
+                                        if(t.data().reportGuide){
+                                             console.log("yyyy")  
+                                             var FormsGuide = await getPathData(t.data().reportGuide.path)
+                                             console.log("FormsGuide",FormsGuide) 
+                                             this.setState({show1:true,forms:[this.state.dateFrom], reportGuide:[FormsGuide]})
+                                             this.createCsvFile([this.state.dateFrom],[FormsGuide])
+                                        }
+                                        else
+                                        {
+                                        this.setState({show1:!this.state.show1,forms:[], reportGuide:[]})
+                                        this.createCsvFile([], [])
+                                        }
+                                        //////*********************
+                                          {/* var FormsGuide = await getPathData(this.state.dateFrom.reportGuide.path)
+                                        forms.push(FormsGuide)
+                                        return [doc,dates,forms]
+                                       forms:[this.state.dateFrom], reportGuide:[FormsGuide]})
+                                        this.createCsvFile([this.state.dateFrom], [FormsGuide])
+                                        ////////////*****************/}
+                                    }}>{!this.state.show1?("הצג דו\"ח מפגשים"):("הסתר דו\"ח מפגשים")}<span
+                                        className="fa fa-arrow-right"></span></button>
+                                </Grid>
+
+                           { /*</Grid>*/}
+                        </div>
+                        {this.state.forms?(
+                            <Grid  item xs={12} hidden={!this.state.show1||!this.state.report} >
+                                <CSVLink
+                                    data={csvData}
+                                    filename={"_s_ משוב מדריכים בתאריך מסויים.csv"}
+                                    className="btn btn-primary"
+                                    target="_blank"
+                                >
+                                    <button>
+                                        הורדת כל דוחות המדריכים של הקבוצה בתאריך הנבחר
+                                    </button>
+                                </CSVLink>
+                                {
+                                    this.state.forms.map((Form,index) => (
+                                        <Grid  item xs={12}  key={index}>
+                                            <hr/>
+                                            { this.feedbacks(Form.data(),index)}
+                                        </Grid >
+                                    ))
+                                }
+                                 </Grid >       
+                        ///////////*/}
+                        ):(<div></div>)}
                         <button id="go-back" className="btn btn-info" onClick={()=>{this.BackPage()}}>חזור</button>
-                    </div>
+                  {/*  </div>*/}
                 </div>
             </div>
         )
@@ -301,21 +397,19 @@ class FeedbackGuide extends Component {
 
     feedbacks(form,index)
     {
-        // console.log(csvData)
-        // console.log(form)
         if(index>=this.state.reportGuide.length)
         {
             return
         }
-        // console.log(this.state.show)
-        if(form && this.state.show) {
-            // console.log(form)
+
+        if(form && (this.state.show||this.state.show1)) {
             var reportGuide = this.state.reportGuide[index].form
             var date =form.date.toDate()
             var day = date.getDate()
             var month = date.getMonth()+1
             var year = date.getFullYear()
             // console.log(reportGuide)
+         
             return (
                 <div id="name-group" className="form-group" dir="rtl">
                     <div className="report" id="report">

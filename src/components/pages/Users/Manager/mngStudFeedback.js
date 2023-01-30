@@ -383,7 +383,7 @@ class FeedbackStudents extends Component {
                         ///////////*/}
                         <button id="go-back" className="btn btn-info" onClick={()=>{this.BackPage()}}>חזור</button>
                                      { /*     </div>*/}
-                                                                                        </div>
+                     </div>
              </div>
         )
         }
