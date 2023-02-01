@@ -290,7 +290,6 @@ class FeedbackGuide extends Component {
                                 }} >{this.state.report?"הסתר משוב":"הצג משובי מדריכים לפי תאריך מסויים "}</button>
                             </div>
                         </Grid>      
-                        /////////////////////////////////////////////
                          <Grid  item xs={8} hidden={!this.state.teams||!this.state.report}>
                             <Select  placeholder={" בחר קבוצה "} options={this.state.teams} onChange={async(e)=>{
                                 this.setState({team1:e.value})
@@ -330,13 +329,7 @@ class FeedbackGuide extends Component {
                                         this.setState({show1:!this.state.show1,forms:[], reportGuide:[]})
                                         this.createCsvFile([], [])
                                         }
-                                        //////*********************
-                                          {/* var FormsGuide = await getPathData(this.state.dateFrom.reportGuide.path)
-                                        forms.push(FormsGuide)
-                                        return [doc,dates,forms]
-                                       forms:[this.state.dateFrom], reportGuide:[FormsGuide]})
-                                        this.createCsvFile([this.state.dateFrom], [FormsGuide])
-                                        ////////////*****************/}
+                                        
                                     }}>{!this.state.show1?("הצג דו\"ח מפגשים"):("הסתר דו\"ח מפגשים")}<span
                                         className="fa fa-arrow-right"></span></button>
                                 </Grid>
@@ -364,7 +357,6 @@ class FeedbackGuide extends Component {
                                     ))
                                 }
                                  </Grid >       
-                        ///////////*/}
                         ):(<div></div>)}
                         <button id="go-back" className="btn btn-info" onClick={()=>{this.BackPage()}}>חזור</button>
                   {/*  </div>*/}

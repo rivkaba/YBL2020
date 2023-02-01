@@ -323,7 +323,6 @@ class FeedbackStudents extends Component {
                                 }} >{this.state.report?"הסתר משוב":"הצג משובי חניכים לפי תאריך מסויים "}</button>
                             </div>
                         </Grid>      
-                        /////////////////////////////////////////////
                          <Grid  item xs={8} hidden={!this.state.teams||!this.state.report}>
                             <Select  placeholder={" בחר קבוצה "} options={this.state.teams} onChange={async(e)=>{
                                 this.setState({team1:e.value})
@@ -380,7 +379,6 @@ class FeedbackStudents extends Component {
                                 }
                                  </Grid >
                         ):(<div></div>)}       
-                        ///////////*/}
                         <button id="go-back" className="btn btn-info" onClick={()=>{this.BackPage()}}>חזור</button>
                                      { /*     </div>*/}
                      </div>
